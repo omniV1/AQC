@@ -11,9 +11,6 @@ export default function HomePage() {
             alt="The Quiet Chapter Logo" 
             className="w-64 mx-auto mb-6"
           />
-          <h1 className="text-3xl md:text-4xl font-serif text-brown">
-            The Quiet Chapter
-          </h1>
           <p className="text-lg text-brown/80 italic mt-2">
             Tender support for the story unfolding
           </p>
