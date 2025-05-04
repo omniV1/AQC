@@ -30,7 +30,7 @@ export default function ContactPage() {
         {/* Logo Section */}
         <div className="mb-16 text-center">
           <img 
-            src="/images/logo.jpeg"
+            src="/images/logo.png"
             alt="The Quiet Chapter Logo" 
             className="w-64 mx-auto mb-6"
           />
