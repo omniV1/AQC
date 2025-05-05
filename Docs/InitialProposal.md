@@ -1,6 +1,3 @@
-## Technical Vision
-
-Our technical approach focuses on creating a platform that combines beautiful# A Quiet Chapter
 ## Postpartum Doula Support Platform Project Proposal
 
 *May 2025*
