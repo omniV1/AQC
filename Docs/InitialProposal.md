@@ -22,7 +22,7 @@
 
 ## Executive Summary
 
-"A Quiet Chapter" will transform the postpartum support experience through a thoughtfully designed digital platform for both new parents and doulas. By combining enchanting storybook-inspired aesthetics with intuitive, practical tools, we aim to create a digital sanctuary that nurtures families through their fourth trimester journey.
+"LUNARA" will transform the postpartum support experience through a thoughtfully designed digital platform for both new parents and doulas. By combining enchanting storybook-inspired aesthetics with intuitive, practical tools, we aim to create a digital sanctuary that nurtures families through their fourth trimester journey.
 
 Our vision is to develop a platform that feels less like traditional software and more like a treasured companion—offering personalized guidance, emotional support, and practical resources when families need them most. The gentle interface will provide families with on-demand access to their doula's wisdom, while giving doulas powerful tools to enhance their practice.
 
@@ -36,7 +36,7 @@ As senior software development students at Grand Canyon University, we're commit
 
 **Owen Lindsey** (Full Stack Developer & Project Manager): As the project manager, I'll be Sarah's primary point of contact, ensuring her vision is faithfully translated into the platform's features and functionality. Drawing on my experience with JavaScript, TypeScript, C#, Java, and various frameworks, I'll oversee project direction and timeline adherence while maintaining regular communication about our progress. My background as an Air Force veteran has equipped me with valuable experience in team coordination and attention to detail that will serve this project well.
 
-**Carter Wright** (Full Stack Developer & Scrum Master): Carter will facilitate our development process, breaking down complex features into manageable components and ensuring smooth day-to-day progress. His experience with React development will be instrumental in creating the beautiful, intuitive interface that embodies the storybook aesthetic of A Quiet Chapter while maintaining responsiveness across all devices.
+**Carter Wright** (Full Stack Developer & Scrum Master): Carter will facilitate our development process, breaking down complex features into manageable components and ensuring smooth day-to-day progress. His experience with React development will be instrumental in creating the beautiful, intuitive interface that embodies the storybook aesthetic of LUNARA while maintaining responsiveness across all devices.
 
 **Andrew Mack** (Full Stack Developer & Development Manager): Andrew will focus on code quality, system security, and technical integrity throughout the project. His technical knowledge will be crucial for developing the integrated features that make the platform uniquely supportive for each family's journey, while helping maintain a stable, secure, and scalable platform.
 
@@ -83,7 +83,7 @@ We'll utilize modern collaboration tools that provide transparency and maintain 
 
 ## Software Description
 
-"A Quiet Chapter" will be a digital sanctuary for new parents in their fourth trimester, weaving together practical support tools with an enchanting storybook aesthetic. The platform will extend your nurturing presence into families' daily lives through thoughtfully designed features that prioritize emotional wellbeing, practical guidance, and holistic care.
+"LUNARA" will be a digital sanctuary for new parents in their fourth trimester, weaving together practical support tools with an enchanting storybook aesthetic. The platform will extend your nurturing presence into families' daily lives through thoughtfully designed features that prioritize emotional wellbeing, practical guidance, and holistic care.
 
 ### The Client Experience
 
@@ -234,7 +234,7 @@ Developing your platform requires thoughtful navigation of various consideration
 
 ## Desired Goals
 
-Our shared vision for A Quiet Chapter extends beyond creating software—we aim to craft a digital extension of Sarah's nurturing presence that truly enhances the postpartum journey for families while supporting the growth of her practice.
+Our shared vision for LUNARA extends beyond creating software—we aim to craft a digital extension of Sarah's nurturing presence that truly enhances the postpartum journey for families while supporting the growth of her practice.
 
 ### Transforming the Fourth Trimester Experience
 
@@ -272,7 +272,7 @@ Our project will culminate in a cohesive digital ecosystem that supports every a
 
 **A Complete Digital Platform** that includes:
 
-**Family Portal** – A beautiful, intuitive web application where clients can access personalized support. This will include their customized dashboard, appointment system, mood and symptom tracking, digital journaling tools, direct messaging with their doula, secure payment processing, and a personalized resource library—all wrapped in the enchanting storybook aesthetic that defines The Quiet Chapter brand.
+**Family Portal** – A beautiful, intuitive web application where clients can access personalized support. This will include their customized dashboard, appointment system, mood and symptom tracking, digital journaling tools, direct messaging with their doula, secure payment processing, and a personalized resource library—all wrapped in the enchanting storybook aesthetic that defines LUNARA brand.
 
 **Doula Command Center** – A comprehensive practice management system with tools to monitor client wellbeing, manage appointments, record session notes, create and distribute resources, generate personalized care plans, and gain insights into client needs through thoughtful analytics.
 
@@ -299,27 +299,6 @@ To ensure we're creating a platform that truly serves Sarah and her clients, we'
 **Operational Sustainability**: We'll monitor the resources required to maintain the platform, particularly for AI features, ensuring monthly costs remain under $50 for these components.
 
 These metrics will help us refine the platform during development and provide Sarah with insights for ongoing improvement after launch.
-
----
-
- light household help, and resource sharing
-- **Target Market**: New parents in the West Valley area of Arizona
-- **Current Operations**: In-person services with manual resource sharing and paper documentation
-
-### Experience & Qualifications
-- DONA International certified postpartum doula
-- Mother of three with firsthand postpartum experience
-- 3+ years providing postpartum support services
-- Background in early childhood education
-
-### Project Involvement
-Sarah has confirmed her willingness to work closely with our development team throughout the project. She will be available for:
-- Weekly check-in meetings (video or phone)
-- User testing sessions (2-3 hours bi-weekly)
-- Content creation and review
-- Feedback on designs and functionality
-
-Sarah will serve as the primary stakeholder and subject matter expert, providing essential domain knowledge and ensuring the platform meets real-world needs of both doulas and clients.
 
 ---
 
@@ -402,7 +381,7 @@ This technical foundation provides the perfect balance of current best practices
 
 ## User Experience
 
-The essence of A Quiet Chapter lies in creating a digital space that feels like a natural extension of your nurturing presence—a place where new parents feel held, supported, and empowered during a transformative time in their lives.
+The essence of LUNARA lies in creating a digital space that feels like a natural extension of your nurturing presence—a place where new parents feel held, supported, and empowered during a transformative time in their lives.
 
 ### Design Philosophy
 
