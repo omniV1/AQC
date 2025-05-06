@@ -38,7 +38,7 @@ As senior software development students at Grand Canyon University, we're commit
 
 **Carter Wright** (Full Stack Developer & Scrum Master): Carter will facilitate our development process, breaking down complex features into manageable components and ensuring smooth day-to-day progress. His experience with React development will be instrumental in creating the beautiful, intuitive interface that embodies the storybook aesthetic of LUNARA while maintaining responsiveness across all devices.
 
-**Andrew Mack** (Full Stack Developer & Development Manager): Andrew will focus on code quality, system security, and technical integrity throughout the project. His technical knowledge will be crucial for developing the integrated features that make the platform uniquely supportive for each family's journey, while helping maintain a stable, secure, and scalable platform.
+**Andrew Mack** (Full Stack Developer & Development Lead): Andrew will focus on code quality, system security, and technical integrity throughout the project. His technical knowledge will be crucial for developing the integrated features that make the platform uniquely supportive for each family's journey, while helping maintain a stable, secure, and scalable platform.
 
 Together, we bring complementary skills from our software development education and project experience. As we near the completion of our degrees, we're excited to apply our knowledge to create a meaningful real-world solution that will help Sarah build her doula practice and support the families she serves.
 
