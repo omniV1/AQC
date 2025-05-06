@@ -17,7 +17,7 @@ export default function Footer() {
 
         <div className="mb-4 flex justify-center space-x-6">
           {/* Social Links - Changed hover color */}
-          <a href="#" /* Replace with actual Instagram URL */ aria-label="Instagram" target="_blank" rel="noopener noreferrer" className="hover:text-brand-secondary transition-colors duration-200 text-2xl">
+          <a href="https://www.instagram.com/lunaracare/" aria-label="Instagram" target="_blank" rel="noopener noreferrer" className="hover:text-brand-secondary transition-colors duration-200 text-2xl">
             <FontAwesomeIcon icon={faInstagram} />
           </a>
           <a href="#" /* Replace with actual Facebook URL */ aria-label="Facebook" target="_blank" rel="noopener noreferrer" className="hover:text-brand-secondary transition-colors duration-200 text-2xl">
@@ -29,7 +29,7 @@ export default function Footer() {
         </div>
 
         <p className="text-sm text-brand-text/80">
-          &copy; {new Date().getFullYear()} The Quiet Chapter. All rights reserved.
+          &copy; {new Date().getFullYear()} Lunara. All rights reserved.
         </p>
         <p className="text-xs text-brand-text/60 mt-1">
           Serving Litchfield Park & the West Valley, AZ

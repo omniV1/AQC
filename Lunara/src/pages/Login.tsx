@@ -36,68 +36,87 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Welcome back to Lunara
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Or{' '}
-            <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
-              create a new account
-            </Link>
+    <div className="w-full bg-cream">
+      <div className="max-w-2xl mx-auto px-6 py-16">
+        {/* Logo Section */}
+        <div className="mb-16 text-center">
+          <img 
+            src="/images/logo.png"
+            alt="Lunara Logo" 
+            className="w-64 mx-auto mb-6"
+          />
+          <h1 className="text-3xl md:text-4xl font-serif text-brown">
+            Welcome Back
+          </h1>
+          <p className="mt-4 text-brown/80">
+            Sign in to access your personalized postpartum support dashboard
           </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {error && (
-            <div className="rounded-md bg-red-50 p-4">
-              <div className="text-sm text-red-700">{error}</div>
-            </div>
-          )}
-          <div className="rounded-md shadow-sm -space-y-px">
+        
+        {/* Login Form */}
+        <div className="space-y-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {error && (
+              <div className="bg-red-50/50 border border-red-100 text-red-700 p-4 rounded text-center">
+                {error}
+              </div>
+            )}
             <div>
-              <label htmlFor="email" className="sr-only">
-                Email address
+              <label htmlFor="email" className="block text-sm font-medium text-brown mb-1">
+                Email
               </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
+              <input 
+                type="email" 
+                name="email" 
+                id="email" 
+                required 
+                placeholder="your.email@example.com"
                 value={formData.email}
                 onChange={handleChange}
+                className="w-full px-4 py-2 border border-brown/20 rounded bg-white/50 focus:outline-none focus:ring-1 focus:ring-purple placeholder:text-brown/40"
               />
+              <p className="mt-1 text-xs text-brown/60">Enter the email address you used to register</p>
             </div>
             <div>
-              <label htmlFor="password" className="sr-only">
+              <label htmlFor="password" className="block text-sm font-medium text-brown mb-1">
                 Password
               </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
+              <input 
+                type="password" 
+                name="password" 
+                id="password" 
+                required 
+                placeholder="Enter your password"
                 value={formData.password}
                 onChange={handleChange}
+                className="w-full px-4 py-2 border border-brown/20 rounded bg-white/50 focus:outline-none focus:ring-1 focus:ring-purple placeholder:text-brown/40"
               />
+              <p className="mt-1 text-xs text-brown/60">Must be at least 8 characters long</p>
             </div>
-          </div>
+            <div>
+              <button 
+                type="submit" 
+                disabled={isLoading}
+                className="w-full bg-purple hover:bg-purple/80 text-white font-medium py-2.5 px-8 rounded transition-colors duration-300 disabled:opacity-50"
+              >
+                {isLoading ? 'Signing in...' : 'Sign in'}
+              </button>
+            </div>
+          </form>
 
-          <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
-            >
-              {isLoading ? 'Signing in...' : 'Sign in'}
-            </button>
+          {/* Additional Info */}
+          <div className="text-center space-y-4 pt-8 border-t border-brown/10">
+            <p className="text-brown/90">
+              Don't have an account yet?{' '}
+              <Link to="/register" className="text-purple hover:text-purple/80 transition-colors duration-200">
+                Create one here
+              </Link>
+            </p>
+            <p className="text-sm italic text-brown/70">
+              Welcome to your postpartum support journey.
+            </p>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
