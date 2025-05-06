@@ -1,25 +1,77 @@
 import React from 'react';
 // import ServicesOverview from '../components/sections/ServicesOverview'; // Reuse the overview component
 
-// Placeholder for more detailed service descriptions
-const detailedServices = [
+interface ServiceFeature {
+  name: string;
+  details: string;
+  features: string[];
+}
+
+// Detailed service descriptions
+const detailedServices: ServiceFeature[] = [
   {
     name: 'Postpartum Doula Support',
-    details: 'Comprehensive in-home support including emotional check-ins, newborn care assistance, infant feeding support, light household tasks, and sibling integration. Packages available for various needs.',
-    // Add pricing or link to pricing info if applicable
-  },
-  {
-    name: 'Lactation Counseling',
-    details: 'Personalized, in-home or virtual lactation support covering latch issues, milk supply concerns, pumping guidance, weaning, and more. Judgement-free, evidence-based care.',
+    details: 'Comprehensive in-home support tailored to your unique needs. Services include emotional check-ins, infant care assistance while you rest or shower, feeding support, light household tasks (laundry, dishes, tidying), simple meal and snack preparation, herbal bath setup, and sibling integration support. Available in flexible packages to match your family\'s needs.',
+    features: [
+      'Emotional and physical recovery support',
+      'Infant feeding guidance (breast, bottle, or combination)',
+      'Baby care assistance and education',
+      'Light household help to ease your transition',
+      'Sibling adjustment support',
+      'Daytime and overnight support options'
+    ]
   },
   {
     name: 'Newborn Care Education',
-    details: 'Private, tailored sessions covering infant soothing techniques, bathing, diapering, safe sleep practices, babywearing basics, and understanding newborn cues.',
+    details: 'Private, tailored sessions in your home covering essential newborn care skills. Learn gentle techniques for soothing, feeding, diapering, and understanding your baby\'s unique cues. Sessions are personalized to your parenting style and specific concerns.',
+    features: [
+      'Infant soothing techniques',
+      'Safe sleep practices',
+      'Bathing and diapering guidance',
+      'Babywearing basics',
+      'Understanding newborn behavior',
+      'Feeding position and timing tips'
+    ]
   },
-  // Add other specific services
+  {
+    name: 'Postpartum Wellness Planning',
+    details: 'Create a comprehensive plan for your fourth trimester that addresses physical recovery, emotional wellbeing, and family adjustment. Includes personalized recommendations for nutrition, rest, healing practices, and support system coordination.',
+    features: [
+      'Customized recovery timeline',
+      'Nutrition and hydration guidance',
+      'Rest and sleep strategies',
+      'Support circle coordination',
+      'Self-care ritual planning',
+      'Resource recommendations'
+    ]
+  },
+  {
+    name: 'Holistic Care Services',
+    details: 'Supporting your physical and emotional recovery through gentle, natural approaches. Services include herbal bath preparation, aromatherapy guidance, light massage techniques, and recommendations for healing foods and teas.',
+    features: [
+      'Herbal bath preparation',
+      'Aromatherapy guidance',
+      'Comfort measures',
+      'Healing food suggestions',
+      'Gentle movement support',
+      'Relaxation techniques'
+    ]
+  },
+  {
+    name: 'Digital Support Access',
+    details: 'Complement your in-person care with our digital support platform. Access personalized resources, track your recovery journey, and stay connected between visits through our beautiful, intuitive interface.',
+    features: [
+      'Personalized dashboard',
+      'Daily wellness tracking',
+      'Resource library access',
+      'Secure messaging system',
+      'Appointment scheduling',
+      'Custom care plan viewing'
+    ]
+  }
 ];
 
-export default function ServicesPage() {
+export default function ServicesPage(): JSX.Element {
   return (
     <div className="w-full bg-cream">
       <div className="max-w-2xl mx-auto px-6 py-16">
@@ -39,21 +91,30 @@ export default function ServicesPage() {
           {/* Services Overview */}
           <section>
             <p className="text-brown/90 text-center leading-relaxed">
-              As I complete my postpartum doula certification, I'm offering gentle, in-home 
-              support to a limited number of families. These are non-medical services rooted 
-              in compassion, experience, and a desire to make your life easier.
+              As a DONA-certified postpartum doula, I offer gentle, in-home support to families 
+              in the West Valley area. My services are non-medical and rooted in compassion, 
+              experience, and a desire to make your fourth trimester journey easier and more 
+              peaceful.
             </p>
           </section>
 
           {/* Detailed Services */}
           {detailedServices.map((service) => (
-            <section key={service.name} className="space-y-4">
+            <section key={service.name} className="space-y-4 border-b border-brown/10 pb-8">
               <h2 className="text-2xl font-serif text-brown">
                 {service.name}
               </h2>
               <p className="text-brown/90 leading-relaxed">
                 {service.details}
               </p>
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+                {service.features.map((feature) => (
+                  <li key={feature} className="text-brown/80 flex items-start">
+                    <span className="text-purple mr-2">•</span>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
             </section>
           ))}
 
@@ -62,6 +123,9 @@ export default function ServicesPage() {
             <h3 className="text-xl font-serif text-brown mb-4">
               Ready to Discuss Your Needs?
             </h3>
+            <p className="text-brown/80 mb-6">
+              Every family's journey is unique. Let's talk about how I can best support yours.
+            </p>
             <a 
               href="/contact" 
               className="inline-block bg-purple hover:bg-purple/80 text-white font-medium py-2.5 px-8 rounded transition-colors duration-300"
