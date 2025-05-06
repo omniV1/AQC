@@ -385,9 +385,7 @@ The essence of LUNARA lies in creating a digital space that feels like a natural
 
 ### Design Philosophy
 
-Your platform will embrace the storybook-inspired aesthetic you've envisioned, creating an experience that feels less like traditional software and more like opening a treasured book of wisdom and support. Each screen will be thoughtfully designed to evoke feelings of calm, warmth, and gentle guidance.
-
-The visual language will draw from your existing illustrations—"Mother Tree," "Fourth Trimester Garden," "Porch Fairy + Parent," "Doula Satchel," and "Nest of Nurture"—creating a consistent world that envelops users in a nurturing environment. Soft, natural colors will shift subtly throughout the day, acknowledging the rhythm of new parenthood.
+Your platform will embrace the storybook-inspired aesthetic you've envisioned, creating an experience that feels less like traditional software and more like opening a treasured book of  support. Each screen will be thoughtfully designed to evoke feelings of calm, warmth, and gentle guidance.
 
 Typography will balance beauty with readability, pairing serif fonts for headings with highly accessible text for content. Every visual element will be chosen not just for aesthetic appeal but for how it makes parents feel during a vulnerable time.
 
