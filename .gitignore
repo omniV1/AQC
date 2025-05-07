@@ -72,3 +72,13 @@ frontend/.vite-cache/
 *.sublime-project
 
 .fake
+
+# Environment files
+.env.*
+!.env.example
+backend/env.properties
+!backend/env.properties.example
+
+# Existing sensitive files that should have been ignored
+backend/env.properties
+Lunara/.env
