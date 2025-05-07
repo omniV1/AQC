@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -9,6 +10,10 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Dashboard } from './pages/Dashboard';
+import { AppointmentPage } from './pages/AppointmentPage';
+import { ProviderAvailabilityPage } from './pages/ProviderAvailabilityPage';
+import { AppointmentScheduler } from './components/AppointmentScheduler';
+import { Calendar } from './components/Calendar';
 
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
@@ -30,6 +35,16 @@ function App() {
               <Route path="/dashboard" element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/appointments" element={
+                <ProtectedRoute>
+                  <AppointmentPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/availability" element={
+                <ProtectedRoute>
+                  <ProviderAvailabilityPage />
                 </ProtectedRoute>
               } />
               <Route path="/" element={<Navigate to="/dashboard" replace />} />

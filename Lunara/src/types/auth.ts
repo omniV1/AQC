@@ -19,6 +19,7 @@ export interface UserProfile {
   email: string;
   firstName: string;
   lastName: string;
+  role: 'CLIENT' | 'PROVIDER' | 'ADMIN';
   dueDate?: string;
   birthDate?: string;
   createdAt: string;

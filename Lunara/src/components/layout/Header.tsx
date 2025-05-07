@@ -30,6 +30,11 @@ export default function Header() {
               <Link to="/dashboard" className="text-lg text-warm-brown hover:text-sage transition-colors duration-200">
                 Dashboard
               </Link>
+              {user?.role === 'PROVIDER' && (
+                <Link to="/availability" className="text-lg text-warm-brown hover:text-sage transition-colors duration-200">
+                  Availability
+                </Link>
+              )}
               <button
                 onClick={logout}
                 className="text-lg text-warm-brown hover:text-sage transition-colors duration-200"
