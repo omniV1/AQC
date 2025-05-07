@@ -3,8 +3,8 @@ spring:
     name: backend
   datasource:
     url: jdbc:postgresql://localhost:5432/lunara_db
-    username: Owen
-    password: omni
+    username: your_username
+    password: your_password
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -18,7 +18,7 @@ spring:
 # JWT Configuration
 security:
   jwt:
-    secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+    secret-key: your_jwt_secret_key
     expiration: 86400000 # 24 hours in milliseconds
     refresh-token:
       expiration: 604800000 # 7 days in milliseconds

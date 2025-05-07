@@ -82,3 +82,9 @@ backend/env.properties
 # Existing sensitive files that should have been ignored
 backend/env.properties
 Lunara/.env
+
+# Application configuration
+backend/src/main/resources/application.yml
+backend/src/main/resources/application-*.yml
+!backend/src/main/resources/application.yml.example
+!backend/src/main/resources/application-example.yml
