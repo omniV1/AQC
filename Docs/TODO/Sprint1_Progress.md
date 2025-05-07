@@ -202,13 +202,13 @@ Frontend:
 
 ### 2024-05-07
 Frontend:
-- Completed login component with form validation [2024-05-07 10:00 EST]
-- Completed registration component with form validation [2024-05-07 10:00 EST]
-- Completed authentication context and token management [2024-05-07 10:00 EST]
-- Completed protected route implementation [2024-05-07 10:00 EST]
-- Completed basic profile display in dashboard [2024-05-07 11:00 EST]
-- Completed basic appointment card in dashboard [2024-05-07 14:00 EST]
-- Completed basic check-in card in dashboard [2024-05-07 15:00 EST]
-- Completed basic resource cards in dashboard [2024-05-07 16:00 EST]
+- Completed login component with form validation [2024-05-07 07:00 MST]
+- Completed registration component with form validation [2024-05-07 07:00 MST]
+- Completed authentication context and token management [2024-05-07 07:00 MST]
+- Completed protected route implementation [2024-05-07 07:00 MST]
+- Completed basic profile display in dashboard [2024-05-07 08:00 MST]
+- Completed basic appointment card in dashboard [2024-05-07 11:00 MST]
+- Completed basic check-in card in dashboard [2024-05-07 12:00 MST]
+- Completed basic resource cards in dashboard [2024-05-07 13:00 MST]
 
-_Last Updated: 2024-05-07_
+_Last Updated: 2024-05-07 MST_
