@@ -1,3 +1,13 @@
+-- System Configuration table
+CREATE TABLE IF NOT EXISTS system_config (
+    id BIGSERIAL PRIMARY KEY,
+    config_key VARCHAR(255) NOT NULL UNIQUE,
+    config_value TEXT NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Users table
 CREATE TABLE IF NOT EXISTS _user (
     id BIGSERIAL PRIMARY KEY,
@@ -38,6 +48,20 @@ CREATE TABLE IF NOT EXISTS daily_checkins (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Provider-Client Relationships table
+CREATE TABLE IF NOT EXISTS provider_client_relationships (
+    id BIGSERIAL PRIMARY KEY,
+    provider_id BIGINT NOT NULL REFERENCES _user(id),
+    client_id BIGINT NOT NULL REFERENCES _user(id),
+    status VARCHAR(50) NOT NULL DEFAULT 'ACTIVE',
+    start_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    end_date TIMESTAMP,
+    notes TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (provider_id, client_id)
+);
+
 -- Support Sessions table
 CREATE TABLE IF NOT EXISTS support_sessions (
     id BIGSERIAL PRIMARY KEY,
@@ -46,7 +70,11 @@ CREATE TABLE IF NOT EXISTS support_sessions (
     start_time TIMESTAMP NOT NULL,
     end_time TIMESTAMP NOT NULL,
     status VARCHAR(50) NOT NULL,
+    approval_status VARCHAR(50) NOT NULL DEFAULT 'PENDING',
+    session_type VARCHAR(50) NOT NULL,
     notes TEXT,
+    follow_up_notes TEXT,
+    cancellation_reason TEXT,
     location VARCHAR(255),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP

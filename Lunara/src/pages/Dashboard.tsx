@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Resources } from '../components/dashboard/Resources';
 import { WeeklySchedule } from '../components/dashboard/WeeklySchedule';
@@ -6,7 +7,15 @@ import { MusicPlayer } from '../components/dashboard/MusicPlayer';
 import { Card } from '../components/ui/Card';
 
 export const Dashboard: React.FC = () => {
-  const { user } = useAuth();
+  const { user, isProvider } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Redirect providers to their dashboard
+    if (isProvider) {
+      navigate('/provider/dashboard');
+    }
+  }, [isProvider, navigate]);
 
   return (
     <div className="min-h-screen bg-cream p-6 md:p-8">
@@ -23,7 +32,7 @@ export const Dashboard: React.FC = () => {
           <h1 className="text-3xl md:text-4xl font-serif text-forest-green mb-2">
             Hello, {user?.firstName || 'there'}
           </h1>
-          <p className="text-brown-dark text-lg mb-2">Welcome to Lunara</p>
+          <p className="text-brown-dark text-lg mb-2">Welcome to Your Client Dashboard</p>
           <p className="text-brown-dark/80">Your postpartum care journey begins here</p>
         </div>
 

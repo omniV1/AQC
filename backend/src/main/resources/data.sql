@@ -1,3 +1,8 @@
+-- Insert provider registration code if it doesn't exist
+INSERT INTO system_config (config_key, config_value, description)
+SELECT 'provider_registration_code', 'LUNARA2024', 'Provider registration code'
+WHERE NOT EXISTS (SELECT 1 FROM system_config WHERE config_key = 'provider_registration_code');
+
 -- Insert mock providers if they don't exist
 INSERT INTO _user (first_name, last_name, email, password, role) 
 SELECT 'Sarah', 'Johnson', 'sarah.j@lunara.com', '$2a$10$YourHashedPasswordHere', 'PROVIDER'

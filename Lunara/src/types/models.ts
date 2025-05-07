@@ -37,17 +37,46 @@ export interface DailyCheckIn {
 }
 
 // Appointment/Support Session types
-export interface Appointment {
+export enum SupportSessionStatus {
+    SCHEDULED = 'SCHEDULED',
+    IN_PROGRESS = 'IN_PROGRESS',
+    COMPLETED = 'COMPLETED',
+    CANCELLED = 'CANCELLED',
+    NO_SHOW = 'NO_SHOW'
+}
+
+export enum ApprovalStatus {
+    PENDING = 'PENDING',
+    APPROVED = 'APPROVED',
+    REJECTED = 'REJECTED'
+}
+
+export enum SupportSessionType {
+    INITIAL_CONSULTATION = 'INITIAL_CONSULTATION',
+    FOLLOW_UP = 'FOLLOW_UP',
+    EMERGENCY = 'EMERGENCY',
+    ROUTINE = 'ROUTINE'
+}
+
+export interface SupportSession {
     id: number;
-    clientId: number;
-    providerId: number;
+    provider: {
+        id: number;
+        name: string;
+    };
+    client: {
+        id: number;
+        name: string;
+    };
     startTime: string;
     endTime: string;
-    status: 'SCHEDULED' | 'COMPLETED' | 'CANCELLED';
+    status: SupportSessionStatus;
+    approvalStatus: ApprovalStatus;
+    sessionType: SupportSessionType;
     notes?: string;
+    followUpNotes?: string;
+    cancellationReason?: string;
     location: string;
-    createdAt: string;
-    updatedAt: string;
 }
 
 // Message types

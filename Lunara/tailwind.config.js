@@ -1,27 +1,40 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
       colors: {
-        'sage-light': '#F0F2EA',
-        'sage': '#94A889',
-        'cream': '#FDF8F4',
-        'forest-green': '#2C4A3B',
-        'brown-dark': '#594A42',
-        'brown-light': '#8C7B75',
-        'purple': '#9B6B9D',
-        'olive': '#6F6D25',
+        'cream': '#FAF7F2',
+        'warm-brown': '#6B4D37',
+        'sage': '#8C9A8C',
+        'sage-light': '#F5F7F5',
+        'forest-green': '#4A5D4C',
+        'olive': '#8B8356',
+        'purple': '#9D98B5',
+        'brown': {
+          DEFAULT: '#6B4D37',
+          dark: '#5A3E2E',
+          light: '#8E6F5A'
+        }
       },
       fontFamily: {
+        'sans': ['Lato', 'system-ui', 'sans-serif'],
         'serif': ['Lora', 'serif'],
-        'sans': ['Inter', 'sans-serif'],
+        'heading': ['Playfair Display', 'serif']
+      },
+      backgroundImage: {
+        'hero-pattern': "url('/images/leaf-pattern.png')",
+        'leaf-texture': "url('/images/leaf-texture.png')"
+      },
+      maxWidth: {
+        'readable': '65ch'
       },
       boxShadow: {
-        'soft': '0 2px 15px rgba(0, 0, 0, 0.05)',
-      },
+        'soft': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+      }
     },
   },
   plugins: [],

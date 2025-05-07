@@ -8,6 +8,7 @@ import com.lunara.api.exception.ResourceNotFoundException;
 import com.lunara.api.repository.SupportSessionRepository;
 import com.lunara.api.repository.ProviderAvailabilityRepository;
 import com.lunara.api.user.User;
+import com.lunara.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,7 @@ import java.util.List;
 public class SupportSessionService {
     private final SupportSessionRepository supportSessionRepository;
     private final ProviderAvailabilityRepository availabilityRepository;
+    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
     public List<ProviderAvailabilityDTO> getProviderAvailability(Long providerId, LocalDateTime startDate, LocalDateTime endDate) {
@@ -39,6 +41,9 @@ public class SupportSessionService {
     @Transactional
     public SupportSessionDTO scheduleSupportSession(User client, CreateSupportSessionRequest request) {
         // Validate provider availability
+        var provider = userRepository.findById(request.getProviderId())
+            .orElseThrow(() -> new ResourceNotFoundException("Provider not found"));
+
         var providerAvailability = availabilityRepository
             .findByProviderIdAndDayOfWeek(request.getProviderId(), request.getStartTime().getDayOfWeek().getValue() % 7)
             .orElseThrow(() -> new ResourceNotFoundException("Provider not available on this day"));
@@ -65,11 +70,13 @@ public class SupportSessionService {
 
         // Create the support session
         var session = SupportSession.builder()
-            .clientId(client.getId())
-            .providerId(request.getProviderId())
+            .client(client)
+            .provider(provider)
             .startTime(request.getStartTime())
             .endTime(request.getEndTime())
-            .status(SupportSessionStatus.SCHEDULED.name())
+            .status(SupportSessionStatus.SCHEDULED)
+            .approvalStatus(ApprovalStatus.PENDING)
+            .sessionType(request.getSessionType())
             .notes(request.getNotes())
             .location(request.getLocation())
             .build();
@@ -84,11 +91,12 @@ public class SupportSessionService {
             .orElseThrow(() -> new ResourceNotFoundException("Support session not found"));
 
         // Verify the user owns this support session
-        if (!session.getClientId().equals(userId) && !session.getProviderId().equals(userId)) {
+        if (!session.getClient().getId().equals(userId) && !session.getProvider().getId().equals(userId)) {
             throw new IllegalArgumentException("Not authorized to cancel this support session");
         }
 
-        session.setStatus(SupportSessionStatus.CANCELLED.name());
+        session.setStatus(SupportSessionStatus.CANCELLED);
+        session.setApprovalStatus(ApprovalStatus.CANCELLED_BY_CLIENT);
         supportSessionRepository.save(session);
     }
 
@@ -98,8 +106,7 @@ public class SupportSessionService {
             .orElseThrow(() -> new ResourceNotFoundException("Support session not found"));
         
         try {
-            SupportSessionStatus newStatus = SupportSessionStatus.valueOf(status.toUpperCase());
-            session.setStatus(newStatus.name());
+            session.setStatus(SupportSessionStatus.valueOf(status.toUpperCase()));
             return supportSessionRepository.save(session);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid support session status: " + status);

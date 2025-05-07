@@ -1,63 +1,69 @@
 import React from 'react';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import { LandingPage } from './pages/LandingPage';
+import { ProviderLogin } from './components/auth/ProviderLogin';
+import { ClientLogin } from './components/auth/ClientLogin';
+import { RegisterClient } from './components/auth/RegisterClient';
+import { ProviderRegistration } from './components/auth/ProviderRegistration';
 import { ProtectedRoute } from './components/ProtectedRoute';
-import { Login } from './pages/Login';
-import { Register } from './pages/Register';
 import { Dashboard } from './pages/Dashboard';
-import { AppointmentPage } from './pages/AppointmentPage';
-import { ProviderAvailabilityPage } from './pages/ProviderAvailabilityPage';
-import { AppointmentScheduler } from './components/AppointmentScheduler';
-import { Calendar } from './components/Calendar';
-
+import ProviderDashboard from './pages/ProviderDashboard';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
-import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import ServicesPage from './pages/ServicesPage';
 import ContactPage from './pages/ContactPage';
 
-function App() {
+const App: React.FC = () => {
   return (
     <Router>
       <AuthProvider>
-        <div className="flex flex-col min-h-screen bg-cream">
+        <div className="min-h-screen flex flex-col bg-cream">
           <Header />
+          
           <main className="flex-grow">
             <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/dashboard" element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              } />
-              <Route path="/appointments" element={
-                <ProtectedRoute>
-                  <AppointmentPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/availability" element={
-                <ProtectedRoute>
-                  <ProviderAvailabilityPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              {/* Public Routes */}
+              <Route path="/" element={<LandingPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/services" element={<ServicesPage />} />
               <Route path="/contact" element={<ContactPage />} />
+              <Route path="/provider/login" element={<ProviderLogin />} />
+              <Route path="/provider/register" element={<ProviderRegistration />} />
+              <Route path="/client/login" element={<ClientLogin />} />
+              <Route path="/client/register" element={<RegisterClient />} />
+
+              {/* Protected Provider Routes */}
+              <Route
+                path="/provider/dashboard"
+                element={
+                  <ProtectedRoute allowedRoles={['PROVIDER', 'ADMIN']}>
+                    <ProviderDashboard />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Protected Client Routes */}
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute allowedRoles={['CLIENT']}>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Catch-all redirect */}
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
+
           <Footer />
         </div>
       </AuthProvider>
     </Router>
   );
-}
+};
 
 export default App;

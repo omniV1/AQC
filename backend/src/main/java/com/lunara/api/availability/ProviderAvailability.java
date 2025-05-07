@@ -35,6 +35,7 @@ public class ProviderAvailability {
     @Column(name = "end_time", nullable = false)
     private LocalTime endTime;
 
+    @Builder.Default
     @Column(name = "is_available", nullable = false)
     private Boolean isAvailable = true;
 

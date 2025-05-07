@@ -1,10 +1,8 @@
 package com.lunara.api.appointment.dto;
 
+import com.lunara.api.appointment.SupportSessionType;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -21,6 +19,9 @@ public class CreateSupportSessionRequest {
 
     @NotNull(message = "End time is required")
     private LocalDateTime endTime;
+
+    @NotNull(message = "Session type is required")
+    private SupportSessionType sessionType;
 
     private String notes;
     private String location;

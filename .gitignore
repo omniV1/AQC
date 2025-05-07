@@ -74,10 +74,12 @@ frontend/.vite-cache/
 .fake
 
 # Environment files
-.env.*
-!.env.example
-backend/env.properties
-!backend/env.properties.example
+.env
+.env.local
+.env.*.local
+backend/src/main/resources/application-local.yml
+backend/src/main/resources/application-dev.yml
+backend/src/main/resources/application-prod.yml
 
 # Existing sensitive files that should have been ignored
 backend/env.properties
@@ -88,3 +90,14 @@ backend/src/main/resources/application.yml
 backend/src/main/resources/application-*.yml
 !backend/src/main/resources/application.yml.example
 !backend/src/main/resources/application-example.yml
+
+# Secrets and keys
+*.pem
+*.key
+*.jks
+*.p12
+
+# Environment setup
+setup-env.ps1
+*.env
+.env*

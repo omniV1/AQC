@@ -5,14 +5,24 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+import com.lunara.api.user.User;
+import com.lunara.api.exceptions.ForbiddenException;
+import com.lunara.api.exceptions.BadRequestException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.validation.FieldError;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Controller handling user authentication operations.
@@ -22,22 +32,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 @Tag(name = "Authentication", description = "Authentication management APIs")
 public class AuthenticationController {
 
     private final AuthenticationService service;
+    private static final Logger log = LoggerFactory.getLogger(AuthenticationController.class);
 
     /**
-     * Registers a new user in the system.
-     * Creates a new user account and returns a JWT token for immediate authentication.
-     *
-     * @param request Contains user registration details (firstName, lastName, email, password)
-     * @return JWT token wrapped in ResponseEntity
-     * @throws RuntimeException if email is already registered
+     * Registers a new provider in the system.
+     * This endpoint requires a special registration code for security.
      */
     @Operation(
-        summary = "Register a new user",
-        description = "Creates a new user account and returns a JWT token for immediate authentication"
+        summary = "Register a new provider",
+        description = "Creates a new provider account with enhanced security measures"
     )
     @ApiResponses({
         @ApiResponse(
@@ -55,13 +63,81 @@ public class AuthenticationController {
                 mediaType = MediaType.APPLICATION_JSON_VALUE,
                 schema = @Schema(implementation = ErrorResponse.class)
             )
+        ),
+        @ApiResponse(
+            responseCode = "403",
+            description = "Invalid registration code",
+            content = @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = ErrorResponse.class)
+            )
         )
     })
-    @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody RegisterRequest request
+    @PostMapping("/register/provider")
+    public ResponseEntity<AuthenticationResponse> registerProvider(
+            @Valid @RequestBody RegisterProviderRequest request
     ) {
-        return ResponseEntity.ok(service.register(request));
+        log.info("Received provider registration request for email: {}", request.getEmail());
+        
+        // Validate registration code
+        if (!service.isValidRegistrationCode(request.getRegistrationCode())) {
+            log.warn("Invalid registration code provided");
+            throw new ForbiddenException("Invalid registration code");
+        }
+
+        // Validate password strength
+        if (!service.isPasswordStrong(request.getPassword())) {
+            log.warn("Password does not meet security requirements");
+            throw new BadRequestException("Password must be at least 8 characters long and contain uppercase, lowercase, number, and special character");
+        }
+
+        AuthenticationResponse response = service.registerProvider(request);
+        log.info("Provider registration successful for email: {}", request.getEmail());
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Allows providers to register new clients.
+     * Only accessible by providers and admins.
+     */
+    @Operation(
+        summary = "Register a new client",
+        description = "Creates a new client account (requires provider authentication)"
+    )
+    @SecurityRequirement(name = "Bearer Authentication")
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "Successfully registered client",
+            content = @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = AuthenticationResponse.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Invalid input",
+            content = @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = ErrorResponse.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "403",
+            description = "Not authorized to register clients",
+            content = @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = ErrorResponse.class)
+            )
+        )
+    })
+    @PostMapping("/register/client")
+    @PreAuthorize("hasAnyRole('PROVIDER', 'ADMIN')")
+    public ResponseEntity<AuthenticationResponse> registerClient(
+            @AuthenticationPrincipal User provider,
+            @RequestBody CreateClientRequest request
+    ) {
+        return ResponseEntity.ok(service.registerClient(provider, request));
     }
 
     /**
@@ -96,8 +172,28 @@ public class AuthenticationController {
     })
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody AuthenticationRequest request
+            @Valid @RequestBody AuthenticationRequest request
     ) {
         return ResponseEntity.ok(service.authenticate(request));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return ResponseEntity.badRequest().body(errors);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, String>> handleAllExceptions(Exception ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("message", ex.getMessage());
+        log.error("Error occurred: ", ex);
+        return ResponseEntity.badRequest().body(error);
     }
 } 

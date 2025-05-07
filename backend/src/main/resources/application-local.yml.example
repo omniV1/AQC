@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/lunara
+    username: postgres
+    password: postgres
+
+lunara:
+  security:
+    provider-registration-code: your_secure_registration_code_here
+    jwt:
+      secret-key: your_secure_jwt_secret_here
+      expiration: 86400000 # 24 hours
+
+# Note: Replace these values with actual secure values
+# Do not commit the actual application-local.yml file with real values 
