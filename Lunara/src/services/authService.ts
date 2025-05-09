@@ -1,50 +1,119 @@
-import axios from 'axios';
+import { ApiClient } from '../api/apiClient';
+import { 
+    LoginRequest, 
+    LoginResponse, 
+    RefreshTokenRequest, 
+    RefreshTokenResponse 
+} from '../types/api';
 import { User, LoginCredentials, RegisterData, AuthResponse } from '../types/models';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
-export const authService = {
-    // Provider login
-    providerLogin: async (credentials: LoginCredentials): Promise<AuthResponse> => {
-        try {
-            const response = await axios.post(`${API_URL}/auth/authenticate`, credentials);
-            return response.data;
-        } catch (error: any) {
-            if (error.response?.data?.message) {
-                throw new Error(error.response.data.message);
-            }
-            throw new Error('Login failed. Please try again.');
-        }
-    },
+/**
+ * Service for handling authentication-related operations
+ */
+export class AuthService {
+    private static instance: AuthService;
+    private api: ApiClient;
 
-    // Client login
-    clientLogin: async (credentials: LoginCredentials): Promise<AuthResponse> => {
-        try {
-            const response = await axios.post(`${API_URL}/auth/authenticate`, credentials);
-            return response.data;
-        } catch (error: any) {
-            if (error.response?.data?.message) {
-                throw new Error(error.response.data.message);
-            }
-            throw new Error('Login failed. Please try again.');
+    private constructor() {
+        this.api = ApiClient.getInstance();
+    }
+
+    /**
+     * Get singleton instance of AuthService
+     */
+    public static getInstance(): AuthService {
+        if (!AuthService.instance) {
+            AuthService.instance = new AuthService();
         }
-    },
+        return AuthService.instance;
+    }
+
+    /**
+     * Provider login
+     * @param credentials - Login credentials
+     * @returns Login response with tokens and user info
+     */
+    public async providerLogin(credentials: LoginRequest): Promise<LoginResponse> {
+        const response = await this.api.post<LoginResponse>('/auth/provider/login', credentials);
+        this.handleAuthResponse(response);
+        return response;
+    }
+
+    /**
+     * Client login
+     * @param credentials - Login credentials
+     * @returns Login response with tokens and user info
+     */
+    public async clientLogin(credentials: LoginRequest): Promise<LoginResponse> {
+        const response = await this.api.post<LoginResponse>('/auth/client/login', credentials);
+        this.handleAuthResponse(response);
+        return response;
+    }
+
+    /**
+     * Refresh authentication token
+     * @returns New access token
+     */
+    public async refreshToken(): Promise<RefreshTokenResponse> {
+        const refreshToken = localStorage.getItem('refreshToken');
+        if (!refreshToken) {
+            throw new Error('No refresh token available');
+        }
+
+        const request: RefreshTokenRequest = { refreshToken };
+        const response = await this.api.post<RefreshTokenResponse>('/auth/refresh', request);
+        
+        localStorage.setItem('token', response.token);
+        return response;
+    }
+
+    /**
+     * Logout user
+     */
+    public async logout(): Promise<void> {
+        try {
+            await this.api.post('/auth/logout', {});
+        } finally {
+            this.clearAuthData();
+        }
+    }
+
+    /**
+     * Store authentication data in localStorage
+     * @param response - Login response containing tokens and user info
+     */
+    private handleAuthResponse(response: LoginResponse): void {
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('refreshToken', response.refreshToken);
+        localStorage.setItem('user', JSON.stringify(response.user));
+    }
+
+    /**
+     * Clear authentication data from localStorage
+     */
+    private clearAuthData(): void {
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user');
+    }
 
     // Provider registration
-    registerProvider: async (providerData: {
+    async registerProvider(providerData: {
         email: string;
         firstName: string;
         lastName: string;
         password: string;
         registrationCode: string;
-    }): Promise<AuthResponse> => {
+    }): Promise<AuthResponse> {
         try {
             console.log('Sending registration request:', {
                 ...providerData,
                 password: '[REDACTED]'
             });
-            const response = await axios.post(`${API_URL}/auth/register/provider`, providerData);
-            return response.data;
+            const response = await this.api.post<AuthResponse>('/auth/register/provider', providerData);
+            return response;
         } catch (error: any) {
             console.error('Registration error details:', error.response?.data);
             if (error.response?.data?.message) {
@@ -55,37 +124,32 @@ export const authService = {
             }
             throw new Error('Registration failed. Please try again.');
         }
-    },
+    }
 
     // Client registration (provider only)
-    registerClient: async (clientData: RegisterData & { providerId: number }): Promise<AuthResponse> => {
-        const response = await axios.post(`${API_URL}/auth/register/client`, clientData);
-        return response.data;
-    },
+    async registerClient(clientData: RegisterData & { providerId: number }): Promise<AuthResponse> {
+        const response = await this.api.post<AuthResponse>('/auth/register/client', clientData);
+        return response;
+    }
 
     // Get current user
-    getCurrentUser: async (): Promise<User> => {
-        const response = await axios.get(`${API_URL}/auth/me`);
-        return response.data;
-    },
-
-    // Logout
-    logout: async (): Promise<void> => {
-        await axios.post(`${API_URL}/auth/logout`);
-    },
+    async getCurrentUser(): Promise<User> {
+        const response = await this.api.get<User>('/auth/me');
+        return response;
+    }
 
     // Request password reset
-    requestPasswordReset: async (email: string): Promise<void> => {
-        await axios.post(`${API_URL}/auth/password-reset-request`, { email });
-    },
+    async requestPasswordReset(email: string): Promise<void> {
+        await this.api.post('/auth/password-reset-request', { email });
+    }
 
     // Reset password
-    resetPassword: async (token: string, newPassword: string): Promise<void> => {
-        await axios.post(`${API_URL}/auth/password-reset`, { token, newPassword });
-    },
+    async resetPassword(token: string, newPassword: string): Promise<void> {
+        await this.api.post('/auth/password-reset', { token, newPassword });
+    }
 
     // Update password
-    updatePassword: async (currentPassword: string, newPassword: string): Promise<void> => {
-        await axios.post(`${API_URL}/auth/password-update`, { currentPassword, newPassword });
+    async updatePassword(currentPassword: string, newPassword: string): Promise<void> {
+        await this.api.post('/auth/password-update', { currentPassword, newPassword });
     }
-}; 
+} 
