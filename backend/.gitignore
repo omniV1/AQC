@@ -51,12 +51,25 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# dotenv
+# === Configuration and Secrets ===
 .env
-.env.*.local
+.env.*
+!.env.example
+application.yml
+application.properties
+!application.yml.example
+!application.properties.example
+src/main/resources/application-*.yml
+!src/main/resources/application-*.yml.example
+src/main/resources/application-*.properties
+!src/main/resources/application-*.properties.example
 
-# Vite cache
-frontend/.vite-cache/
+# Database files
+*.sql
+!src/main/resources/db/migration/*.sql
+*.pgerd
+*.pgdump
+*.backup
 
 # === General ===
 *.tmp
@@ -70,3 +83,15 @@ frontend/.vite-cache/
 .trash/
 *.sublime-workspace
 *.sublime-project
+
+# === Security ===
+**/private_key*
+**/public_key*
+**/*.pem
+**/*.key
+**/*.keystore
+**/*.jks
+**/*.p12
+**/*.pfx
+**/*.cer
+**/*.crt
