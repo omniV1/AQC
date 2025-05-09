@@ -9,9 +9,10 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
-public interface SupportSessionRepository extends JpaRepository<SupportSession, Long> {
+public interface SupportSessionRepository extends JpaRepository<SupportSession, UUID> {
     List<SupportSession> findByClient(User client);
     List<SupportSession> findByProvider(User provider);
     List<SupportSession> findByStartTimeBetween(LocalDateTime start, LocalDateTime end);
@@ -36,7 +37,7 @@ public interface SupportSessionRepository extends JpaRepository<SupportSession, 
         AND s.startTime < :endDate
         ORDER BY s.startTime
     """)
-    List<SupportSessionDTO> findUserSupportSessionsInRange(Long userId, LocalDateTime startDate, LocalDateTime endDate);
+    List<SupportSessionDTO> findUserSupportSessionsInRange(UUID userId, LocalDateTime startDate, LocalDateTime endDate);
 
     @Query("""
         SELECT COUNT(s) > 0
@@ -49,5 +50,5 @@ public interface SupportSessionRepository extends JpaRepository<SupportSession, 
             OR (s.startTime >= :startTime AND s.endTime <= :endTime)
         )
     """)
-    boolean hasConflictingSupportSessions(Long providerId, LocalDateTime startTime, LocalDateTime endTime);
+    boolean hasConflictingSupportSessions(UUID providerId, LocalDateTime startTime, LocalDateTime endTime);
 } 

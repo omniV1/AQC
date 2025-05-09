@@ -18,9 +18,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationService {
 
     private final UserRepository userRepository;
@@ -38,19 +40,32 @@ public class AuthenticationService {
     @PostConstruct
     public void init() {
         // Initialize registration code in database if not exists
-        systemConfigRepository.findByKey(PROVIDER_REGISTRATION_CODE_KEY)
-                .orElseGet(() -> systemConfigRepository.save(SystemConfig.builder()
-                        .key(PROVIDER_REGISTRATION_CODE_KEY)
-                        .value(defaultRegistrationCode)
-                        .description("Provider registration code")
-                        .build()));
+        var existingCode = systemConfigRepository.findByKey(PROVIDER_REGISTRATION_CODE_KEY);
+        if (existingCode.isEmpty()) {
+            log.info("Initializing registration code in database with default value: {}", defaultRegistrationCode);
+            systemConfigRepository.save(SystemConfig.builder()
+                    .key(PROVIDER_REGISTRATION_CODE_KEY)
+                    .value(defaultRegistrationCode)
+                    .description("Provider registration code")
+                    .build());
+        } else {
+            log.info("Registration code already exists in database");
+        }
     }
 
     public boolean isValidRegistrationCode(String code) {
-        return systemConfigRepository
-                .findByKey(PROVIDER_REGISTRATION_CODE_KEY)
-                .map(config -> config.getValue().equals(code))
-                .orElse(false);
+        log.debug("Validating registration code: {}", code);
+        var configOpt = systemConfigRepository.findByKey(PROVIDER_REGISTRATION_CODE_KEY);
+        log.debug("Found registration code in database: {}", configOpt.isPresent());
+        
+        if (configOpt.isPresent()) {
+            var config = configOpt.get();
+            log.debug("Stored registration code: {}", config.getValue());
+            return config.getValue().equals(code);
+        }
+        
+        log.debug("Using default registration code: {}", defaultRegistrationCode);
+        return defaultRegistrationCode.equals(code);
     }
 
     public boolean isPasswordStrong(String password) {
@@ -156,5 +171,12 @@ public class AuthenticationService {
                 .token(token)
                 .user(user)
                 .build();
+    }
+
+    public String getRegistrationCode() {
+        return systemConfigRepository
+                .findByKey(PROVIDER_REGISTRATION_CODE_KEY)
+                .map(SystemConfig::getValue)
+                .orElse(defaultRegistrationCode);
     }
 } 

@@ -12,17 +12,18 @@ import { ErrorHandler } from './errorHandler';
  */
 export class ApiClient {
     private static instance: ApiClient;
-    private axiosInstance: AxiosInstance;
+    protected axiosInstance: AxiosInstance;
     private cache: Map<string, { data: any; timestamp: number }>;
     private readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
     private constructor() {
         this.axiosInstance = axios.create({
-            baseURL: import.meta.env.MODE === 'test' ? 'http://localhost:8080' : (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'),
+            baseURL: import.meta.env.MODE === 'test' ? 'http://localhost:8080/api' : (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api'),
             timeout: 10000,
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            withCredentials: true
         });
         this.cache = new Map();
         this.setupInterceptors();
@@ -113,8 +114,25 @@ export class ApiClient {
         try {
             const response = await this.axiosInstance.post<T>(url, data, config);
             return response.data;
-        } catch (error) {
-            throw ErrorHandler.handle(error);
+        } catch (error: any) {
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.error('Server Error Response:', {
+                    status: error.response.status,
+                    data: error.response.data,
+                    headers: error.response.headers
+                });
+                throw error;
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.error('No Response Received:', error.request);
+                throw new Error('No response received from server. Please try again.');
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.error('Request Setup Error:', error.message);
+                throw error;
+            }
         }
     }
 
@@ -160,5 +178,10 @@ export class ApiClient {
         } catch (error) {
             throw ErrorHandler.handle(error);
         }
+    }
+
+    // Add getter for axios instance
+    public getAxiosInstance(): AxiosInstance {
+        return this.axiosInstance;
     }
 } 

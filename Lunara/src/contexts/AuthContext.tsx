@@ -41,8 +41,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         try {
             const { token, user } = await authService.providerLogin(credentials);
             handleAuthResponse(token, user);
-        } catch (err) {
-            setError('Invalid provider credentials');
+        } catch (err: any) {
+            const errorMessage = err.response?.data?.message || err.response?.data?.errors?.join(', ') || 'Invalid provider credentials';
+            setError(errorMessage);
             throw err;
         }
     };

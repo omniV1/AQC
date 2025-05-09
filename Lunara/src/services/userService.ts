@@ -79,7 +79,7 @@ export class UserService {
      */
     public async getClients(params: QueryParams): Promise<PaginatedResponse<UserProfile>> {
         const queryString = this.buildQueryString(params);
-        return this.api.get<PaginatedResponse<UserProfile>>(`/users/clients${queryString}`);
+        return this.api.get<PaginatedResponse<UserProfile>>(`/api/clients${queryString}`);
     }
 
     /**

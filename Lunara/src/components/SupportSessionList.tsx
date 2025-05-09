@@ -22,8 +22,8 @@ export const SupportSessionList: React.FC<SupportSessionListProps> = ({ role, on
     try {
       setLoading(true);
       const data = await (role === 'provider' 
-        ? supportSessionService.getProviderSessions(user.id)
-        : supportSessionService.getClientSessions(user.id));
+        ? supportSessionService.getProviderSessions(user.id.toString())
+        : supportSessionService.getClientSessions(user.id.toString()));
       setSessions(data);
     } catch (err) {
       setError('Failed to load support sessions');
@@ -36,7 +36,7 @@ export const SupportSessionList: React.FC<SupportSessionListProps> = ({ role, on
     fetchSessions();
   }, [user, role]);
 
-  const handleStatusChange = async (sessionId: number, status: SupportSessionStatus) => {
+  const handleStatusChange = async (sessionId: string, status: SupportSessionStatus) => {
     try {
       await supportSessionService.updateSessionStatus(sessionId, status);
       onSessionUpdate?.();
@@ -46,7 +46,7 @@ export const SupportSessionList: React.FC<SupportSessionListProps> = ({ role, on
     }
   };
 
-  const handleApprovalChange = async (sessionId: number, approvalStatus: ApprovalStatus) => {
+  const handleApprovalChange = async (sessionId: string, approvalStatus: ApprovalStatus) => {
     try {
       await supportSessionService.updateApprovalStatus(sessionId, approvalStatus);
       onSessionUpdate?.();

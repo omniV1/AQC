@@ -1,14 +1,9 @@
 import axios from 'axios';
 import { format } from 'date-fns';
+import { ApiClient } from '../api/apiClient';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
-
-const api = axios.create({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+// Use the singleton ApiClient instance instead of creating a new one
+const api = ApiClient.getInstance().getAxiosInstance();
 
 // Add token to requests if available
 api.interceptors.request.use((config) => {

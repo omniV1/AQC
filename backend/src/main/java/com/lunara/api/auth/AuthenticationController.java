@@ -23,6 +23,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.validation.FieldError;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.context.annotation.Profile;
 
 /**
  * Controller handling user authentication operations.
@@ -32,7 +33,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"}, allowCredentials = "true")
 @Tag(name = "Authentication", description = "Authentication management APIs")
 public class AuthenticationController {
 
@@ -175,6 +176,12 @@ public class AuthenticationController {
             @Valid @RequestBody AuthenticationRequest request
     ) {
         return ResponseEntity.ok(service.authenticate(request));
+    }
+
+    @GetMapping("/registration-code")
+    @Profile("dev")  // Only available in development
+    public ResponseEntity<String> getRegistrationCode() {
+        return ResponseEntity.ok(service.getRegistrationCode());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

@@ -36,12 +36,15 @@ const ProviderDashboard: React.FC = () => {
       setLoading(true);
       setError(null);
       console.log('Fetching clients...');
-      const response = await userService.getClients();
+      const response = await userService.getClients({
+        page: 1,
+        pageSize: 10
+      });
       console.log('Clients fetched successfully:', response);
-      if (!Array.isArray(response)) {
-        throw new Error('Invalid response format: expected an array of clients');
+      if (!response || !response.content) {
+        throw new Error('Invalid response format: expected paginated data');
       }
-      setClients(response);
+      setClients(response.content);
     } catch (err: any) {
       console.error('Failed to load clients:', err);
       setError(err.message || 'Failed to load clients. Please try again later.');

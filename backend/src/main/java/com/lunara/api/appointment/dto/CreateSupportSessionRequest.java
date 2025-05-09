@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CreateSupportSessionRequest {
     @NotNull(message = "Provider ID is required")
-    private Long providerId;
+    private UUID providerId;
 
     @NotNull(message = "Start time is required")
     private LocalDateTime startTime;

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -14,8 +15,8 @@ import java.time.LocalDateTime;
 @Table(name = "support_sessions")
 public class SupportSession {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
@@ -75,11 +76,11 @@ public class SupportSession {
         updatedAt = LocalDateTime.now();
     }
 
-    public Long getClientId() {
+    public UUID getClientId() {
         return client != null ? client.getId() : null;
     }
 
-    public Long getProviderId() {
+    public UUID getProviderId() {
         return provider != null ? provider.getId() : null;
     }
 } 

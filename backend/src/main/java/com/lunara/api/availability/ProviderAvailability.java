@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -19,8 +20,8 @@ import java.time.LocalDateTime;
     uniqueConstraints = @UniqueConstraint(columnNames = {"provider_id", "day_of_week"}))
 public class ProviderAvailability {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "provider_id", nullable = false)

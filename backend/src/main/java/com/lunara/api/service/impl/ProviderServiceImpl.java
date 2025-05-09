@@ -1,6 +1,6 @@
 package com.lunara.api.service.impl;
 
-import com.lunara.api.model.Provider;
+import com.lunara.api.user.Provider;
 import com.lunara.api.repository.ProviderRepository;
 import com.lunara.api.service.ProviderService;
 import lombok.RequiredArgsConstructor;
@@ -31,19 +31,19 @@ public class ProviderServiceImpl implements ProviderService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Provider> getProviderById(UUID id) {
-        return providerRepository.findById(id);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<Provider> getProviderByEmail(String email) {
+    public Optional<Provider> findByEmail(String email) {
         return providerRepository.findByEmail(email);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Provider> getAllProviders() {
+    public Optional<Provider> findById(UUID id) {
+        return providerRepository.findById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Provider> findAll() {
         return providerRepository.findAll();
     }
 

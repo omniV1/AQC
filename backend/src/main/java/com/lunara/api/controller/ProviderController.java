@@ -2,7 +2,7 @@ package com.lunara.api.controller;
 
 import com.lunara.api.dto.CreateProviderRequest;
 import com.lunara.api.dto.ProviderDTO;
-import com.lunara.api.model.Provider;
+import com.lunara.api.user.Provider;
 import com.lunara.api.service.ProviderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

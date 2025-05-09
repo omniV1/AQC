@@ -5,9 +5,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import com.lunara.api.user.User;
+import lombok.RequiredArgsConstructor;
 
 import java.security.Key;
 import java.util.Date;
@@ -16,15 +17,9 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
-    @Value("${lunara.security.jwt.secret-key}")
-    private String secretKey;
-
-    @Value("${lunara.security.jwt.expiration}")
-    private long jwtExpiration;
-
-    @Value("${security.jwt.refresh-token.expiration}")
-    private long refreshExpiration;
+    private final JwtConfig jwtConfig;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -36,15 +31,22 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        Map<String, Object> claims = new HashMap<>();
+        if (userDetails instanceof User) {
+            User user = (User) userDetails;
+            claims.put("role", "ROLE_" + user.getRole().name());
+            claims.put("userId", user.getId().toString());
+            claims.put("email", user.getEmail());
+        }
+        return generateToken(claims, userDetails);
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return buildToken(extraClaims, userDetails, jwtExpiration);
+        return buildToken(extraClaims, userDetails, jwtConfig.getExpiration());
     }
 
     public String generateRefreshToken(UserDetails userDetails) {
-        return buildToken(new HashMap<>(), userDetails, refreshExpiration);
+        return buildToken(new HashMap<>(), userDetails, jwtConfig.getExpiration() * 7); // 7 days
     }
 
     private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
@@ -81,7 +83,7 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        byte[] keyBytes = Decoders.BASE64.decode(jwtConfig.getSecretKey());
         return Keys.hmacShaKeyFor(keyBytes);
     }
 } 

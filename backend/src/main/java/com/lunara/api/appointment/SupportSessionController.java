@@ -24,6 +24,7 @@ import com.lunara.api.error.ErrorResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -38,8 +39,13 @@ import java.util.stream.Collectors;
 @SecurityRequirement(name = "Bearer Authentication")
 public class SupportSessionController {
 
-    private final SupportSessionService supportSessionService;
-    private final UserRepository userRepository;
+    private SupportSessionService supportSessionService;
+    private UserRepository userRepository;
+
+    public SupportSessionController(SupportSessionService supportSessionService, UserRepository userRepository) {
+        this.supportSessionService = supportSessionService;
+        this.userRepository = userRepository;
+    }
 
     @Operation(
         summary = "Schedule a new support session",
@@ -193,7 +199,7 @@ public class SupportSessionController {
     })
     @PutMapping("/{id}/status")
     public ResponseEntity<SupportSessionDTO> updateSupportSessionStatus(
-            @Parameter(description = "Support session ID") @PathVariable Long id,
+            @Parameter(description = "Support session ID") @PathVariable UUID id,
             @Parameter(description = "New status (SCHEDULED, COMPLETED, CANCELLED)")
             @Schema(allowableValues = {"SCHEDULED", "COMPLETED", "CANCELLED"})
             @RequestParam String status) {
@@ -204,7 +210,7 @@ public class SupportSessionController {
     @Operation(summary = "Get provider availability")
     @GetMapping("/providers/{providerId}/availability")
     public ResponseEntity<List<ProviderAvailabilityDTO>> getProviderAvailability(
-            @PathVariable Long providerId,
+            @PathVariable UUID providerId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
         return ResponseEntity.ok(supportSessionService.getProviderAvailability(providerId, startDate, endDate));
@@ -214,7 +220,7 @@ public class SupportSessionController {
     @PostMapping("/{sessionId}/cancel")
     public ResponseEntity<Void> cancelSupportSession(
             @AuthenticationPrincipal User user,
-            @PathVariable Long sessionId) {
+            @PathVariable UUID sessionId) {
         supportSessionService.cancelSupportSession(sessionId, user.getId());
         return ResponseEntity.ok().build();
     }

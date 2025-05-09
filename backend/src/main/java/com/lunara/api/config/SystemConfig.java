@@ -1,10 +1,7 @@
 package com.lunara.api.config;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
@@ -25,4 +22,21 @@ public class SystemConfig {
 
     @Column(name = "description")
     private String description;
+
+    // Add explicit getters and setters for better compatibility
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 } 

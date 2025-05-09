@@ -1,8 +1,7 @@
 package com.lunara.api.user;
 
 public enum Role {
-    CLIENT,
+    ADMIN,
     PROVIDER,
-    ASSISTANT,
-    ADMIN
+    CLIENT
 } 

@@ -11,21 +11,21 @@ export const supportSessionService = {
     },
 
     // Get sessions by client ID
-    getClientSessions: async (clientId: number): Promise<SupportSession[]> => {
+    getClientSessions: async (clientId: string): Promise<SupportSession[]> => {
         const response = await axios.get(`${API_URL}/support-sessions/client/${clientId}`);
         return response.data;
     },
 
     // Get sessions by provider ID
-    getProviderSessions: async (providerId: number): Promise<SupportSession[]> => {
+    getProviderSessions: async (providerId: string): Promise<SupportSession[]> => {
         const response = await axios.get(`${API_URL}/support-sessions/provider/${providerId}`);
         return response.data;
     },
 
     // Create a new session
     createSession: async (sessionData: {
-        clientId: number;
-        providerId: number;
+        clientId: string;
+        providerId: string;
         startTime: string;
         endTime: string;
         sessionType: SupportSessionType;
@@ -38,7 +38,7 @@ export const supportSessionService = {
 
     // Update a session
     updateSession: async (
-        sessionId: number,
+        sessionId: string,
         updateData: Partial<{
             startTime: string;
             endTime: string;
@@ -55,13 +55,13 @@ export const supportSessionService = {
     },
 
     // Delete a session
-    deleteSession: async (sessionId: number): Promise<void> => {
+    deleteSession: async (sessionId: string): Promise<void> => {
         await axios.delete(`${API_URL}/support-sessions/${sessionId}`);
     },
 
     // Update session status
     updateSessionStatus: async (
-        sessionId: number,
+        sessionId: string,
         status: SupportSessionStatus
     ): Promise<SupportSession> => {
         const response = await axios.put(`${API_URL}/support-sessions/${sessionId}/status`, { status });
@@ -70,7 +70,7 @@ export const supportSessionService = {
 
     // Update approval status
     updateApprovalStatus: async (
-        sessionId: number,
+        sessionId: string,
         approvalStatus: ApprovalStatus
     ): Promise<SupportSession> => {
         const response = await axios.put(`${API_URL}/support-sessions/${sessionId}/approval`, { approvalStatus });

@@ -10,15 +10,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class SupportSessionDTO {
-    private Long id;
-    private Long clientId;
-    private Long providerId;
+    private UUID id;
+    private UUID clientId;
+    private UUID providerId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private SupportSessionStatus status;
@@ -52,13 +53,13 @@ public class SupportSessionDTO {
 
     public Object toFrontendFormat() {
         return new Object() {
-            public final Long id = SupportSessionDTO.this.id;
+            public final UUID id = SupportSessionDTO.this.id;
             public final Object provider = new Object() {
-                public final Long id = SupportSessionDTO.this.providerId;
+                public final UUID id = SupportSessionDTO.this.providerId;
                 public final String name = SupportSessionDTO.this.providerName;
             };
             public final Object client = new Object() {
-                public final Long id = SupportSessionDTO.this.clientId;
+                public final UUID id = SupportSessionDTO.this.clientId;
                 public final String name = SupportSessionDTO.this.clientName;
             };
             public final LocalDateTime startTime = SupportSessionDTO.this.startTime;

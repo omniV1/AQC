@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Service for managing support sessions between clients and support providers.
@@ -29,12 +30,12 @@ public class SupportSessionService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public List<ProviderAvailabilityDTO> getProviderAvailability(Long providerId, LocalDateTime startDate, LocalDateTime endDate) {
+    public List<ProviderAvailabilityDTO> getProviderAvailability(UUID providerId, LocalDateTime startDate, LocalDateTime endDate) {
         return availabilityRepository.findAvailabilityInRange(providerId, startDate, endDate);
     }
 
     @Transactional(readOnly = true)
-    public List<SupportSessionDTO> getUserSupportSessions(Long userId, LocalDateTime startDate, LocalDateTime endDate) {
+    public List<SupportSessionDTO> getUserSupportSessions(UUID userId, LocalDateTime startDate, LocalDateTime endDate) {
         return supportSessionRepository.findUserSupportSessionsInRange(userId, startDate, endDate);
     }
 
@@ -86,7 +87,7 @@ public class SupportSessionService {
     }
 
     @Transactional
-    public void cancelSupportSession(Long sessionId, Long userId) {
+    public void cancelSupportSession(UUID sessionId, UUID userId) {
         var session = supportSessionRepository.findById(sessionId)
             .orElseThrow(() -> new ResourceNotFoundException("Support session not found"));
 
@@ -101,7 +102,7 @@ public class SupportSessionService {
     }
 
     @Transactional
-    public SupportSession updateSupportSessionStatus(Long sessionId, String status) {
+    public SupportSession updateSupportSessionStatus(UUID sessionId, String status) {
         var session = supportSessionRepository.findById(sessionId)
             .orElseThrow(() -> new ResourceNotFoundException("Support session not found"));
         

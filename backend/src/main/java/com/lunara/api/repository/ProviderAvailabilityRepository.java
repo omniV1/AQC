@@ -10,9 +10,10 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface ProviderAvailabilityRepository extends JpaRepository<ProviderAvailability, Long> {
+public interface ProviderAvailabilityRepository extends JpaRepository<ProviderAvailability, UUID> {
     List<ProviderAvailability> findByProvider(User provider);
     Optional<ProviderAvailability> findByProviderAndDayOfWeek(User provider, Integer dayOfWeek);
     boolean existsByProviderAndDayOfWeek(User provider, Integer dayOfWeek);
@@ -34,7 +35,7 @@ public interface ProviderAvailabilityRepository extends JpaRepository<ProviderAv
             AND EXTRACT(DOW FROM CAST(:endDate AS date))
         ORDER BY pa.day_of_week, pa.start_time
     """, nativeQuery = true)
-    List<ProviderAvailabilityDTO> findAvailabilityInRange(Long providerId, LocalDateTime startDate, LocalDateTime endDate);
+    List<ProviderAvailabilityDTO> findAvailabilityInRange(UUID providerId, LocalDateTime startDate, LocalDateTime endDate);
 
-    Optional<ProviderAvailability> findByProviderIdAndDayOfWeek(Long providerId, Integer dayOfWeek);
+    Optional<ProviderAvailability> findByProviderIdAndDayOfWeek(UUID providerId, Integer dayOfWeek);
 } 

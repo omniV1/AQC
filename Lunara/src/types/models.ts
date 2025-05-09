@@ -5,7 +5,7 @@ export interface User {
     firstName: string;
     lastName: string;
     role: 'PROVIDER' | 'CLIENT' | 'ADMIN';
-    createdAt: string;
+    createdAt?: string;
 }
 
 export interface UserProfile {
@@ -59,13 +59,13 @@ export enum SupportSessionType {
 }
 
 export interface SupportSession {
-    id: number;
+    id: string;
     provider: {
-        id: number;
+        id: string;
         name: string;
     };
     client: {
-        id: number;
+        id: string;
         name: string;
     };
     startTime: string;

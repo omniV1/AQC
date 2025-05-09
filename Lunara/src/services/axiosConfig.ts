@@ -2,10 +2,11 @@ import axios from 'axios';
 
 // Create axios instance with custom config
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8080/api', // Updated to match your Spring Boot configuration
+    baseURL: 'http://localhost:8080/api', // Base URL with context path
     headers: {
         'Content-Type': 'application/json',
     },
+    withCredentials: true // Enable sending cookies and auth headers
 });
 
 // Add request interceptor to add auth token
@@ -26,9 +27,20 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response?.status === 401) {
-            localStorage.removeItem('token');
-            window.location.href = '/';
+        if (error.response) {
+            // Handle specific error cases
+            switch (error.response.status) {
+                case 401:
+                    // Handle unauthorized
+                    localStorage.removeItem('token');
+                    break;
+                case 403:
+                    // Handle forbidden
+                    break;
+                default:
+                    // Handle other errors
+                    break;
+            }
         }
         return Promise.reject(error);
     }
