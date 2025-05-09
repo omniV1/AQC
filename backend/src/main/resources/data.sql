@@ -4,24 +4,43 @@ SELECT 'provider_registration_code', 'LUNARA2024', 'Provider registration code'
 WHERE NOT EXISTS (SELECT 1 FROM system_config WHERE config_key = 'provider_registration_code');
 
 -- Insert mock providers if they don't exist
-INSERT INTO _user (first_name, last_name, email, password, role) 
-SELECT 'Sarah', 'Johnson', 'sarah.j@lunara.com', '$2a$10$YourHashedPasswordHere', 'PROVIDER'
-WHERE NOT EXISTS (SELECT 1 FROM _user WHERE email = 'sarah.j@lunara.com');
+INSERT INTO users (id, first_name, last_name, email, password, role) 
+SELECT 
+    gen_random_uuid(),
+    'Sarah', 
+    'Johnson', 
+    'sarah.j@lunara.com', 
+    '$2a$10$YourHashedPasswordHere', 
+    'PROVIDER'
+WHERE NOT EXISTS (SELECT 1 FROM users WHERE email = 'sarah.j@lunara.com');
 
-INSERT INTO _user (first_name, last_name, email, password, role) 
-SELECT 'Michael', 'Chen', 'michael.c@lunara.com', '$2a$10$YourHashedPasswordHere', 'PROVIDER'
-WHERE NOT EXISTS (SELECT 1 FROM _user WHERE email = 'michael.c@lunara.com');
+INSERT INTO users (id, first_name, last_name, email, password, role) 
+SELECT 
+    gen_random_uuid(),
+    'Michael', 
+    'Chen', 
+    'michael.c@lunara.com', 
+    '$2a$10$YourHashedPasswordHere', 
+    'PROVIDER'
+WHERE NOT EXISTS (SELECT 1 FROM users WHERE email = 'michael.c@lunara.com');
 
-INSERT INTO _user (first_name, last_name, email, password, role) 
-SELECT 'Emma', 'Williams', 'emma.w@lunara.com', '$2a$10$YourHashedPasswordHere', 'PROVIDER'
-WHERE NOT EXISTS (SELECT 1 FROM _user WHERE email = 'emma.w@lunara.com');
+INSERT INTO users (id, first_name, last_name, email, password, role) 
+SELECT 
+    gen_random_uuid(),
+    'Emma', 
+    'Williams', 
+    'emma.w@lunara.com', 
+    '$2a$10$YourHashedPasswordHere', 
+    'PROVIDER'
+WHERE NOT EXISTS (SELECT 1 FROM users WHERE email = 'emma.w@lunara.com');
 
 -- Insert provider availability (Monday to Friday, 9 AM to 5 PM)
 WITH provider_ids AS (
-    SELECT DISTINCT id FROM _user WHERE role = 'PROVIDER'
+    SELECT DISTINCT id FROM users WHERE role = 'PROVIDER'
 )
-INSERT INTO provider_availability (provider_id, day_of_week, start_time, end_time, is_available)
+INSERT INTO provider_availability (id, provider_id, day_of_week, start_time, end_time, is_available)
 SELECT 
+    gen_random_uuid(),
     id as provider_id,
     day_number as day_of_week,
     '09:00:00'::TIME as start_time,
@@ -37,7 +56,7 @@ SET
 
 -- Add some variation in availability
 WITH michael_id AS (
-    SELECT id FROM _user WHERE email = 'michael.c@lunara.com' LIMIT 1
+    SELECT id FROM users WHERE email = 'michael.c@lunara.com' LIMIT 1
 )
 UPDATE provider_availability 
 SET start_time = '10:00:00', end_time = '18:00:00'
@@ -45,7 +64,7 @@ WHERE provider_id = (SELECT id FROM michael_id)
 AND day_of_week IN (2, 4);
 
 WITH emma_id AS (
-    SELECT id FROM _user WHERE email = 'emma.w@lunara.com' LIMIT 1
+    SELECT id FROM users WHERE email = 'emma.w@lunara.com' LIMIT 1
 )
 UPDATE provider_availability 
 SET start_time = '08:00:00', end_time = '16:00:00'
