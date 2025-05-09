@@ -30,6 +30,7 @@ build/
 *.ipr
 .vscode/
 *.sw?
+.cursor/
 
 # OS files
 .DS_Store
