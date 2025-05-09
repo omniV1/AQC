@@ -1,5 +1,9 @@
 import { AxiosError } from 'axios';
 
+interface ErrorResponse {
+    message?: string;
+}
+
 /**
  * Custom error types for different scenarios
  */
@@ -59,13 +63,14 @@ export class ErrorHandler {
      * @param error - Axios error object
      * @returns Appropriate error type
      */
-    private static handleAxiosError(error: AxiosError): Error {
+    private static handleAxiosError(error: AxiosError<ErrorResponse>): Error {
         // Network errors (no response)
         if (!error.response) {
             return new NetworkError('Unable to connect to the server');
         }
 
-        const { status, data } = error.response;
+        const { status, data, config } = error.response;
+        const url = config.url || '';
 
         // Authentication errors
         if (status === 401) {
@@ -86,12 +91,37 @@ export class ErrorHandler {
 
         // Server errors
         if (status >= 500) {
+            if (url.includes('/appointments')) {
+                return new ApiError('Failed to fetch appointments', status);
+            }
+            if (url.includes('/providers') && !url.includes('/availability')) {
+                return new ApiError('Failed to fetch providers', status);
+            }
+            if (url.includes('/availability')) {
+                return new ApiError('Failed to fetch provider availability', status);
+            }
+            if (url.includes('/sessions')) {
+                return new ApiError('Failed to fetch sessions', status);
+            }
             return new ApiError('Server error occurred', status);
+        }
+
+        // Client errors
+        if (status === 400) {
+            return new ApiError(data?.message || 'Invalid request', status);
+        }
+
+        if (status === 404) {
+            return new ApiError('Resource not found', status);
+        }
+
+        if (status === 409) {
+            return new ApiError(data?.message || 'Conflict occurred', status);
         }
 
         // Default error
         return new ApiError(
-            error.response.data?.message || 'An error occurred',
+            data?.message || 'An error occurred',
             status
         );
     }
@@ -115,9 +145,6 @@ export class ErrorHandler {
         }
 
         if (error instanceof ApiError) {
-            if (error.statusCode >= 500) {
-                return 'We\'re experiencing technical difficulties. Please try again later.';
-            }
             return error.message;
         }
 

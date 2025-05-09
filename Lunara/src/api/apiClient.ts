@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
+import axios, { AxiosInstance, AxiosResponse, AxiosError, AxiosRequestConfig } from 'axios';
 import { ErrorHandler } from './errorHandler';
 
 /**
@@ -18,7 +18,7 @@ export class ApiClient {
 
     private constructor() {
         this.axiosInstance = axios.create({
-            baseURL: process.env.VITE_API_BASE_URL || 'http://localhost:8080',
+            baseURL: process.env.NODE_ENV === 'test' ? 'http://localhost:8080' : (process.env.VITE_API_BASE_URL || 'http://localhost:8080'),
             timeout: 10000,
             headers: {
                 'Content-Type': 'application/json'
@@ -40,13 +40,8 @@ export class ApiClient {
 
     /**
      * Setup request and response interceptors
-     * Handles:
-     * - Token injection
-     * - Response error handling
-     * - Token refresh
      */
     private setupInterceptors(): void {
-        // Request interceptor
         this.axiosInstance.interceptors.request.use(
             (config) => {
                 const token = localStorage.getItem('token');
@@ -60,7 +55,6 @@ export class ApiClient {
             }
         );
 
-        // Response interceptor
         this.axiosInstance.interceptors.response.use(
             (response) => response,
             async (error: AxiosError) => {
@@ -72,9 +66,6 @@ export class ApiClient {
         );
     }
 
-    /**
-     * Handle expired token by refreshing or logging out
-     */
     private async handleTokenExpiration(): Promise<void> {
         const refreshToken = localStorage.getItem('refreshToken');
         if (refreshToken) {
@@ -89,9 +80,6 @@ export class ApiClient {
         this.handleLogout();
     }
 
-    /**
-     * Clear auth tokens and redirect to login
-     */
     private handleLogout(): void {
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
@@ -101,16 +89,16 @@ export class ApiClient {
     /**
      * Make GET request with caching
      */
-    public async get<T>(url: string, cacheDuration?: number): Promise<T> {
-        const cacheKey = url;
+    public async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+        const cacheKey = url + JSON.stringify(config?.params || {});
         const cachedData = this.cache.get(cacheKey);
         
-        if (cachedData && Date.now() - cachedData.timestamp < (cacheDuration || this.CACHE_DURATION)) {
+        if (cachedData && Date.now() - cachedData.timestamp < this.CACHE_DURATION) {
             return cachedData.data;
         }
 
         try {
-            const response = await this.axiosInstance.get<T>(url);
+            const response = await this.axiosInstance.get<T>(url, config);
             this.cache.set(cacheKey, { data: response.data, timestamp: Date.now() });
             return response.data;
         } catch (error) {
@@ -121,9 +109,9 @@ export class ApiClient {
     /**
      * Make POST request
      */
-    public async post<T>(url: string, data: any): Promise<T> {
+    public async post<T>(url: string, data: any, config?: AxiosRequestConfig): Promise<T> {
         try {
-            const response = await this.axiosInstance.post<T>(url, data);
+            const response = await this.axiosInstance.post<T>(url, data, config);
             return response.data;
         } catch (error) {
             throw ErrorHandler.handle(error);
@@ -133,9 +121,9 @@ export class ApiClient {
     /**
      * Make PUT request
      */
-    public async put<T>(url: string, data: any): Promise<T> {
+    public async put<T>(url: string, data: any, config?: AxiosRequestConfig): Promise<T> {
         try {
-            const response = await this.axiosInstance.put<T>(url, data);
+            const response = await this.axiosInstance.put<T>(url, data, config);
             return response.data;
         } catch (error) {
             throw ErrorHandler.handle(error);
@@ -143,11 +131,31 @@ export class ApiClient {
     }
 
     /**
+     * Make PATCH request
+     */
+    public async patch<T>(url: string, data: any, config?: AxiosRequestConfig): Promise<T> {
+        try {
+            const response = await this.axiosInstance.patch<T>(url, data, config);
+            return response.data;
+        } catch (error) {
+            throw ErrorHandler.handle(error);
+        }
+    }
+
+    /**
+     * Clear the request cache
+     * Useful for testing and when user logs out
+     */
+    public clearCache(): void {
+        this.cache.clear();
+    }
+
+    /**
      * Make DELETE request
      */
-    public async delete<T>(url: string): Promise<T> {
+    public async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
         try {
-            const response = await this.axiosInstance.delete<T>(url);
+            const response = await this.axiosInstance.delete<T>(url, config);
             return response.data;
         } catch (error) {
             throw ErrorHandler.handle(error);
