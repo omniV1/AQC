@@ -1,34 +1,38 @@
 import { ApiClient } from '../api/apiClient';
+import { format } from 'date-fns';
 import {
     Appointment,
     CreateAppointmentRequest,
+    UpdateAppointmentRequest,
     PaginatedResponse,
     QueryParams,
     ProviderAvailability,
     UpdateAvailabilityRequest
 } from '../types/api';
 
+export interface Provider {
+    id: number;
+    firstName: string;
+    lastName: string;
+    role: string;
+}
+
 /**
  * Service for handling appointment and availability related operations
  */
 export class AppointmentService {
-    private static _instance: AppointmentService | null = null;
-    private readonly api: ApiClient;
-    private readonly APPOINTMENT_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+    private static instance: AppointmentService;
+    private apiClient: ApiClient;
 
     private constructor() {
-        this.api = ApiClient.getInstance();
+        this.apiClient = ApiClient.getInstance();
     }
 
     public static getInstance(): AppointmentService {
-        if (!AppointmentService._instance) {
-            AppointmentService._instance = new AppointmentService();
+        if (!AppointmentService.instance) {
+            AppointmentService.instance = new AppointmentService();
         }
-        return AppointmentService._instance;
-    }
-
-    public static clearInstance(): void {
-        AppointmentService._instance = null;
+        return AppointmentService.instance;
     }
 
     /**
@@ -37,7 +41,7 @@ export class AppointmentService {
      * @returns Created appointment
      */
     public async createAppointment(request: CreateAppointmentRequest): Promise<Appointment> {
-        return this.api.post<Appointment>('/appointments', request);
+        return this.apiClient.post<Appointment>('/appointments', request);
     }
 
     /**
@@ -46,35 +50,35 @@ export class AppointmentService {
      * @returns Appointment details
      */
     public async getAppointment(id: number): Promise<Appointment> {
-        return this.api.get<Appointment>(`/appointments/${id}`, this.APPOINTMENT_CACHE_DURATION);
+        return this.apiClient.get<Appointment>(`/appointments/${id}`);
     }
 
     /**
      * Update appointment details
      * @param id - Appointment ID
-     * @param updates - Partial appointment updates
+     * @param request - Partial appointment updates
      * @returns Updated appointment
      */
-    public async updateAppointment(id: number, updates: Partial<Appointment>): Promise<Appointment> {
-        return this.api.put<Appointment>(`/appointments/${id}`, updates);
+    public async updateAppointment(id: number, request: UpdateAppointmentRequest): Promise<Appointment> {
+        return this.apiClient.patch<Appointment>(`/appointments/${id}`, request);
     }
 
     /**
      * Cancel an appointment
      * @param id - Appointment ID
-     * @param reason - Cancellation reason
+     * @returns void
      */
-    public async cancelAppointment(id: number, reason: string): Promise<void> {
-        await this.api.post(`/appointments/${id}/cancel`, { reason });
+    public async cancelAppointment(id: number): Promise<void> {
+        await this.apiClient.patch(`/appointments/${id}`, { status: 'CANCELLED' });
     }
 
     /**
      * Complete an appointment
      * @param id - Appointment ID
-     * @param notes - Session notes
+     * @returns void
      */
-    public async completeAppointment(id: number, notes?: string): Promise<void> {
-        await this.api.post(`/appointments/${id}/complete`, { notes });
+    public async completeAppointment(id: number): Promise<void> {
+        await this.apiClient.patch(`/appointments/${id}`, { status: 'COMPLETED' });
     }
 
     /**
@@ -84,7 +88,7 @@ export class AppointmentService {
      */
     public async getMyAppointments(params: QueryParams): Promise<PaginatedResponse<Appointment>> {
         const queryString = this.buildQueryString(params);
-        return this.api.get<PaginatedResponse<Appointment>>(`/appointments/me${queryString}`);
+        return this.apiClient.get<PaginatedResponse<Appointment>>(`/appointments/me${queryString}`);
     }
 
     /**
@@ -93,7 +97,7 @@ export class AppointmentService {
      * @returns List of upcoming appointments
      */
     public async getUpcomingAppointments(limit: number = 5): Promise<Appointment[]> {
-        return this.api.get<Appointment[]>(`/appointments/upcoming?limit=${limit}`);
+        return this.apiClient.get<Appointment[]>(`/appointments/upcoming?limit=${limit}`);
     }
 
     /**
@@ -108,8 +112,15 @@ export class AppointmentService {
         startTime: string,
         endTime: string
     ): Promise<boolean> {
-        const response = await this.api.get<{ available: boolean }>(
-            `/appointments/check-availability?providerId=${providerId}&startTime=${startTime}&endTime=${endTime}`
+        const response = await this.apiClient.get<{ available: boolean }>(
+            `/appointments/check-availability`,
+            {
+                params: {
+                    providerId,
+                    startTime,
+                    endTime
+                }
+            }
         );
         return response.available;
     }
@@ -120,7 +131,7 @@ export class AppointmentService {
      * @returns List of availability slots
      */
     public async getProviderAvailability(providerId: number): Promise<ProviderAvailability[]> {
-        return this.api.get<ProviderAvailability[]>(`/providers/${providerId}/availability`);
+        return this.apiClient.get<ProviderAvailability[]>(`/providers/${providerId}/availability`);
     }
 
     /**
@@ -132,7 +143,7 @@ export class AppointmentService {
         providerId: number,
         availability: UpdateAvailabilityRequest
     ): Promise<ProviderAvailability> {
-        return this.api.put<ProviderAvailability>(
+        return this.apiClient.put<ProviderAvailability>(
             `/providers/${providerId}/availability`,
             availability
         );
@@ -148,7 +159,7 @@ export class AppointmentService {
         providerId: number,
         date: string
     ): Promise<{ startTime: string; endTime: string }[]> {
-        return this.api.get<{ startTime: string; endTime: string }[]>(
+        return this.apiClient.get<{ startTime: string; endTime: string }[]>(
             `/providers/${providerId}/available-slots?date=${date}`
         );
     }

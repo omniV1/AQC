@@ -1,25 +1,25 @@
 // User related types
 export interface User {
     id: number;
+    email: string;
     firstName: string;
     lastName: string;
-    email: string;
-    role: 'CLIENT' | 'PROVIDER' | 'ADMIN';
+    role: 'PROVIDER' | 'CLIENT' | 'ADMIN';
+    createdAt: string;
 }
 
 export interface UserProfile {
     id: number;
-    userId: number;
-    dueDate?: string;
-    birthDate?: string;
-    birthType?: 'VAGINAL' | 'C_SECTION' | 'OTHER';
-    feedingStyle?: 'BREAST' | 'BOTTLE' | 'MIXED' | 'OTHER';
-    birthLocation?: string;
-    supportSystem?: string;
-    concerns?: string;
-    goals?: string;
-    createdAt: string;
-    updatedAt: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    role: 'PROVIDER' | 'CLIENT' | 'ADMIN';
+    specialties?: string[];
+    bio?: string;
+    availability?: {
+        start: string;
+        end: string;
+    }[];
 }
 
 // Daily Check-in types
@@ -96,14 +96,70 @@ export interface LoginCredentials {
     password: string;
 }
 
-export interface RegisterData extends LoginCredentials {
+export interface RegisterData {
+    email: string;
     firstName: string;
     lastName: string;
-    dueDate?: string;
-    birthDate?: string;
+    password: string;
 }
 
 export interface AuthResponse {
-    token: string;
     user: User;
+    token: string;
+}
+
+export interface PaginatedResponse<T> {
+    content: T[];
+    totalElements: number;
+    totalPages: number;
+    size: number;
+    number: number;
+}
+
+export interface CreateProviderRequest {
+    email: string;
+    firstName: string;
+    lastName: string;
+    password: string;
+    specialties?: string[];
+    bio?: string;
+}
+
+export interface UpdateProviderRequest {
+    firstName?: string;
+    lastName?: string;
+    specialties?: string[];
+    bio?: string;
+    availability?: {
+        start: string;
+        end: string;
+    }[];
+}
+
+export interface Provider {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    specialties?: string[];
+    bio?: string;
+    availability?: {
+        start: string;
+        end: string;
+    }[];
+}
+
+export interface Appointment {
+    id: number;
+    provider: Provider;
+    client: {
+        id: number;
+        firstName: string;
+        lastName: string;
+    };
+    startTime: string;
+    endTime: string;
+    status: string;
+    location: string;
+    notes?: string;
 } 

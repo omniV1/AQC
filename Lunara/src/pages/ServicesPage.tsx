@@ -1,5 +1,5 @@
 import React from 'react';
-// import ServicesOverview from '../components/sections/ServicesOverview'; // Reuse the overview component
+import ServicesOverview from '../components/sections/ServicesOverview';
 
 interface ServiceFeature {
   name: string;
@@ -74,65 +74,56 @@ const detailedServices: ServiceFeature[] = [
 export default function ServicesPage(): JSX.Element {
   return (
     <div className="w-full bg-cream">
+      {/* Logo Section */}
+      <div className="max-w-2xl mx-auto px-6 pt-16 pb-8 text-center">
+        <img 
+          src="/images/logo.png"
+          alt="The Quiet Chapter Logo" 
+          className="w-64 mx-auto mb-6"
+        />
+        <h1 className="text-3xl md:text-4xl font-serif text-brown">
+          Our Services
+        </h1>
+      </div>
+
+      {/* Services Overview */}
+      <ServicesOverview />
+
+      {/* Detailed Services */}
       <div className="max-w-2xl mx-auto px-6 py-16">
-        {/* Logo Section */}
-        <div className="mb-16 text-center">
-          <img 
-            src="/images/logo.png"
-            alt="The Quiet Chapter Logo" 
-            className="w-64 mx-auto mb-6"
-          />
-          <h1 className="text-3xl md:text-4xl font-serif text-brown">
-            Our Services
-          </h1>
-        </div>
-
-        <div className="space-y-12">
-          {/* Services Overview */}
-          <section>
-            <p className="text-brown/90 text-center leading-relaxed">
-              As a DONA-certified postpartum doula, I offer gentle, in-home support to families 
-              in the West Valley area. My services are non-medical and rooted in compassion, 
-              experience, and a desire to make your fourth trimester journey easier and more 
-              peaceful.
+        {detailedServices.map((service) => (
+          <section key={service.name} className="space-y-4 border-b border-brown/10 pb-8 mb-8">
+            <h2 className="text-2xl font-serif text-brown">
+              {service.name}
+            </h2>
+            <p className="text-brown/90 leading-relaxed">
+              {service.details}
             </p>
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+              {service.features.map((feature) => (
+                <li key={feature} className="text-brown/80 flex items-start">
+                  <span className="text-purple mr-2">•</span>
+                  {feature}
+                </li>
+              ))}
+            </ul>
           </section>
+        ))}
 
-          {/* Detailed Services */}
-          {detailedServices.map((service) => (
-            <section key={service.name} className="space-y-4 border-b border-brown/10 pb-8">
-              <h2 className="text-2xl font-serif text-brown">
-                {service.name}
-              </h2>
-              <p className="text-brown/90 leading-relaxed">
-                {service.details}
-              </p>
-              <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
-                {service.features.map((feature) => (
-                  <li key={feature} className="text-brown/80 flex items-start">
-                    <span className="text-purple mr-2">•</span>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ))}
-
-          {/* Call to Action */}
-          <div className="text-center pt-8">
-            <h3 className="text-xl font-serif text-brown mb-4">
-              Ready to Discuss Your Needs?
-            </h3>
-            <p className="text-brown/80 mb-6">
-              Every family's journey is unique. Let's talk about how I can best support yours.
-            </p>
-            <a 
-              href="/contact" 
-              className="inline-block bg-purple hover:bg-purple/80 text-white font-medium py-2.5 px-8 rounded transition-colors duration-300"
-            >
-              Get in Touch
-            </a>
-          </div>
+        {/* Call to Action */}
+        <div className="text-center pt-8">
+          <h3 className="text-xl font-serif text-brown mb-4">
+            Ready to Discuss Your Needs?
+          </h3>
+          <p className="text-brown/80 mb-6">
+            Every family's journey is unique. Let's talk about how I can best support yours.
+          </p>
+          <a 
+            href="/contact" 
+            className="inline-block bg-purple hover:bg-purple/80 text-white font-medium py-2.5 px-8 rounded transition-colors duration-300"
+          >
+            Get in Touch
+          </a>
         </div>
       </div>
     </div>

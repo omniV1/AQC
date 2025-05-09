@@ -1,9 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, LoginCredentials, RegisterData } from '../types/models';
 import { AuthContextType } from '../types/auth';
-import { authService } from '../services/authService';
+import { AuthService } from '../services/authService';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const authService = AuthService.getInstance();
 
 export { AuthContext };
 

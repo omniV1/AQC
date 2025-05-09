@@ -34,6 +34,9 @@ export interface QueryParams {
     sortBy?: string;
     sortOrder?: 'asc' | 'desc';
     search?: string;
+    startDate?: string;
+    endDate?: string;
+    providerId?: number;
 }
 
 /**
@@ -90,37 +93,38 @@ export interface UserProfile {
  */
 export interface Appointment {
     id: number;
-    providerId: number;
     clientId: number;
+    providerId: number;
+    provider: Provider;
     startTime: string;
     endTime: string;
     status: 'SCHEDULED' | 'COMPLETED' | 'CANCELLED';
-    type: 'VIRTUAL' | 'IN_PERSON';
+    location: string;
     notes?: string;
-    location?: string;
-    createdAt: string;
-    updatedAt: string;
 }
 
 export interface CreateAppointmentRequest {
+    clientId: number;
     providerId: number;
     startTime: string;
     endTime: string;
-    type: 'VIRTUAL' | 'IN_PERSON';
+    location: string;
     notes?: string;
+}
+
+export interface UpdateAppointmentRequest {
+    status?: 'SCHEDULED' | 'COMPLETED' | 'CANCELLED';
     location?: string;
+    notes?: string;
 }
 
 /**
  * Provider availability types
  */
 export interface ProviderAvailability {
-    id: number;
-    providerId: number;
     dayOfWeek: number;
     startTime: string;
     endTime: string;
-    isAvailable: boolean;
 }
 
 export interface UpdateAvailabilityRequest {
@@ -146,4 +150,12 @@ export interface Message {
 export interface SendMessageRequest {
     recipientId: number;
     content: string;
+}
+
+export interface Provider {
+    id: number;
+    firstName: string;
+    lastName: string;
+    role: string;
+    specialties?: string[];
 } 

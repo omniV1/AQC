@@ -24,12 +24,7 @@ export default function AboutSection() {
             deserves to feel nurtured and supported in early parenthood.
           </p>
 
-          {/* Decorative elements */}
-          <div className="flex justify-center space-x-4 mt-12">
-            <div className="w-16 h-1 bg-sage/40 rounded-full"></div>
-            <div className="w-16 h-1 bg-sage/40 rounded-full"></div>
-            <div className="w-16 h-1 bg-sage/40 rounded-full"></div>
-          </div>
+          
         </div>
       </div>
     </section>

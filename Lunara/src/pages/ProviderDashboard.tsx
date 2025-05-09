@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User } from '../types/user';
 import { CreateClientRequest } from '../types/provider';
-import { authService } from '../services/authService';
-import { userService } from '../services/userService';
+import { AuthService } from '../services/authService';
+import { UserService } from '../services/userService';
 import { ClientManagementCenter } from '../components/dashboard/ClientManagementCenter';
 import { JourneyManagement } from '../components/dashboard/JourneyManagement';
 import { CommunicationHub } from '../components/dashboard/CommunicationHub';
@@ -15,6 +15,9 @@ const ProviderDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const authService = AuthService.getInstance();
+  const userService = UserService.getInstance();
 
   console.log('ProviderDashboard Debug:', {
     activeTab,

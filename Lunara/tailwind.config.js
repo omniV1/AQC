@@ -14,6 +14,7 @@ module.exports = {
         'forest-green': '#4A5D4C',
         'olive': '#8B8356',
         'purple': '#9D98B5',
+        'soft-rose': '#F8E5E5',
         'brown': {
           DEFAULT: '#6B4D37',
           dark: '#5A3E2E',
@@ -21,9 +22,10 @@ module.exports = {
         }
       },
       fontFamily: {
-        'sans': ['Lato', 'system-ui', 'sans-serif'],
+        'sans': ['Atkinson Hyperlegible', 'system-ui', 'sans-serif'],
         'serif': ['Lora', 'serif'],
-        'heading': ['Playfair Display', 'serif']
+        'heading': ['Playfair Display', 'serif'],
+        'body': ['Atkinson Hyperlegible', 'system-ui', 'sans-serif']
       },
       backgroundImage: {
         'hero-pattern': "url('/images/leaf-pattern.png')",

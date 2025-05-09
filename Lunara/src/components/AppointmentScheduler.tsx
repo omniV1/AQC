@@ -4,6 +4,7 @@ import { Calendar } from './Calendar';
 import { useAuth } from '../hooks/useAuth';
 import { supportSessionService } from '../services/supportSessionService';
 import { SupportSessionType } from '../types/models';
+import { ApiClient } from '../api/apiClient';
 
 interface ProviderAvailability {
   dayOfWeek: number;
@@ -32,26 +33,45 @@ export const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({ onSc
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
+  const apiClient = ApiClient.getInstance();
 
   useEffect(() => {
-    // Fetch providers
-    fetch('http://localhost:8081/api/v1/users/providers')
-      .then(res => res.json())
-      .then(data => setProviders(data))
-      .catch(err => setError('Failed to load providers'));
+    const fetchProviders = async () => {
+      try {
+        const data = await apiClient.get<Provider[]>('/providers');
+        setProviders(data);
+      } catch (err) {
+        setError('Failed to load providers');
+      }
+    };
+
+    fetchProviders();
   }, []);
 
   useEffect(() => {
-    if (selectedProvider && selectedDate) {
-      const startDate = setHours(selectedDate, 0);
-      const endDate = setHours(addHours(selectedDate, 23), 59);
+    const fetchAvailability = async () => {
+      if (selectedProvider && selectedDate) {
+        try {
+          const startDate = setHours(selectedDate, 0);
+          const endDate = setHours(addHours(selectedDate, 23), 59);
 
-      // Fetch provider availability from the API
-      fetch(`${import.meta.env.VITE_API_URL}/providers/${selectedProvider.id}/availability?start=${format(startDate, "yyyy-MM-dd'T'HH:mm:ss")}&end=${format(endDate, "yyyy-MM-dd'T'HH:mm:ss")}`)
-        .then(res => res.json())
-        .then((data: ProviderAvailability[]) => setAvailability(data))
-        .catch(() => setError('Failed to load provider availability'));
-    }
+          const data = await apiClient.get<ProviderAvailability[]>(
+            `/providers/${selectedProvider.id}/availability`,
+            {
+              params: {
+                start: format(startDate, "yyyy-MM-dd'T'HH:mm:ss"),
+                end: format(endDate, "yyyy-MM-dd'T'HH:mm:ss")
+              }
+            }
+          );
+          setAvailability(data);
+        } catch (err) {
+          setError('Failed to load provider availability');
+        }
+      }
+    };
+
+    fetchAvailability();
   }, [selectedProvider, selectedDate]);
 
   const handleDateSelect = (date: Date) => {
@@ -71,7 +91,7 @@ export const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({ onSc
       const startTime = setMinutes(setHours(selectedDate, hours), minutes);
       const endTime = addHours(startTime, 1); // 1-hour sessions
 
-      await supportSessionService.createSession({
+      await apiClient.post('/appointments', {
         clientId: user.id,
         providerId: selectedProvider.id,
         startTime: format(startTime, "yyyy-MM-dd'T'HH:mm:ss"),

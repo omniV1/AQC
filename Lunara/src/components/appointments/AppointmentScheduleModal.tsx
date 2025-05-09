@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { Appointment, Provider, CreateAppointmentRequest } from '../../types/api';
+import { AppointmentService } from '../../services/appointmentService';
 
 interface SupportProvider {
   id: number;
@@ -16,6 +18,12 @@ interface SupportSessionScheduleModalProps {
   initialEndTime?: Date;
 }
 
+interface CalendarEvent extends Omit<Appointment, 'startTime' | 'endTime'> {
+  title: string;
+  start: Date;
+  end: Date;
+}
+
 interface CreateSupportSessionRequest {
   providerId: number;
   startTime: string;
@@ -24,20 +32,30 @@ interface CreateSupportSessionRequest {
   location: string;
 }
 
-export const AppointmentScheduleModal: React.FC<SupportSessionScheduleModalProps> = ({
+interface AppointmentScheduleModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  selectedSlot: { start: Date; end: Date } | null;
+  selectedEvent: CalendarEvent | null;
+  providers: Provider[];
+}
+
+export const AppointmentScheduleModal: React.FC<AppointmentScheduleModalProps> = ({
   isOpen,
   onClose,
-  onSchedule,
-  providers,
-  initialStartTime,
-  initialEndTime
+  selectedSlot,
+  selectedEvent,
+  providers
 }) => {
-  const [formData, setFormData] = useState<CreateSupportSessionRequest>({
-    providerId: 0,
-    startTime: initialStartTime ? initialStartTime.toISOString().slice(0, 16) : '',
-    endTime: initialEndTime ? initialEndTime.toISOString().slice(0, 16) : '',
-    location: '',
-    notes: ''
+  const { user } = useAuth();
+  const appointmentService = AppointmentService.getInstance();
+  const [formData, setFormData] = useState<CreateAppointmentRequest>({
+    clientId: user?.id || 0,
+    providerId: providers.length > 0 ? providers[0].id : 0,
+    startTime: selectedSlot ? selectedSlot.start.toISOString() : '',
+    endTime: selectedSlot ? selectedSlot.end.toISOString() : '',
+    location: selectedEvent?.location || '',
+    notes: selectedEvent?.notes || ''
   });
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,11 +65,11 @@ export const AppointmentScheduleModal: React.FC<SupportSessionScheduleModalProps
       setFormData(prev => ({
         ...prev,
         providerId: providers[0].id,
-        startTime: initialStartTime ? initialStartTime.toISOString().slice(0, 16) : prev.startTime,
-        endTime: initialEndTime ? initialEndTime.toISOString().slice(0, 16) : prev.endTime
+        startTime: selectedSlot ? selectedSlot.start.toISOString() : prev.startTime,
+        endTime: selectedSlot ? selectedSlot.end.toISOString() : prev.endTime
       }));
     }
-  }, [isOpen, providers, initialStartTime, initialEndTime]);
+  }, [isOpen, providers, selectedSlot]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,7 +77,7 @@ export const AppointmentScheduleModal: React.FC<SupportSessionScheduleModalProps
     setIsSubmitting(true);
 
     try {
-      await onSchedule(formData);
+      await appointmentService.createAppointment(formData);
       onClose();
     } catch (err) {
       setError('Failed to schedule support session. Please try again.');

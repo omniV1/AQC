@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Calendar, dateFnsLocalizer, View } from 'react-big-calendar';
 import { format, addMonths, subMonths, addWeeks, subWeeks, parseISO, isBefore, startOfMonth, setHours, setMinutes, isWithinInterval } from 'date-fns';
 import { parse } from 'date-fns';
@@ -6,31 +6,23 @@ import { startOfWeek } from 'date-fns';
 import { getDay } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import { useAuth } from '../../contexts/AuthContext';
+import { AppointmentService } from '../../services/appointmentService';
+import { ProviderService } from '../../services/providerService';
+import { Appointment, Provider } from '../../types/api';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-interface SupportProvider {
-  id: number;
-  firstName: string;
-  lastName: string;
-}
-
-interface CalendarEvent {
-  id: number;
+interface CalendarEvent extends Omit<Appointment, 'startTime' | 'endTime'> {
   title: string;
   start: Date;
   end: Date;
-  provider: SupportProvider;
-  status: string;
-  location: string;
-  notes?: string;
 }
 
 interface AppointmentCalendarProps {
   sessions: CalendarEvent[];
   onSelectSlot: (slotInfo: { start: Date; end: Date }) => void;
   onSelectEvent: (event: CalendarEvent) => void;
-  providers: SupportProvider[];
-  selectedProvider?: number;
+  providers: Provider[];
+  selectedProvider: number | undefined;
   onProviderChange: (providerId: number) => void;
 }
 
@@ -72,19 +64,70 @@ export const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
   const { user } = useAuth();
   const [view, setView] = useState<'month' | 'week' | 'day'>('week');
   const [currentDate, setCurrentDate] = useState(() => {
-    // Initialize with user's creation date if available, otherwise use current date
     const date = user?.createdAt ? parseISO(user.createdAt) : new Date();
-    // Set time to the start of the current hour
     return setMinutes(setHours(date, date.getHours()), 0);
   });
+  const [events, setEvents] = useState<CalendarEvent[]>(sessions);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const creationDate = user?.createdAt ? parseISO(user.createdAt) : new Date();
+  const appointmentService = AppointmentService.getInstance();
+  const providerService = ProviderService.getInstance();
+
+  const fetchAppointments = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const startDate = view === 'month' 
+        ? startOfMonth(currentDate)
+        : subWeeks(currentDate, 1);
+      const endDate = view === 'month'
+        ? addMonths(startDate, 1)
+        : addWeeks(currentDate, 1);
+
+      const response = await appointmentService.getMyAppointments({
+        startDate: format(startDate, "yyyy-MM-dd'T'HH:mm:ss"),
+        endDate: format(endDate, "yyyy-MM-dd'T'HH:mm:ss"),
+        providerId: selectedProvider
+      });
+      
+      const calendarEvents = response.data.map((appointment: Appointment) => ({
+        ...appointment,
+        title: `Session with ${appointment.provider.firstName} ${appointment.provider.lastName}`,
+        start: parseISO(appointment.startTime),
+        end: parseISO(appointment.endTime),
+      }));
+
+      setEvents(calendarEvents);
+    } catch (err) {
+      setError('Failed to load appointments');
+    } finally {
+      setLoading(false);
+    }
+  }, [view, currentDate, selectedProvider]);
+
+  const fetchProviders = useCallback(async () => {
+    try {
+      const data = await providerService.getProviders();
+      onProviderChange(data[0].id);
+    } catch (err) {
+      setError('Failed to load providers');
+    }
+  }, [onProviderChange]);
+
+  useEffect(() => {
+    fetchProviders();
+  }, [fetchProviders]);
+
+  useEffect(() => {
+    fetchAppointments();
+  }, [fetchAppointments, selectedProvider]);
 
   const handleNavigate = useCallback((action: 'PREV' | 'NEXT' | 'TODAY' | Date) => {
     if (action === 'PREV') {
       const newDate = view === 'month' ? subMonths(currentDate, 1) : subWeeks(currentDate, 1);
       // Only update if new date is not before creation date
-      if (!isBefore(startOfMonth(newDate), startOfMonth(creationDate))) {
+      if (!isBefore(startOfMonth(newDate), startOfMonth(new Date(user?.createdAt || '')))) {
         setCurrentDate(newDate);
       }
     } else if (action === 'NEXT') {
@@ -94,12 +137,12 @@ export const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
       setCurrentDate(setMinutes(setHours(now, now.getHours()), 0));
     } else {
       // Only update if selected date is not before creation date
-      if (!isBefore(startOfMonth(action), startOfMonth(creationDate))) {
+      if (!isBefore(startOfMonth(action), startOfMonth(new Date(user?.createdAt || '')))) {
         // Ensure the time is set to the start of an hour
         setCurrentDate(setMinutes(action, 0));
       }
     }
-  }, [view, currentDate, creationDate]);
+  }, [view, currentDate, user?.createdAt]);
 
   const handleSelectSlot = (slotInfo: { start: Date; end: Date }) => {
     // Ensure selected times are on the hour
@@ -140,9 +183,10 @@ export const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
     value: i,
     label: format(new Date(2000, i, 1), 'MMMM')
   })).filter(month => {
-    // If it's the creation year, only show months from creation date onwards
-    if (currentDate.getFullYear() === startYear) {
-      return month.value >= creationDate.getMonth();
+    const userCreatedAt = user?.createdAt ? parseISO(user.createdAt) : null;
+    if (!userCreatedAt) return true;
+    if (currentDate.getFullYear() === userCreatedAt.getFullYear()) {
+      return month.value >= userCreatedAt.getMonth();
     }
     return true;
   });
@@ -178,7 +222,7 @@ export const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
         ? subMonths(currentDate, 1) 
         : subWeeks(currentDate, 1)
     ),
-    startOfMonth(creationDate)
+    startOfMonth(new Date(user?.createdAt || ''))
   );
 
   // Format times to show only hours
@@ -205,6 +249,12 @@ export const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
 
   return (
     <div className="space-y-4">
+      {error && (
+        <div className="p-3 bg-red-50 border border-red-100 rounded text-red-700 text-sm">
+          {error}
+        </div>
+      )}
+
       <div className="flex justify-between items-center">
         <div className="flex space-x-2">
           <select
@@ -252,40 +302,6 @@ export const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
             Today
           </button>
 
-          <div className="flex items-center space-x-2">
-            <select
-              value={currentDate.getMonth()}
-              onChange={(e) => {
-                const newDate = new Date(currentDate);
-                newDate.setMonth(parseInt(e.target.value));
-                handleNavigate(newDate);
-              }}
-              className="px-3 py-2 border border-brown/20 rounded bg-white/50 focus:outline-none focus:ring-1 focus:ring-purple"
-            >
-              {months.map(month => (
-                <option key={month.value} value={month.value}>
-                  {month.label}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={currentDate.getFullYear()}
-              onChange={(e) => {
-                const newDate = new Date(currentDate);
-                newDate.setFullYear(parseInt(e.target.value));
-                handleNavigate(newDate);
-              }}
-              className="px-3 py-2 border border-brown/20 rounded bg-white/50 focus:outline-none focus:ring-1 focus:ring-purple"
-            >
-              {years.map(year => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </div>
-
           <button
             onClick={() => handleNavigate('NEXT')}
             className="p-2 text-brown-dark hover:text-purple transition-colors"
@@ -296,52 +312,29 @@ export const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
         </div>
       </div>
 
-      <div className="relative">
-        <div className="h-[600px] bg-white rounded-lg shadow">
-          <Calendar
-            localizer={localizer}
-            events={sessions}
-            startAccessor="start"
-            endAccessor="end"
-            view={view}
-            date={currentDate}
-            onNavigate={handleNavigate}
-            onView={(newView: View) => setView(newView as 'month' | 'week' | 'day')}
-            selectable
-            onSelectSlot={handleSelectSlot}
-            onSelectEvent={onSelectEvent}
-            eventPropGetter={eventStyleGetter}
-            slotPropGetter={slotPropGetter}
-            tooltipAccessor={(event: CalendarEvent) => `${event.title}\nLocation: ${event.location}${event.notes ? `\nNotes: ${event.notes}` : ''}`}
-            defaultView="week"
-            step={60}
-            timeslots={1}
-            formats={formats}
-            dayLayoutAlgorithm="no-overlap"
-          />
+      {loading ? (
+        <div className="flex items-center justify-center h-[600px] bg-white/50 rounded">
+          <div className="text-brown-dark">Loading appointments...</div>
         </div>
-
-        {/* After-hours info banner */}
-        <div className="mt-4 p-4 bg-purple/10 rounded-lg text-sm text-brown-dark">
-          <h4 className="font-medium mb-2">24/7 Support Information</h4>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <h5 className="font-medium text-purple mb-1">Business Hours (9 AM - 5 PM)</h5>
-              <p>Full availability for scheduled support sessions</p>
-            </div>
-            <div>
-              <h5 className="font-medium text-purple mb-1">After Hours</h5>
-              <p>Limited availability. For emergencies, contact healthcare providers or 911.</p>
-              <p className="mt-1">For non-emergencies, reach out via:</p>
-              <ul className="list-disc list-inside ml-2 mt-1">
-                <li>Discord</li>
-                <li>Social Media</li>
-                <li>Email</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+      ) : (
+        <Calendar
+          localizer={localizer}
+          events={events}
+          startAccessor="start"
+          endAccessor="end"
+          style={{ height: 600 }}
+          view={view}
+          onView={(newView) => setView(newView as 'month' | 'week' | 'day')}
+          onNavigate={handleNavigate}
+          onSelectSlot={handleSelectSlot}
+          onSelectEvent={onSelectEvent}
+          selectable
+          eventPropGetter={eventStyleGetter}
+          slotPropGetter={slotPropGetter}
+          formats={formats}
+          className="bg-white/50 rounded shadow-sm"
+        />
+      )}
     </div>
   );
 }; 
