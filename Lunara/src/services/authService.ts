@@ -47,7 +47,7 @@ export class AuthService {
      * @returns Login response with tokens and user info
      */
     public async clientLogin(credentials: LoginRequest): Promise<LoginResponse> {
-        const response = await this.api.post<LoginResponse>('/auth/client/login', credentials);
+        const response = await this.api.post<LoginResponse>('/auth/authenticate', credentials);
         this.handleAuthResponse(response);
         return response;
     }
