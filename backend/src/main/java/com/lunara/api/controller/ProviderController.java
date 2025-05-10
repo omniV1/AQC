@@ -3,6 +3,7 @@ package com.lunara.api.controller;
 import com.lunara.api.dto.CreateProviderRequest;
 import com.lunara.api.dto.ProviderDTO;
 import com.lunara.api.user.Provider;
+import com.lunara.api.user.Role;
 import com.lunara.api.service.ProviderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +24,10 @@ public class ProviderController {
     @PostMapping
     public ResponseEntity<ProviderDTO> createProvider(@Valid @RequestBody CreateProviderRequest request) {
         Provider provider = new Provider();
-        provider.setName(request.getName());
+        provider.setFirstName(request.getName());
         provider.setEmail(request.getEmail());
         provider.setPassword(request.getPassword());
+        provider.setRole(Role.PROVIDER);
         
         Provider savedProvider = providerService.createProvider(provider);
         return ResponseEntity.ok(toDTO(savedProvider));
@@ -33,7 +35,7 @@ public class ProviderController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProviderDTO> getProvider(@PathVariable UUID id) {
-        return providerService.getProviderById(id)
+        return providerService.findById(id)
                 .map(this::toDTO)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -41,7 +43,7 @@ public class ProviderController {
 
     @GetMapping
     public ResponseEntity<List<ProviderDTO>> getAllProviders() {
-        List<ProviderDTO> providers = providerService.getAllProviders().stream()
+        List<ProviderDTO> providers = providerService.findAll().stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(providers);
@@ -49,9 +51,9 @@ public class ProviderController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ProviderDTO> updateProvider(@PathVariable UUID id, @Valid @RequestBody CreateProviderRequest request) {
-        return providerService.getProviderById(id)
+        return providerService.findById(id)
                 .map(provider -> {
-                    provider.setName(request.getName());
+                    provider.setFirstName(request.getName());
                     provider.setEmail(request.getEmail());
                     if (request.getPassword() != null && !request.getPassword().isEmpty()) {
                         provider.setPassword(request.getPassword());
@@ -70,7 +72,7 @@ public class ProviderController {
     private ProviderDTO toDTO(Provider provider) {
         ProviderDTO dto = new ProviderDTO();
         dto.setId(provider.getId());
-        dto.setName(provider.getName());
+        dto.setName(provider.getFirstName());
         dto.setEmail(provider.getEmail());
         dto.setRole(provider.getRole());
         dto.setLastLogin(provider.getLastLogin());

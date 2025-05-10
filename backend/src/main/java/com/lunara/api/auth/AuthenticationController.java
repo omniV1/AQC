@@ -33,7 +33,6 @@ import org.springframework.context.annotation.Profile;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"}, allowCredentials = "true")
 @Tag(name = "Authentication", description = "Authentication management APIs")
 public class AuthenticationController {
 
@@ -175,7 +174,15 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> authenticate(
             @Valid @RequestBody AuthenticationRequest request
     ) {
-        return ResponseEntity.ok(service.authenticate(request));
+        log.info("Received authentication request for email: {}", request.getEmail());
+        try {
+            AuthenticationResponse response = service.authenticate(request);
+            log.info("Authentication successful for user: {}", request.getEmail());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("Authentication failed for user: {}", request.getEmail(), e);
+            throw e;
+        }
     }
 
     @GetMapping("/registration-code")

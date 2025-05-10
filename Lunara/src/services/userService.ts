@@ -31,7 +31,7 @@ export class UserService {
      * @returns User profile
      */
     public async getCurrentProfile(): Promise<UserProfile> {
-        return this.api.get<UserProfile>('/users/me');
+        return this.api.get<UserProfile>('/api/users/me');
     }
 
     /**
@@ -40,7 +40,7 @@ export class UserService {
      * @returns Updated user profile
      */
     public async updateProfile(profile: Partial<UserProfile>): Promise<UserProfile> {
-        return this.api.put<UserProfile>('/users/me', profile);
+        return this.api.put<UserProfile>('/api/users/me', profile);
     }
 
     /**
@@ -49,7 +49,7 @@ export class UserService {
      * @returns User profile
      */
     public async getUserById(id: number): Promise<UserProfile> {
-        return this.api.get<UserProfile>(`/users/${id}`);
+        return this.api.get<UserProfile>(`/api/users/${id}`);
     }
 
     /**
@@ -59,7 +59,7 @@ export class UserService {
      */
     public async getUsers(params: QueryParams): Promise<PaginatedResponse<UserProfile>> {
         const queryString = this.buildQueryString(params);
-        return this.api.get<PaginatedResponse<UserProfile>>(`/users${queryString}`);
+        return this.api.get<PaginatedResponse<UserProfile>>(`/api/users${queryString}`);
     }
 
     /**
@@ -69,7 +69,7 @@ export class UserService {
      */
     public async getProviders(params: QueryParams): Promise<PaginatedResponse<UserProfile>> {
         const queryString = this.buildQueryString(params);
-        return this.api.get<PaginatedResponse<UserProfile>>(`/users/providers${queryString}`);
+        return this.api.get<PaginatedResponse<UserProfile>>(`/api/users/providers${queryString}`);
     }
 
     /**

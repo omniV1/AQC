@@ -137,8 +137,8 @@ public class AuthenticationService {
 
         var profile = UserProfile.builder()
                 .user(client)
-                .dueDate(request.getDueDate())
-                .birthDate(request.getBirthDate())
+                .dueDate(request.getDueDate() != null ? request.getDueDate().atStartOfDay() : null)
+                .birthDate(request.getBirthDate() != null ? request.getBirthDate().atStartOfDay() : null)
                 .birthType(request.getBirthType())
                 .feedingStyle(request.getFeedingStyle())
                 .birthLocation(request.getBirthLocation())

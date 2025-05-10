@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -22,8 +22,8 @@ public class UserProfile {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private LocalDate dueDate;
-    private LocalDate birthDate;
+    private LocalDateTime dueDate;
+    private LocalDateTime birthDate;
     
     @Enumerated(EnumType.STRING)
     private BirthType birthType;
@@ -37,19 +37,19 @@ public class UserProfile {
     private String goals;
     
     @Column(name = "created_at")
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
     
     @Column(name = "updated_at")
-    private LocalDate updatedAt;
+    private LocalDateTime updatedAt;
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDate.now();
-        updatedAt = LocalDate.now();
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = LocalDate.now();
+        updatedAt = LocalDateTime.now();
     }
 } 

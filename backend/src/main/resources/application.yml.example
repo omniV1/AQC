@@ -3,8 +3,8 @@ spring:
     name: lunara-api
   datasource:
     url: jdbc:postgresql://localhost:5432/${POSTGRES_DB:lunara_db}
-    username: ${POSTGRES_USER:postgres}
-    password: ${POSTGRES_PASSWORD:changeme}
+    username: ${POSTGRES_USER:Owen}
+    password: ${POSTGRES_PASSWORD:omni}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -60,7 +60,7 @@ springdoc:
 
 lunara:
   security:
-    provider-registration-code: ${LUNARA_PROVIDER_REGISTRATION_CODE:changeme}
+    provider-registration-code: ${LUNARA_PROVIDER_REGISTRATION_CODE:LUNARA2024}
     jwt:
       secret-key: ${LUNARA_SECURITY_JWT_SECRET_KEY:changeme}
       expiration: 86400000 # 24 hours in milliseconds 
