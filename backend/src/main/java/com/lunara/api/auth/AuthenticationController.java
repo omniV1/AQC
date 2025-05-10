@@ -24,6 +24,7 @@ import org.springframework.validation.FieldError;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * Controller handling user authentication operations.
@@ -189,6 +190,26 @@ public class AuthenticationController {
     @Profile("dev")  // Only available in development
     public ResponseEntity<String> getRegistrationCode() {
         return ResponseEntity.ok(service.getRegistrationCode());
+    }
+
+    @Operation(
+        summary = "Logout user",
+        description = "Invalidates the user's session and clears authentication"
+    )
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "Successfully logged out",
+            content = @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE
+            )
+        )
+    })
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout() {
+        // Clear the security context
+        SecurityContextHolder.clearContext();
+        return ResponseEntity.ok().build();
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
