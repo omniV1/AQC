@@ -1,4 +1,3 @@
-<div align="center">
 
 # Grand Canyon University  
 **College of Science, Engineering and Technology**  
@@ -24,13 +23,13 @@ Instructor: Amr Elchouemi
 **Date:**  
 *May 11, 2025*
 
-</div>
 
 ## Postpartum Doula Support Platform Project Proposal
 
 *May 2025*
 
 ---
+
 \newpage
 ## Table of Contents
 
@@ -47,6 +46,7 @@ Instructor: Amr Elchouemi
 - [User Experience](#user-experience)
 
 ---
+
 \newpage
 ## Executive Summary
 
@@ -57,6 +57,7 @@ Our vision is to develop a platform that feels less like traditional software an
 As software development students at Grand Canyon University, we're excited to build this platform as our senior capstone project. Our work will unfold over seven months, culminating in a December 2025 launch. We'll blend modern technology with timeless care principles to create a sustainable, accessible digital extension of Sarah's nurturing presence in her clients' lives.
 
 ---
+
 \newpage
 ## Team Members & Responsibilities
 
