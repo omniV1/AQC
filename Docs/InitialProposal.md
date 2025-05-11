@@ -11,7 +11,7 @@ Grand Canyon University: Senior Project 1
 
 February 23, 2025
 
-Document Version 2.0
+Document Version 1.0
 
 ## Postpartum Doula Support Platform Project Proposal
 
