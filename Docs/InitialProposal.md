@@ -1,15 +1,14 @@
-
 # Grand Canyon University  
 **College of Science, Engineering and Technology**  
 **Software Development Capstone**
 
----
+----
 
 ## Capstone Proposal
 
 # **LUNARA: A Compassionate Companion for Postpartum Mothers**
 
----
+----
 
 **Prepared by:**  
 *Owen Lindsey, Andrew Mack, Carter Wright*  
@@ -18,7 +17,7 @@ Capstone Section: *CST-451*
 Instructor: Amr Elchouemi
 
 
----
+----
 
 **Date:**  
 *May 11, 2025*
@@ -28,9 +27,9 @@ Instructor: Amr Elchouemi
 
 *May 2025*
 
----
+----
 
-\newpage
+
 ## Table of Contents
 
 - [Executive Summary](#executive-summary)
@@ -45,9 +44,8 @@ Instructor: Amr Elchouemi
 - [Technical Vision](#technical-vision)
 - [User Experience](#user-experience)
 
----
+----
 
-\newpage
 ## Executive Summary
 
 "LUNARA" will transform the postpartum support experience through a thoughtfully designed digital platform for both new parents and doulas. By combining enchanting storybook-inspired aesthetics with intuitive, practical tools, we aim to create a digital sanctuary that nurtures families through their fourth trimester journey.
@@ -56,9 +54,8 @@ Our vision is to develop a platform that feels less like traditional software an
 
 As software development students at Grand Canyon University, we're excited to build this platform as our senior capstone project. Our work will unfold over seven months, culminating in a December 2025 launch. We'll blend modern technology with timeless care principles to create a sustainable, accessible digital extension of Sarah's nurturing presence in her clients' lives.
 
----
+----
 
-\newpage
 ## Team Members & Responsibilities
 
 As senior software development students at Grand Canyon University, we're committed to applying our education and skills to create a meaningful solution for Sarah and the families she serves.
@@ -71,8 +68,8 @@ As senior software development students at Grand Canyon University, we're commit
 
 Together, we bring complementary skills from our software development education and project experience. As we near the completion of our degrees, we're excited to apply our knowledge to create a meaningful real-world solution that will help Sarah build her doula practice and support the families she serves.
 
----
-\newpage
+----
+
 ## Team Coordination & Communication
 
 We believe in transparency, regular communication, and adaptability. We'll keep Sarah involved throughout the development process, providing regular opportunities for feedback and ensuring the final product truly meets her needs.
@@ -85,7 +82,7 @@ We embrace the Agile methodology, which means we'll develop the platform in iter
 * Prioritize features that deliver the most value first
 * Provide regular demonstrations of progress
 * Make informed decisions based on what we learn together
-\newpage
+
 ### Communication Rhythm
 
 We'll maintain clear and consistent communication throughout the project:
@@ -108,8 +105,8 @@ We'll utilize modern collaboration tools that provide transparency and maintain 
 
 **Documentation** will be maintained throughout the project, not just at the end, ensuring that knowledge about the system is preserved for future reference.
 
----
-\newpage
+----
+
 ## Software Description
 
 "LUNARA" will be a digital sanctuary for new parents in their fourth trimester, weaving together practical support tools with an enchanting storybook aesthetic. The platform will extend your nurturing presence into families' daily lives through thoughtfully designed features that prioritize emotional wellbeing, practical guidance, and holistic care.
@@ -130,7 +127,7 @@ When new parents log into their personalized portal, they'll enter a calming, be
 
 **Unique Daily Insights** through features like the "New Mother Horoscope" and "Baby Forecast" that combine astrological elements with developmental wisdom and gentle encouragement, adding a touch of magic to daily routines.
 
-\newpage
+
 ### Your Doula Dashboard
 
 As the heart of your practice, your administrative portal will be designed with efficiency and clarity in mind, allowing you to:
@@ -157,8 +154,8 @@ The visual and emotional experience of the platform will reflect the gentle tran
 
 **Responsive Design** that works beautifully on phones, tablets, and computers, acknowledging that new parents often have a baby in one arm and a device in the other.
 
----
-\newpage
+----
+
 ## Project Approach
 
 Our development philosophy centers on creating a platform that will evolve alongside Sarah's practice, beginning with a solid foundation of essential features and expanding thoughtfully over time. We recognize that postpartum care is a deeply personal field that requires flexibility and adaptation.
@@ -192,8 +189,8 @@ Following Agile principles means we'll develop these features iteratively, with 
 
 This approach ensures that what we build truly meets the needs of Sarah's practice and clients while allowing for discovery and refinement throughout the process.
 
----
-\newpage
+----
+
 ## Timeline
 
 Our journey together will unfold from May to December 2025, carefully paced to ensure quality development while moving efficiently toward the platform launch. Each phase builds upon the previous one, with regular opportunities for Sarah's input and course corrections.
@@ -234,8 +231,8 @@ The final months will be dedicated to implementing the AI features that provide 
 
 Throughout the entire timeline, our Agile approach means Sarah will see continuous progress through regular demonstrations, ensuring that what we build aligns with her vision and meets the needs of her practice.
 
----
-\newpage
+----
+
 ## Project Considerations
 
 Developing your platform requires thoughtful navigation of various considerations to ensure we create a solution that is not only beautiful and functional, but also responsible, secure, and sustainable for your practice.
@@ -260,8 +257,8 @@ Developing your platform requires thoughtful navigation of various consideration
 
 **Compliance Guidance**: While not subject to HIPAA, the platform will follow similar best practices for handling sensitive health information, positioning your practice as one that takes client privacy seriously.
 
----
-\newpage
+----
+
 ## Desired Goals
 
 Our shared vision for LUNARA extends beyond creating software—we aim to craft a digital extension of Sarah's nurturing presence that truly enhances the postpartum journey for families while supporting the growth of her practice.
@@ -292,8 +289,8 @@ We'll know we've succeeded when:
 
 **Technology Costs Remain Sustainable** for the practice, with AI features optimized to provide personalized experiences without excessive operational expenses.
 
----
-\newpage
+----
+
 ## Deliverables & Measurement
 
 Our project will culminate in a cohesive digital ecosystem that supports every aspect of Sarah's postpartum doula practice. Here we outline what we'll deliver and how we'll measure success.
@@ -330,8 +327,8 @@ To ensure we're creating a platform that truly serves Sarah and her clients, we'
 
 These metrics will help us refine the platform during development and provide Sarah with insights for ongoing improvement after launch.
 
----
-\newpage
+----
+
 ## Technical Vision
 
 Our technical approach focuses on creating a platform that combines beautiful aesthetics with reliable performance, security, and sustainability. We've carefully selected technologies that will provide the best foundation for your unique needs.
@@ -407,8 +404,10 @@ We'll host your platform on cloud infrastructure that balances performance, reli
 
 This technical foundation provides the perfect balance of current best practices and forward-thinking design, creating a platform that will serve your practice well both now and as you grow.
 
----
-\newpage
+----
+
+
+
 ## User Experience
 
 The essence of LUNARA lies in creating a digital space that feels like a natural extension of your nurturing presence—a place where new parents feel held, supported, and empowered during a transformative time in their lives.
@@ -447,6 +446,6 @@ Your experience using the platform will focus on efficiency and insight, helping
 
 Throughout both the client and doula experiences, we'll maintain a careful balance of beauty and function, ensuring the platform feels like a natural extension of your caring practice rather than a technological intervention.
 
----
+----
 
 *We look forward to bringing this vision to life in partnership with you, creating a platform that enhances the sacred journey of the fourth trimester for the families you serve.*
