@@ -1,17 +1,29 @@
-## AUTHORS
+<div align="center">
 
-| Name | Role | Department |
-|------|------|------------|
-| Carter Wright | Scrum Master | Development |
-| Rian Smart | Product Owner | Management |
-| Owen | Developer | Development |
-| Andrew Mack | Developer | Development |
+# Grand Canyon University  
+**College of Science, Engineering and Technology**  
+**Software Development Capstone**
 
-Grand Canyon University: Senior Project 1
+---
 
-February 23, 2025
+## Capstone Proposal
 
-Document Version 1.0
+# **LUNARA: A Compassionate Companion for Postpartum Mothers**
+
+---
+
+**Prepared by:**  
+*Your Full Name*  
+Bachelor of Science in Software Development  
+Capstone Section: *CST-451*  
+Instructor: *Instructor’s Full Name*
+
+---
+
+**Date:**  
+*May 11, 2025*
+
+</div>
 
 ## Postpartum Doula Support Platform Project Proposal
 
