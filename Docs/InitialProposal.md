@@ -1,3 +1,18 @@
+## AUTHORS
+
+| Name | Role | Department |
+|------|------|------------|
+| Carter Wright | Scrum Master | Development |
+| Rian Smart | Product Owner | Management |
+| Owen | Developer | Development |
+| Andrew Mack | Developer | Development |
+
+Grand Canyon University: Senior Project 1
+
+February 23, 2025
+
+Document Version 2.0
+
 ## Postpartum Doula Support Platform Project Proposal
 
 *May 2025*
