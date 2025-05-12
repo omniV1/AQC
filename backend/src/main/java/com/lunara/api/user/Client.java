@@ -8,6 +8,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 
@@ -34,6 +37,7 @@ public class Client extends User {
     private LocalDateTime dueDate;
 
     @Column(name = "preferences", columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
     private String preferences;
 
     @Enumerated(EnumType.STRING)

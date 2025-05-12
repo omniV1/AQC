@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CreateClientRequest } from '../../types/provider';
+import { CreateClientRequest, BirthType, FeedingStyle } from '../../types/provider';
 
 interface AddClientFormProps {
   onSubmit: (client: CreateClientRequest) => Promise<void>;
@@ -14,8 +14,8 @@ type FormData = {
   confirmPassword: string;
   dueDate: string;
   birthDate: string;
-  birthType: CreateClientRequest['birthType'];
-  feedingStyle: CreateClientRequest['feedingStyle'];
+  birthType: BirthType | undefined;
+  feedingStyle: FeedingStyle | undefined;
   birthLocation: string;
   supportSystem: string;
   concerns: string;
@@ -201,14 +201,11 @@ export const AddClientForm: React.FC<AddClientFormProps> = ({ onSubmit, onCancel
             className="mt-1 block w-full px-3 py-2 border border-warm-brown/20 rounded-md shadow-sm focus:outline-none focus:ring-sage focus:border-sage"
           >
             <option value="">Select birth type...</option>
-            <option value="VAGINAL">Vaginal</option>
-            <option value="C_SECTION">C-Section</option>
-            <option value="VBAC">VBAC</option>
-            <option value="UNMEDICATED">Unmedicated</option>
-            <option value="MEDICATED">Medicated</option>
-            <option value="HOME_BIRTH">Home Birth</option>
-            <option value="BIRTH_CENTER">Birth Center</option>
-            <option value="HOSPITAL">Hospital</option>
+            {Object.values(BirthType).map((type) => (
+              <option key={type} value={type}>
+                {type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -224,12 +221,11 @@ export const AddClientForm: React.FC<AddClientFormProps> = ({ onSubmit, onCancel
             className="mt-1 block w-full px-3 py-2 border border-warm-brown/20 rounded-md shadow-sm focus:outline-none focus:ring-sage focus:border-sage"
           >
             <option value="">Select feeding style...</option>
-            <option value="BREASTFEEDING">Breastfeeding</option>
-            <option value="FORMULA">Formula</option>
-            <option value="MIXED">Mixed</option>
-            <option value="PUMPING">Pumping</option>
-            <option value="SNS">Supplemental Nursing System</option>
-            <option value="TUBE_FEEDING">Tube Feeding</option>
+            {Object.values(FeedingStyle).map((style) => (
+              <option key={style} value={style}>
+                {style.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+              </option>
+            ))}
           </select>
         </div>
 

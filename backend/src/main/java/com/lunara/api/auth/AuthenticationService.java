@@ -1,5 +1,7 @@
 package com.lunara.api.auth;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lunara.api.config.SystemConfig;
 import com.lunara.api.config.SystemConfigRepository;
 import com.lunara.api.exception.BadRequestException;
@@ -7,9 +9,7 @@ import com.lunara.api.exception.ForbiddenException;
 import com.lunara.api.security.JwtService;
 import com.lunara.api.user.Role;
 import com.lunara.api.user.User;
-import com.lunara.api.user.UserProfile;
 import com.lunara.api.repository.UserRepository;
-import com.lunara.api.repository.UserProfileRepository;
 import com.lunara.api.repository.ClientRepository;
 import com.lunara.api.repository.ProviderRepository;
 import com.lunara.api.user.Client;
@@ -19,7 +19,6 @@ import com.lunara.api.auth.request.RegisterProviderRequest;
 import com.lunara.api.auth.request.CreateClientRequest;
 import com.lunara.api.auth.request.AuthenticationRequest;
 import com.lunara.api.auth.response.AuthenticationResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,30 +26,55 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import jakarta.annotation.PostConstruct;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@Slf4j
 @Service
-@RequiredArgsConstructor
 public class AuthenticationService {
+    private static final Logger log = LoggerFactory.getLogger(AuthenticationService.class);
+    private static final String PROVIDER_REGISTRATION_CODE_KEY = "provider.registration.code";
+
     private final UserRepository userRepository;
     private final ClientRepository clientRepository;
     private final ProviderRepository providerRepository;
-    private final UserProfileRepository userProfileRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final SystemConfigRepository systemConfigRepository;
+    private final ObjectMapper objectMapper;
     private final Environment environment;
 
-    @Value("${app.provider.registration.code:default123}")
+    @Value("${app.registration.provider-code:default123}")
     private String defaultRegistrationCode;
 
-    private static final String PROVIDER_REGISTRATION_CODE_KEY = "provider.registration.code";
+    @Autowired
+    public AuthenticationService(
+            UserRepository userRepository,
+            ClientRepository clientRepository,
+            ProviderRepository providerRepository,
+            PasswordEncoder passwordEncoder,
+            JwtService jwtService,
+            AuthenticationManager authenticationManager,
+            SystemConfigRepository systemConfigRepository,
+            ObjectMapper objectMapper,
+            Environment environment) {
+        this.userRepository = userRepository;
+        this.clientRepository = clientRepository;
+        this.providerRepository = providerRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
+        this.systemConfigRepository = systemConfigRepository;
+        this.objectMapper = objectMapper;
+        this.environment = environment;
+    }
 
     @PostConstruct
     public void init() {
@@ -67,12 +91,6 @@ public class AuthenticationService {
     }
 
     public boolean isValidRegistrationCode(String code) {
-        // In development mode, accept any code
-        if (isDevelopmentMode()) {
-            return true;
-        }
-        
-        // Otherwise, check against stored code
         return systemConfigRepository
                 .findByConfigKey(PROVIDER_REGISTRATION_CODE_KEY)
                 .map(config -> config.getValue().equals(code))
@@ -84,35 +102,36 @@ public class AuthenticationService {
                Arrays.asList(environment.getActiveProfiles()).isEmpty();
     }
 
+    public String getRegistrationCode() {
+        if (!isDevelopmentMode()) {
+            throw new ForbiddenException("Registration code can only be retrieved in development mode");
+        }
+        return systemConfigRepository
+                .findByConfigKey(PROVIDER_REGISTRATION_CODE_KEY)
+                .map(SystemConfig::getValue)
+                .orElse(defaultRegistrationCode);
+    }
+
     public boolean isPasswordStrong(String password) {
-        // Simplified password validation
         return password != null && password.length() >= 8;
     }
 
     @Transactional
     public AuthenticationResponse registerProvider(RegisterProviderRequest request) {
-        if (!isValidRegistrationCode(request.getRegistrationCode())) {
-            throw new ForbiddenException("Invalid registration code");
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email already exists");
         }
 
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new BadRequestException("Email already registered");
-        }
+        var provider = new Provider();
+        provider.setFirstName(request.getFirstName());
+        provider.setLastName(request.getLastName());
+        provider.setEmail(request.getEmail());
+        provider.setPassword(passwordEncoder.encode(request.getPassword()));
+        provider.setRole(Role.PROVIDER);
 
-        var user = new Provider();
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(Role.PROVIDER);
-
-        var savedUser = userRepository.save(user);
-        var token = jwtService.generateToken(user);
-
-        return AuthenticationResponse.builder()
-                .token(token)
-                .user(savedUser)
-                .build();
+        var savedProvider = providerRepository.save(provider);
+        var jwtToken = jwtService.generateToken(savedProvider);
+        return AuthenticationResponse.create(jwtToken, savedProvider);
     }
 
     @Transactional
@@ -136,45 +155,50 @@ public class AuthenticationService {
         client.setRole(Role.CLIENT);
         client.setStatus(ClientStatus.ACTIVE);
         
+        // Create preferences JSON
+        var preferences = new HashMap<String, Object>();
+        preferences.put("birthType", request.getBirthType() != null ? request.getBirthType().name() : null);
+        preferences.put("feedingStyle", request.getFeedingStyle() != null ? request.getFeedingStyle().name() : null);
+        preferences.put("birthLocation", request.getBirthLocation());
+        preferences.put("supportSystem", request.getSupportSystem());
+        preferences.put("concerns", request.getConcerns());
+        preferences.put("goals", request.getGoals());
+        
+        // Convert preferences to JSON object for JSONB storage
+        try {
+            String jsonStr = objectMapper.writeValueAsString(preferences);
+            client.setPreferences(jsonStr);
+        } catch (JsonProcessingException e) {
+            log.error("Failed to serialize preferences", e);
+            client.setPreferences("{}");
+        }
+        
         // Set up the bidirectional relationship
         client.setProvider(provider);
         provider.addClient(client);
 
-        // Save both the client and provider (cascade will handle the relationship)
-        var savedClient = clientRepository.save(client);
-        providerRepository.save(provider);
-
-        // Create and save the user profile
-        var profile = new UserProfile();
-        profile.setUser(savedClient);
+        // Set dates if provided
         if (request.getDueDate() != null) {
             try {
-                profile.setDueDate(LocalDate.parse(request.getDueDate()).atStartOfDay());
+                client.setDueDate(LocalDate.parse(request.getDueDate()).atStartOfDay());
             } catch (DateTimeParseException e) {
                 throw new BadRequestException("Invalid due date format. Please use YYYY-MM-DD format.");
             }
         }
         if (request.getBirthDate() != null) {
             try {
-                profile.setBirthDate(LocalDate.parse(request.getBirthDate()).atStartOfDay());
+                client.setBirthDate(LocalDate.parse(request.getBirthDate()).atStartOfDay());
             } catch (DateTimeParseException e) {
                 throw new BadRequestException("Invalid birth date format. Please use YYYY-MM-DD format.");
             }
         }
-        profile.setBirthType(request.getBirthType());
-        profile.setFeedingStyle(request.getFeedingStyle());
-        profile.setBirthLocation(request.getBirthLocation());
-        profile.setSupportSystem(request.getSupportSystem());
-        profile.setConcerns(request.getConcerns());
-        profile.setGoals(request.getGoals());
 
-        userProfileRepository.save(profile);
+        // Save both the client and provider (cascade will handle the relationship)
+        var savedClient = clientRepository.save(client);
+        providerRepository.save(provider);
 
-        var token = jwtService.generateToken(savedClient);
-        return AuthenticationResponse.builder()
-                .token(token)
-                .user(savedClient)
-                .build();
+        var jwtToken = jwtService.generateToken(savedClient);
+        return AuthenticationResponse.create(jwtToken, savedClient);
     }
 
     @Transactional(readOnly = true)
@@ -189,22 +213,7 @@ public class AuthenticationService {
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Initialize the specialties collection if it's a Provider
-        if (user instanceof Provider) {
-            ((Provider) user).getSpecialties().size(); // Force initialization
-        }
-
-        var token = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(token)
-                .user(user)
-                .build();
-    }
-
-    public String getRegistrationCode() {
-        return systemConfigRepository
-                .findByConfigKey(PROVIDER_REGISTRATION_CODE_KEY)
-                .map(SystemConfig::getValue)
-                .orElse(defaultRegistrationCode);
+        var jwtToken = jwtService.generateToken(user);
+        return AuthenticationResponse.create(jwtToken, user);
     }
 } 

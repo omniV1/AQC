@@ -37,7 +37,7 @@ export class AuthService {
     public async providerLogin(credentials: LoginRequest): Promise<LoginResponse> {
         try {
             console.log('Attempting provider login:', { email: credentials.email });
-            const response = await this.api.post<LoginResponse>('/api/auth/authenticate', credentials);
+            const response = await this.api.post<LoginResponse>('/auth/authenticate', credentials);
             console.log('Login successful, storing auth data');
             this.handleAuthResponse(response);
             return response;
@@ -53,7 +53,7 @@ export class AuthService {
      * @returns Login response with tokens and user info
      */
     public async clientLogin(credentials: LoginRequest): Promise<LoginResponse> {
-        const response = await this.api.post<LoginResponse>('/api/auth/authenticate', credentials);
+        const response = await this.api.post<LoginResponse>('/auth/authenticate', credentials);
         this.handleAuthResponse(response);
         return response;
     }
@@ -124,7 +124,7 @@ export class AuthService {
                 ...providerData,
                 password: '[REDACTED]'
             });
-            const response = await this.api.post<{ data: AuthResponse }>('/api/auth/register/provider', providerData);
+            const response = await this.api.post<{ data: AuthResponse }>('/auth/register/provider', providerData);
             return response.data;
         } catch (error: any) {
             console.error('Registration error details:', error.response?.data);

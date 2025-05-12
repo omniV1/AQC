@@ -34,7 +34,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
     ),
     servers = {
         @Server(
-            url = "http://localhost:8081/api",
+            url = "http://localhost:8080/api",
             description = "Development server"
         )
     },

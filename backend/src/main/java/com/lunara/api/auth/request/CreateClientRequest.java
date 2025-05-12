@@ -7,10 +7,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -38,4 +36,100 @@ public class CreateClientRequest {
     private String supportSystem;
     private String concerns;
     private String goals;
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public String getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(String birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public BirthType getBirthType() {
+        return birthType;
+    }
+
+    public void setBirthType(BirthType birthType) {
+        this.birthType = birthType;
+    }
+
+    public FeedingStyle getFeedingStyle() {
+        return feedingStyle;
+    }
+
+    public void setFeedingStyle(FeedingStyle feedingStyle) {
+        this.feedingStyle = feedingStyle;
+    }
+
+    public String getBirthLocation() {
+        return birthLocation;
+    }
+
+    public void setBirthLocation(String birthLocation) {
+        this.birthLocation = birthLocation;
+    }
+
+    public String getSupportSystem() {
+        return supportSystem;
+    }
+
+    public void setSupportSystem(String supportSystem) {
+        this.supportSystem = supportSystem;
+    }
+
+    public String getConcerns() {
+        return concerns;
+    }
+
+    public void setConcerns(String concerns) {
+        this.concerns = concerns;
+    }
+
+    public String getGoals() {
+        return goals;
+    }
+
+    public void setGoals(String goals) {
+        this.goals = goals;
+    }
 } 

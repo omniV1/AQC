@@ -41,7 +41,7 @@ import jakarta.servlet.http.HttpServletRequest;
  * All endpoints in this controller are public and do not require authentication.
  */
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 @Tag(name = "Authentication", description = "Authentication management APIs")
 public class AuthenticationController {

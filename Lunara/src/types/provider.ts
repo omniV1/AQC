@@ -35,10 +35,30 @@ export interface CreateClientRequest {
     password: string;
     dueDate?: string;
     birthDate?: string;
-    birthType?: 'VAGINAL' | 'C_SECTION' | 'VBAC' | 'UNMEDICATED' | 'MEDICATED' | 'HOME_BIRTH' | 'BIRTH_CENTER' | 'HOSPITAL';
-    feedingStyle?: 'BREASTFEEDING' | 'FORMULA' | 'MIXED' | 'PUMPING' | 'SNS' | 'TUBE_FEEDING';
+    birthType?: BirthType;
+    feedingStyle?: FeedingStyle;
     birthLocation?: string;
     supportSystem?: string;
     concerns?: string;
     goals?: string;
+}
+
+export enum BirthType {
+    VAGINAL = 'VAGINAL',
+    C_SECTION = 'C_SECTION',
+    VBAC = 'VBAC',
+    UNMEDICATED = 'UNMEDICATED',
+    MEDICATED = 'MEDICATED',
+    HOME_BIRTH = 'HOME_BIRTH',
+    BIRTH_CENTER = 'BIRTH_CENTER',
+    HOSPITAL = 'HOSPITAL'
+}
+
+export enum FeedingStyle {
+    BREASTFEEDING = 'BREASTFEEDING',
+    FORMULA = 'FORMULA',
+    MIXED = 'MIXED',
+    PUMPING = 'PUMPING',
+    SNS = 'SNS',
+    TUBE_FEEDING = 'TUBE_FEEDING'
 } 

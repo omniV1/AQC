@@ -24,7 +24,14 @@ public class SystemConfig {
     @Column(name = "description")
     private String description;
 
-    // Add explicit getters and setters for better compatibility
+    public String getKey() {
+        return configKey;
+    }
+
+    public void setKey(String key) {
+        this.configKey = key;
+    }
+
     public String getValue() {
         return configValue;
     }
@@ -33,11 +40,11 @@ public class SystemConfig {
         this.configValue = value;
     }
 
-    public String getKey() {
-        return configKey;
+    public String getDescription() {
+        return description;
     }
 
-    public void setKey(String key) {
-        this.configKey = key;
+    public void setDescription(String description) {
+        this.description = description;
     }
 } 

@@ -63,8 +63,21 @@ public class SecurityConfig {
         log.info("Allowed methods: {}", allowedMethods);
         
         // Set allowed headers
-        corsConfiguration.addAllowedHeader("*");
-        log.info("Allowed headers configured with wildcard");
+        List<String> allowedHeaders = Arrays.asList(allowedHeadersStr.split(","));
+        if (allowedHeaders.size() == 1 && allowedHeaders.get(0).equals("*")) {
+            corsConfiguration.setAllowedHeaders(Arrays.asList(
+                "Authorization",
+                "Content-Type",
+                "Accept",
+                "Origin",
+                "X-Requested-With",
+                "Access-Control-Request-Method",
+                "Access-Control-Request-Headers"
+            ));
+        } else {
+            corsConfiguration.setAllowedHeaders(allowedHeaders);
+        }
+        log.info("Allowed headers: {}", allowedHeaders);
         
         // Set exposed headers
         List<String> exposedHeaders = Arrays.asList(
@@ -98,11 +111,10 @@ public class SecurityConfig {
                 auth
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers(
-                        "/api/auth/authenticate",
-                        "/api/auth/register",
-                        "/api/auth/register/provider",
-                        "/api/auth/register/client",
-                        "/api/health",
+                        "/auth/authenticate",
+                        "/auth/register",
+                        "/auth/register/provider",
+                        "/health",
                         "/v2/api-docs",
                         "/v3/api-docs",
                         "/v3/api-docs/**",
@@ -114,10 +126,10 @@ public class SecurityConfig {
                         "/webjars/**",
                         "/swagger-ui.html"
                     ).permitAll()
-                    .requestMatchers("/api/auth/me").authenticated()
-                    .requestMatchers("/api/auth/register/client").hasRole("PROVIDER")
-                    .requestMatchers("/api/v1/support-sessions/**").hasAnyRole("PROVIDER", "CLIENT")
-                    .requestMatchers("/api/clients/**", "/api/providers/**").hasRole("PROVIDER")
+                    .requestMatchers("/auth/me").authenticated()
+                    .requestMatchers("/auth/register/client").hasRole("PROVIDER")
+                    .requestMatchers("/v1/support-sessions/**").hasAnyRole("PROVIDER", "CLIENT")
+                    .requestMatchers("/clients/**", "/providers/**").hasRole("PROVIDER")
                     .anyRequest()
                     .authenticated();
                 log.info("Authorization rules configured");
