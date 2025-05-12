@@ -6,18 +6,37 @@ interface AddClientFormProps {
   onCancel: () => void;
 }
 
+type FormData = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  dueDate: string;
+  birthDate: string;
+  birthType: CreateClientRequest['birthType'];
+  feedingStyle: CreateClientRequest['feedingStyle'];
+  birthLocation: string;
+  supportSystem: string;
+  concerns: string;
+  goals: string;
+};
+
 export const AddClientForm: React.FC<AddClientFormProps> = ({ onSubmit, onCancel }) => {
-  const [formData, setFormData] = useState<CreateClientRequest>({
+  const [formData, setFormData] = useState<FormData>({
     firstName: '',
     lastName: '',
     email: '',
     password: '',
     confirmPassword: '',
+    dueDate: '',
     birthDate: '',
-    deliveryDate: '',
-    deliveryType: 'VAGINAL',
-    complications: '',
-    supportPreferences: [],
+    birthType: undefined,
+    feedingStyle: undefined,
+    birthLocation: '',
+    supportSystem: '',
+    concerns: '',
+    goals: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +45,7 @@ export const AddClientForm: React.FC<AddClientFormProps> = ({ onSubmit, onCancel
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value === '' ? undefined : value
     }));
   };
 
@@ -39,7 +58,24 @@ export const AddClientForm: React.FC<AddClientFormProps> = ({ onSubmit, onCancel
       if (formData.password !== formData.confirmPassword) {
         throw new Error('Passwords do not match');
       }
-      await onSubmit(formData);
+
+      // Convert empty strings to undefined for optional fields and remove confirmPassword
+      const clientData: CreateClientRequest = {
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        email: formData.email.trim(),
+        password: formData.password,
+        dueDate: formData.dueDate || undefined,
+        birthDate: formData.birthDate || undefined,
+        birthType: formData.birthType || undefined,
+        feedingStyle: formData.feedingStyle || undefined,
+        birthLocation: formData.birthLocation?.trim() || undefined,
+        supportSystem: formData.supportSystem?.trim() || undefined,
+        concerns: formData.concerns?.trim() || undefined,
+        goals: formData.goals?.trim() || undefined
+      };
+
+      await onSubmit(clientData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to add client');
     } finally {
@@ -96,68 +132,6 @@ export const AddClientForm: React.FC<AddClientFormProps> = ({ onSubmit, onCancel
         </div>
 
         <div>
-          <label htmlFor="birthDate" className="block text-sm font-medium text-warm-brown">
-            Birth Date
-          </label>
-          <input
-            type="date"
-            id="birthDate"
-            name="birthDate"
-            value={formData.birthDate}
-            onChange={handleChange}
-            required
-            className="mt-1 block w-full px-3 py-2 border border-warm-brown/20 rounded-md shadow-sm focus:outline-none focus:ring-sage focus:border-sage"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="deliveryDate" className="block text-sm font-medium text-warm-brown">
-            Delivery Date
-          </label>
-          <input
-            type="date"
-            id="deliveryDate"
-            name="deliveryDate"
-            value={formData.deliveryDate}
-            onChange={handleChange}
-            required
-            className="mt-1 block w-full px-3 py-2 border border-warm-brown/20 rounded-md shadow-sm focus:outline-none focus:ring-sage focus:border-sage"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="deliveryType" className="block text-sm font-medium text-warm-brown">
-            Delivery Type
-          </label>
-          <select
-            id="deliveryType"
-            name="deliveryType"
-            value={formData.deliveryType}
-            onChange={handleChange}
-            required
-            className="mt-1 block w-full px-3 py-2 border border-warm-brown/20 rounded-md shadow-sm focus:outline-none focus:ring-sage focus:border-sage"
-          >
-            <option value="VAGINAL">Vaginal Birth</option>
-            <option value="C_SECTION">C-Section</option>
-            <option value="OTHER">Other</option>
-          </select>
-        </div>
-
-        <div className="md:col-span-2">
-          <label htmlFor="complications" className="block text-sm font-medium text-warm-brown">
-            Complications (if any)
-          </label>
-          <textarea
-            id="complications"
-            name="complications"
-            value={formData.complications}
-            onChange={handleChange}
-            rows={3}
-            className="mt-1 block w-full px-3 py-2 border border-warm-brown/20 rounded-md shadow-sm focus:outline-none focus:ring-sage focus:border-sage"
-          />
-        </div>
-
-        <div>
           <label htmlFor="password" className="block text-sm font-medium text-warm-brown">
             Password
           </label>
@@ -183,6 +157,134 @@ export const AddClientForm: React.FC<AddClientFormProps> = ({ onSubmit, onCancel
             value={formData.confirmPassword}
             onChange={handleChange}
             required
+            className="mt-1 block w-full px-3 py-2 border border-warm-brown/20 rounded-md shadow-sm focus:outline-none focus:ring-sage focus:border-sage"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="dueDate" className="block text-sm font-medium text-warm-brown">
+            Due Date
+          </label>
+          <input
+            type="date"
+            id="dueDate"
+            name="dueDate"
+            value={formData.dueDate}
+            onChange={handleChange}
+            className="mt-1 block w-full px-3 py-2 border border-warm-brown/20 rounded-md shadow-sm focus:outline-none focus:ring-sage focus:border-sage"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="birthDate" className="block text-sm font-medium text-warm-brown">
+            Birth Date
+          </label>
+          <input
+            type="date"
+            id="birthDate"
+            name="birthDate"
+            value={formData.birthDate}
+            onChange={handleChange}
+            className="mt-1 block w-full px-3 py-2 border border-warm-brown/20 rounded-md shadow-sm focus:outline-none focus:ring-sage focus:border-sage"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="birthType" className="block text-sm font-medium text-warm-brown">
+            Birth Type
+          </label>
+          <select
+            id="birthType"
+            name="birthType"
+            value={formData.birthType}
+            onChange={handleChange}
+            className="mt-1 block w-full px-3 py-2 border border-warm-brown/20 rounded-md shadow-sm focus:outline-none focus:ring-sage focus:border-sage"
+          >
+            <option value="">Select birth type...</option>
+            <option value="VAGINAL">Vaginal</option>
+            <option value="C_SECTION">C-Section</option>
+            <option value="VBAC">VBAC</option>
+            <option value="UNMEDICATED">Unmedicated</option>
+            <option value="MEDICATED">Medicated</option>
+            <option value="HOME_BIRTH">Home Birth</option>
+            <option value="BIRTH_CENTER">Birth Center</option>
+            <option value="HOSPITAL">Hospital</option>
+          </select>
+        </div>
+
+        <div>
+          <label htmlFor="feedingStyle" className="block text-sm font-medium text-warm-brown">
+            Feeding Style
+          </label>
+          <select
+            id="feedingStyle"
+            name="feedingStyle"
+            value={formData.feedingStyle}
+            onChange={handleChange}
+            className="mt-1 block w-full px-3 py-2 border border-warm-brown/20 rounded-md shadow-sm focus:outline-none focus:ring-sage focus:border-sage"
+          >
+            <option value="">Select feeding style...</option>
+            <option value="BREASTFEEDING">Breastfeeding</option>
+            <option value="FORMULA">Formula</option>
+            <option value="MIXED">Mixed</option>
+            <option value="PUMPING">Pumping</option>
+            <option value="SNS">Supplemental Nursing System</option>
+            <option value="TUBE_FEEDING">Tube Feeding</option>
+          </select>
+        </div>
+
+        <div>
+          <label htmlFor="birthLocation" className="block text-sm font-medium text-warm-brown">
+            Birth Location
+          </label>
+          <input
+            type="text"
+            id="birthLocation"
+            name="birthLocation"
+            value={formData.birthLocation}
+            onChange={handleChange}
+            className="mt-1 block w-full px-3 py-2 border border-warm-brown/20 rounded-md shadow-sm focus:outline-none focus:ring-sage focus:border-sage"
+          />
+        </div>
+
+        <div className="md:col-span-2">
+          <label htmlFor="supportSystem" className="block text-sm font-medium text-warm-brown">
+            Support System
+          </label>
+          <textarea
+            id="supportSystem"
+            name="supportSystem"
+            value={formData.supportSystem}
+            onChange={handleChange}
+            rows={3}
+            className="mt-1 block w-full px-3 py-2 border border-warm-brown/20 rounded-md shadow-sm focus:outline-none focus:ring-sage focus:border-sage"
+          />
+        </div>
+
+        <div className="md:col-span-2">
+          <label htmlFor="concerns" className="block text-sm font-medium text-warm-brown">
+            Concerns
+          </label>
+          <textarea
+            id="concerns"
+            name="concerns"
+            value={formData.concerns}
+            onChange={handleChange}
+            rows={3}
+            className="mt-1 block w-full px-3 py-2 border border-warm-brown/20 rounded-md shadow-sm focus:outline-none focus:ring-sage focus:border-sage"
+          />
+        </div>
+
+        <div className="md:col-span-2">
+          <label htmlFor="goals" className="block text-sm font-medium text-warm-brown">
+            Goals
+          </label>
+          <textarea
+            id="goals"
+            name="goals"
+            value={formData.goals}
+            onChange={handleChange}
+            rows={3}
             className="mt-1 block w-full px-3 py-2 border border-warm-brown/20 rounded-md shadow-sm focus:outline-none focus:ring-sage focus:border-sage"
           />
         </div>

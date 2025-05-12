@@ -33,10 +33,12 @@ export interface CreateClientRequest {
     lastName: string;
     email: string;
     password: string;
-    confirmPassword: string;
-    birthDate: string;
-    deliveryDate: string;
-    deliveryType: DeliveryType;
-    complications: string;
-    supportPreferences: string[];
+    dueDate?: string;
+    birthDate?: string;
+    birthType?: 'VAGINAL' | 'C_SECTION' | 'VBAC' | 'UNMEDICATED' | 'MEDICATED' | 'HOME_BIRTH' | 'BIRTH_CENTER' | 'HOSPITAL';
+    feedingStyle?: 'BREASTFEEDING' | 'FORMULA' | 'MIXED' | 'PUMPING' | 'SNS' | 'TUBE_FEEDING';
+    birthLocation?: string;
+    supportSystem?: string;
+    concerns?: string;
+    goals?: string;
 } 

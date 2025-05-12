@@ -3,10 +3,10 @@ import { User } from '../../types/user';
 import { Message } from '../../types/models';
 
 interface CommunicationHubProps {
-  clients: User[];
+  clients?: User[];
 }
 
-export const CommunicationHub: React.FC<CommunicationHubProps> = ({ clients }) => {
+export const CommunicationHub: React.FC<CommunicationHubProps> = ({ clients = [] }) => {
   const [selectedClient, setSelectedClient] = useState<User | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [messages] = useState<Message[]>([

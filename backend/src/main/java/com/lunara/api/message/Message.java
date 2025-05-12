@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -17,8 +18,8 @@ import java.time.LocalDateTime;
 @Table(name = "messages")
 public class Message {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id")
@@ -31,7 +32,14 @@ public class Message {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @Column(columnDefinition = "JSONB")
+    private String attachments;
+
+    @Column(name = "read")
     private boolean read;
+
+    @Column(name = "read_at")
+    private LocalDateTime readAt;
     
     @Column(name = "created_at")
     private LocalDateTime createdAt;

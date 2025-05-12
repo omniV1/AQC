@@ -2,17 +2,20 @@ package com.lunara.api.error;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 /**
  * Standardized error response format for the API.
  * Used to provide consistent error information across all endpoints.
  */
 @Data
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Schema(description = "Standard error response")
 public class ErrorResponse {
     
@@ -32,13 +35,26 @@ public class ErrorResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private LocalDateTime timestamp;
 
+    @Schema(description = "Validation errors map")
+    private Map<String, String> validationErrors;
+
+    public ErrorResponse(int status, String error, String message, String path) {
+        this.status = status;
+        this.error = error;
+        this.message = message;
+        this.path = path;
+        this.timestamp = LocalDateTime.now();
+    }
+
+    public ErrorResponse(String message, Map<String, String> validationErrors) {
+        this.status = 400;
+        this.error = "Validation Error";
+        this.message = message;
+        this.validationErrors = validationErrors;
+        this.timestamp = LocalDateTime.now();
+    }
+
     public static ErrorResponse of(int status, String error, String message, String path) {
-        return ErrorResponse.builder()
-                .status(status)
-                .error(error)
-                .message(message)
-                .path(path)
-                .timestamp(LocalDateTime.now())
-                .build();
+        return new ErrorResponse(status, error, message, path);
     }
 } 

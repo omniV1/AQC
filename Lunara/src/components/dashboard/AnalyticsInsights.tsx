@@ -16,10 +16,10 @@ interface EngagementMetric {
 }
 
 interface AnalyticsInsightsProps {
-  clients: User[];
+  clients?: User[];
 }
 
-export const AnalyticsInsights: React.FC<AnalyticsInsightsProps> = ({ clients }) => {
+export const AnalyticsInsights: React.FC<AnalyticsInsightsProps> = ({ clients = [] }) => {
   const [summary] = useState<AnalyticsSummary>({
     totalClients: clients.length,
     activeClients: clients.filter(c => c.status === 'ACTIVE').length,

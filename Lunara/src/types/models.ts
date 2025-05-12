@@ -1,6 +1,6 @@
 // User related types
 export interface User {
-    id: number;
+    id: string;
     email: string;
     firstName: string;
     lastName: string;
@@ -114,6 +114,9 @@ export interface PaginatedResponse<T> {
     totalPages: number;
     size: number;
     number: number;
+    last: boolean;
+    first: boolean;
+    empty: boolean;
 }
 
 export interface CreateProviderRequest {

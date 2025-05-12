@@ -2,6 +2,7 @@ package com.lunara.api.config;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -11,32 +12,32 @@ import lombok.*;
 @Table(name = "system_config")
 public class SystemConfig {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(name = "config_key", nullable = false, unique = true)
-    private String key;
+    private String configKey;
 
     @Column(name = "config_value", nullable = false)
-    private String value;
+    private String configValue;
 
     @Column(name = "description")
     private String description;
 
     // Add explicit getters and setters for better compatibility
     public String getValue() {
-        return value;
+        return configValue;
     }
 
     public void setValue(String value) {
-        this.value = value;
+        this.configValue = value;
     }
 
     public String getKey() {
-        return key;
+        return configKey;
     }
 
     public void setKey(String key) {
-        this.key = key;
+        this.configKey = key;
     }
 } 

@@ -139,10 +139,11 @@ export const ProviderRegistration: React.FC = () => {
                                     type="email"
                                     id="email"
                                     name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
                                     required
                                     className="block w-full px-3 py-2 border border-warm-brown/20 rounded-md shadow-sm focus:outline-none focus:ring-sage focus:border-sage"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    autoComplete="username"
                                 />
                             </div>
 

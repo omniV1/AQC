@@ -49,9 +49,8 @@ export interface LoginRequest {
 
 export interface LoginResponse {
     token: string;
-    refreshToken: string;
     user: {
-        id: number;
+        id: string;
         email: string;
         firstName: string;
         lastName: string;

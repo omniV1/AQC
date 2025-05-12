@@ -3,12 +3,10 @@ import { User, LoginCredentials, RegisterData } from '../types/models';
 import { AuthContextType } from '../types/auth';
 import { AuthService } from '../services/authService';
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const authService = AuthService.getInstance();
 
-export { AuthContext };
-
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -39,8 +37,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const providerLogin = async (credentials: LoginCredentials) => {
         try {
-            const { token, user } = await authService.providerLogin(credentials);
-            handleAuthResponse(token, user);
+            const response = await authService.providerLogin(credentials);
+            if (response && response.token && response.user) {
+                handleAuthResponse(response.token, response.user);
+            } else {
+                throw new Error('Invalid response from server');
+            }
         } catch (err: any) {
             const errorMessage = err.response?.data?.message || err.response?.data?.errors?.join(', ') || 'Invalid provider credentials';
             setError(errorMessage);
@@ -125,10 +127,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     );
 };
 
-export const useAuth = () => {
+const useAuth = () => {
     const context = useContext(AuthContext);
     if (context === undefined) {
         throw new Error('useAuth must be used within an AuthProvider');
     }
     return context;
-}; 
+};
+
+export { AuthProvider, useAuth }; 

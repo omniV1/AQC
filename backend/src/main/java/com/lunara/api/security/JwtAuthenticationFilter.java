@@ -47,22 +47,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             log.info("  {}: {}", headerName, request.getHeader(headerName))
         );
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            log.info("No Bearer token found in request, proceeding with filter chain");
-            filterChain.doFilter(request, response);
-            return;
+        String jwt = null;
+        String userEmail = null;
+        
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            jwt = authHeader.substring(7);
+            userEmail = jwtService.extractUsername(jwt);
+            log.debug("JWT token found for user: {}", userEmail);
+        } else {
+            log.debug("No JWT token found in request");
         }
-
-        final String jwt;
-        final String userEmail;
-
-        jwt = authHeader.substring(7);
-        userEmail = jwtService.extractUsername(jwt);
-        log.info("Extracted email from JWT: {}", userEmail);
 
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-            log.info("Loaded user details for {}, Authorities: {}", userEmail, userDetails.getAuthorities());
+            log.debug("Loaded user details for {}, Authorities: {}", userEmail, userDetails.getAuthorities());
 
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 log.info("JWT token is valid for user: {}", userEmail);

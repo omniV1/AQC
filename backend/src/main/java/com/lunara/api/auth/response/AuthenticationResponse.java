@@ -1,4 +1,4 @@
-package com.lunara.api.auth;
+package com.lunara.api.auth.response;
 
 import com.lunara.api.user.User;
 import lombok.AllArgsConstructor;
@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class AuthenticationResponse {
     private String token;
     private User user;

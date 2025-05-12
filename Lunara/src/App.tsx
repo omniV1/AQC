@@ -17,8 +17,8 @@ import ContactPage from './pages/ContactPage';
 
 const App: React.FC = () => {
   return (
-    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-      <AuthProvider>
+    <AuthProvider>
+      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <div className="min-h-screen flex flex-col bg-cream">
           <Header />
           
@@ -61,8 +61,8 @@ const App: React.FC = () => {
 
           <Footer />
         </div>
-      </AuthProvider>
-    </Router>
+      </Router>
+    </AuthProvider>
   );
 };
 

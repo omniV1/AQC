@@ -1,6 +1,8 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError, AxiosRequestConfig } from 'axios';
 import { ErrorHandler } from './errorHandler';
 
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api';
+
 /**
  * Singleton class for managing API requests
  * Handles:
@@ -18,7 +20,7 @@ export class ApiClient {
 
     private constructor() {
         this.axiosInstance = axios.create({
-            baseURL: import.meta.env.MODE === 'test' ? 'http://localhost:8080/api' : (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api'),
+            baseURL: API_URL,
             timeout: 10000,
             headers: {
                 'Content-Type': 'application/json'
@@ -48,19 +50,27 @@ export class ApiClient {
                 const token = localStorage.getItem('token');
                 if (token) {
                     config.headers.Authorization = `Bearer ${token}`;
+                    console.log('Adding token to request:', config.url);
                 }
                 return config;
             },
             (error) => {
+                console.error('Request interceptor error:', error);
                 return Promise.reject(error);
             }
         );
 
         this.axiosInstance.interceptors.response.use(
             (response) => response,
-            async (error: AxiosError) => {
+            async (error) => {
+                console.error('Response error:', error.response?.status, error.response?.data);
+                
                 if (error.response?.status === 401) {
+                    console.log('Unauthorized error, attempting token refresh...');
                     await this.handleTokenExpiration();
+                } else if (error.response?.status === 403) {
+                    console.error('Forbidden error. User may not have required permissions.');
+                    // You might want to redirect to an error page or show a message
                 }
                 return Promise.reject(error);
             }

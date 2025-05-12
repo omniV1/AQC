@@ -4,6 +4,7 @@ import {
     PaginatedResponse, 
     QueryParams 
 } from '../types/api';
+import { User } from '../types/user';
 
 /**
  * Service for handling user-related operations
@@ -77,9 +78,9 @@ export class UserService {
      * @param params - Query parameters for pagination and filtering
      * @returns Paginated list of clients
      */
-    public async getClients(params: QueryParams): Promise<PaginatedResponse<UserProfile>> {
+    public async getClients(params: QueryParams): Promise<PaginatedResponse<User>> {
         const queryString = this.buildQueryString(params);
-        return this.api.get<PaginatedResponse<UserProfile>>(`/api/clients${queryString}`);
+        return this.api.get<PaginatedResponse<User>>('/api/users/clients' + (queryString ? `?${queryString}` : ''));
     }
 
     /**

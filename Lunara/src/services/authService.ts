@@ -6,8 +6,7 @@ import {
     RefreshTokenResponse 
 } from '../types/api';
 import { User, LoginCredentials, RegisterData, AuthResponse } from '../types/models';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+import { CreateClientRequest } from '../types/provider';
 
 /**
  * Service for handling authentication-related operations
@@ -36,9 +35,16 @@ export class AuthService {
      * @returns Login response with tokens and user info
      */
     public async providerLogin(credentials: LoginRequest): Promise<LoginResponse> {
-        const response = await this.api.post<LoginResponse>('/auth/authenticate', credentials);
-        this.handleAuthResponse(response);
-        return response;
+        try {
+            console.log('Attempting provider login:', { email: credentials.email });
+            const response = await this.api.post<LoginResponse>('/api/auth/authenticate', credentials);
+            console.log('Login successful, storing auth data');
+            this.handleAuthResponse(response);
+            return response;
+        } catch (error) {
+            console.error('Provider login failed:', error);
+            throw error;
+        }
     }
 
     /**
@@ -47,7 +53,7 @@ export class AuthService {
      * @returns Login response with tokens and user info
      */
     public async clientLogin(credentials: LoginRequest): Promise<LoginResponse> {
-        const response = await this.api.post<LoginResponse>('/auth/authenticate', credentials);
+        const response = await this.api.post<LoginResponse>('/api/auth/authenticate', credentials);
         this.handleAuthResponse(response);
         return response;
     }
@@ -85,9 +91,15 @@ export class AuthService {
      * @param response - Login response containing tokens and user info
      */
     private handleAuthResponse(response: LoginResponse): void {
+        if (!response.token) {
+            console.error('No token received in authentication response');
+            throw new Error('No token received in authentication response');
+        }
+        console.log('Storing authentication token');
         localStorage.setItem('token', response.token);
-        localStorage.setItem('refreshToken', response.refreshToken);
-        localStorage.setItem('user', JSON.stringify(response.user));
+        if (response.user) {
+            localStorage.setItem('user', JSON.stringify(response.user));
+        }
     }
 
     /**
@@ -112,8 +124,8 @@ export class AuthService {
                 ...providerData,
                 password: '[REDACTED]'
             });
-            const response = await this.api.post<AuthResponse>('/auth/register/provider', providerData);
-            return response;
+            const response = await this.api.post<{ data: AuthResponse }>('/api/auth/register/provider', providerData);
+            return response.data;
         } catch (error: any) {
             console.error('Registration error details:', error.response?.data);
             if (error.response?.data?.message) {
@@ -127,9 +139,20 @@ export class AuthService {
     }
 
     // Client registration (provider only)
-    async registerClient(clientData: RegisterData & { providerId: number }): Promise<AuthResponse> {
-        const response = await this.api.post<AuthResponse>('/auth/register/client', clientData);
-        return response;
+    async registerClient(clientData: CreateClientRequest): Promise<AuthResponse> {
+        try {
+            console.log('Attempting to register client:', { email: clientData.email });
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No authentication token found. Please log in again.');
+            }
+            const response = await this.api.post<AuthResponse>('/auth/register/client', clientData);
+            console.log('Client registration successful');
+            return response;
+        } catch (error: any) {
+            console.error('Client registration failed:', error.response?.data || error.message);
+            throw error;
+        }
     }
 
     // Get current user

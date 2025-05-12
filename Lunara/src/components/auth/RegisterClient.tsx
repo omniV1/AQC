@@ -32,10 +32,15 @@ export const RegisterClient: React.FC<RegisterClientProps> = ({ onSuccess, onCan
         }
 
         try {
-            await registerClient({
+            // Format dates to YYYY-MM-DD
+            const formattedData = {
                 ...formData,
+                dueDate: formData.dueDate ? new Date(formData.dueDate).toISOString().split('T')[0] : undefined,
+                birthDate: formData.birthDate ? new Date(formData.birthDate).toISOString().split('T')[0] : undefined,
                 providerId: user.id
-            });
+            };
+
+            await registerClient(formattedData);
             onSuccess?.();
         } catch (err) {
             // Error is handled by the auth context
@@ -158,7 +163,12 @@ export const RegisterClient: React.FC<RegisterClientProps> = ({ onSuccess, onCan
                             <option value="">Select birth type...</option>
                             <option value="VAGINAL">Vaginal</option>
                             <option value="C_SECTION">C-Section</option>
-                            <option value="OTHER">Other</option>
+                            <option value="VBAC">VBAC</option>
+                            <option value="UNMEDICATED">Unmedicated</option>
+                            <option value="MEDICATED">Medicated</option>
+                            <option value="HOME_BIRTH">Home Birth</option>
+                            <option value="BIRTH_CENTER">Birth Center</option>
+                            <option value="HOSPITAL">Hospital</option>
                         </select>
                     </div>
 
@@ -174,10 +184,12 @@ export const RegisterClient: React.FC<RegisterClientProps> = ({ onSuccess, onCan
                             className="w-full p-2 border border-sage rounded"
                         >
                             <option value="">Select feeding style...</option>
-                            <option value="BREAST">Breast</option>
-                            <option value="BOTTLE">Bottle</option>
+                            <option value="BREASTFEEDING">Breastfeeding</option>
+                            <option value="FORMULA">Formula</option>
                             <option value="MIXED">Mixed</option>
-                            <option value="OTHER">Other</option>
+                            <option value="PUMPING">Pumping</option>
+                            <option value="SNS">Supplemental Nursing System</option>
+                            <option value="TUBE_FEEDING">Tube Feeding</option>
                         </select>
                     </div>
                 </div>

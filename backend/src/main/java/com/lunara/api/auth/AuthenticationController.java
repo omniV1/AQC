@@ -15,8 +15,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import com.lunara.api.user.User;
-import com.lunara.api.exceptions.ForbiddenException;
-import com.lunara.api.exceptions.BadRequestException;
+import com.lunara.api.exception.ForbiddenException;
+import com.lunara.api.exception.BadRequestException;
+import com.lunara.api.auth.request.CreateClientRequest;
+import com.lunara.api.auth.request.RegisterProviderRequest;
+import com.lunara.api.auth.request.AuthenticationRequest;
+import com.lunara.api.auth.response.AuthenticationResponse;
+import com.lunara.api.error.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -25,6 +30,10 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.context.SecurityContextHolder;
+import java.time.LocalDateTime;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletWebRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Controller handling user authentication operations.
@@ -32,7 +41,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  * All endpoints in this controller are public and do not require authentication.
  */
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @Tag(name = "Authentication", description = "Authentication management APIs")
 public class AuthenticationController {
@@ -89,7 +98,7 @@ public class AuthenticationController {
         // Validate password strength
         if (!service.isPasswordStrong(request.getPassword())) {
             log.warn("Password does not meet security requirements");
-            throw new BadRequestException("Password must be at least 8 characters long and contain uppercase, lowercase, number, and special character");
+            throw new BadRequestException("Password must be at least 8 characters long");
         }
 
         AuthenticationResponse response = service.registerProvider(request);
@@ -136,7 +145,7 @@ public class AuthenticationController {
     @PreAuthorize("hasAnyRole('PROVIDER', 'ADMIN')")
     public ResponseEntity<AuthenticationResponse> registerClient(
             @AuthenticationPrincipal User provider,
-            @RequestBody CreateClientRequest request
+            @Valid @RequestBody CreateClientRequest request
     ) {
         return ResponseEntity.ok(service.registerClient(provider, request));
     }
@@ -213,22 +222,51 @@ public class AuthenticationController {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(
-            MethodArgumentNotValidException ex) {
+    public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        return ResponseEntity.badRequest().body(errors);
+
+        String path = ((ServletWebRequest) RequestContextHolder.getRequestAttributes()).getRequest().getRequestURI();
+        return ResponseEntity.badRequest().body(new ErrorResponse(400, "Validation Error", "Validation failed", path));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, String>> handleAllExceptions(Exception ex) {
-        Map<String, String> error = new HashMap<>();
-        error.put("message", ex.getMessage());
-        log.error("Error occurred: ", ex);
-        return ResponseEntity.badRequest().body(error);
+    public ResponseEntity<ErrorResponse> handleAllExceptions(Exception ex, HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return ResponseEntity.badRequest().body(new ErrorResponse(400, "Bad Request", ex.getMessage(), path));
+    }
+
+    @Operation(
+        summary = "Get current authenticated user",
+        description = "Retrieves the currently authenticated user's information"
+    )
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "User information retrieved successfully",
+            content = @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = User.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "401",
+            description = "Not authenticated",
+            content = @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = ErrorResponse.class)
+            )
+        )
+    })
+    @GetMapping("/me")
+    public ResponseEntity<User> getCurrentUser(@AuthenticationPrincipal User user) {
+        if (user == null) {
+            throw new RuntimeException("Not authenticated");
+        }
+        return ResponseEntity.ok(user);
     }
 } 

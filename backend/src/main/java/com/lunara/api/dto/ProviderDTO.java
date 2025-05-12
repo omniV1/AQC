@@ -1,6 +1,6 @@
 package com.lunara.api.dto;
 
-import com.lunara.api.model.ProviderRole;
+import com.lunara.api.user.Role;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -11,7 +11,7 @@ public class ProviderDTO {
     private UUID id;
     private String name;
     private String email;
-    private ProviderRole role;
+    private Role role;
     private LocalDateTime lastLogin;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

@@ -1,8 +1,6 @@
 package com.lunara.api.config;
 
 import com.lunara.api.repository.UserRepository;
-import com.lunara.api.user.User;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;

@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import com.lunara.api.repository.DailyCheckInRepository;
-import com.lunara.api.user.User;
+import com.lunara.api.user.Client;
 import com.lunara.api.error.ErrorResponse;
 
 import java.time.LocalDateTime;
@@ -36,10 +36,10 @@ public class DailyCheckInController {
     private final DailyCheckInRepository checkInRepository;
 
     /**
-     * Submits a new daily check-in for the authenticated user.
+     * Submits a new daily check-in for the authenticated client.
      * Records mood level, physical symptoms, emotional notes, and other wellness metrics.
      *
-     * @param user The authenticated user (injected by Spring Security)
+     * @param client The authenticated client (injected by Spring Security)
      * @param checkIn The check-in data to be recorded
      * @return The saved check-in record
      */
@@ -75,22 +75,22 @@ public class DailyCheckInController {
     })
     @PostMapping
     public ResponseEntity<DailyCheckIn> submitCheckIn(
-            @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal Client client,
             @RequestBody @Schema(description = "Daily check-in details") DailyCheckIn checkIn) {
-        checkIn.setUser(user);
+        checkIn.setClient(client);
         return ResponseEntity.ok(checkInRepository.save(checkIn));
     }
 
     /**
-     * Retrieves the complete check-in history for the authenticated user.
+     * Retrieves the complete check-in history for the authenticated client.
      * Results are ordered by creation date in descending order (newest first).
      *
-     * @param user The authenticated user (injected by Spring Security)
-     * @return List of all check-ins for the user
+     * @param client The authenticated client (injected by Spring Security)
+     * @return List of all check-ins for the client
      */
     @Operation(
-        summary = "Get user's check-in history",
-        description = "Retrieves all check-ins for the user, ordered by date (newest first)"
+        summary = "Get client's check-in history",
+        description = "Retrieves all check-ins for the client, ordered by date (newest first)"
     )
     @ApiResponses({
         @ApiResponse(
@@ -112,15 +112,15 @@ public class DailyCheckInController {
     })
     @GetMapping
     public ResponseEntity<List<DailyCheckIn>> getCheckInHistory(
-            @AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(checkInRepository.findByUserOrderByCreatedAtDesc(user));
+            @AuthenticationPrincipal Client client) {
+        return ResponseEntity.ok(checkInRepository.findByClientOrderByCreatedAtDesc(client));
     }
 
     /**
-     * Retrieves check-ins within a specified date range for the authenticated user.
+     * Retrieves check-ins within a specified date range for the authenticated client.
      * Results are ordered by creation date in descending order (newest first).
      *
-     * @param user The authenticated user (injected by Spring Security)
+     * @param client The authenticated client (injected by Spring Security)
      * @param start Start of the date range
      * @param end End of the date range
      * @return List of check-ins within the specified date range
@@ -157,7 +157,7 @@ public class DailyCheckInController {
     })
     @GetMapping("/range")
     public ResponseEntity<List<DailyCheckIn>> getCheckInsByDateRange(
-            @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal Client client,
             @Parameter(description = "Start date-time (yyyy-MM-dd'T'HH:mm:ss)")
             @Schema(example = "2024-01-01T00:00:00")
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
@@ -165,7 +165,7 @@ public class DailyCheckInController {
             @Schema(example = "2024-01-31T23:59:59")
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
         return ResponseEntity.ok(
-            checkInRepository.findByUserAndCreatedAtBetweenOrderByCreatedAtDesc(user, start, end)
+            checkInRepository.findByClientAndCreatedAtBetweenOrderByCreatedAtDesc(client, start, end)
         );
     }
 } 

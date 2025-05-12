@@ -85,23 +85,24 @@ public class SecurityConfig {
         log.info("Registered CORS configuration for all paths /**");
 
         return http
-            // Configure CORS first
             .cors(cors -> {
                 cors.configurationSource(source);
                 log.info("Applied CORS configuration to security chain");
             })
-            // Disable CSRF
             .csrf(csrf -> {
                 csrf.disable();
                 log.info("CSRF disabled");
             })
-            // Configure authorization
             .authorizeHttpRequests(auth -> {
                 log.debug("Configuring authorization rules");
                 auth
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers(
-                        "/auth/**",
+                        "/api/auth/authenticate",
+                        "/api/auth/register",
+                        "/api/auth/register/provider",
+                        "/api/auth/register/client",
+                        "/api/health",
                         "/v2/api-docs",
                         "/v3/api-docs",
                         "/v3/api-docs/**",
@@ -112,20 +113,19 @@ public class SecurityConfig {
                         "/swagger-ui/**",
                         "/webjars/**",
                         "/swagger-ui.html"
-                    )
-                    .permitAll()
+                    ).permitAll()
+                    .requestMatchers("/api/auth/me").authenticated()
+                    .requestMatchers("/api/auth/register/client").hasRole("PROVIDER")
                     .requestMatchers("/api/v1/support-sessions/**").hasAnyRole("PROVIDER", "CLIENT")
                     .requestMatchers("/api/clients/**", "/api/providers/**").hasRole("PROVIDER")
                     .anyRequest()
                     .authenticated();
                 log.info("Authorization rules configured");
             })
-            // Configure session management
             .sessionManagement(session -> {
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 log.info("Session management configured to STATELESS");
             })
-            // Configure authentication
             .authenticationProvider(authenticationProvider)
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
             .build();
