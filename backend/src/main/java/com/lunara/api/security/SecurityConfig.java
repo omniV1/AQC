@@ -24,24 +24,28 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
-@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
     private static final Logger log = LoggerFactory.getLogger(SecurityConfig.class);
 
-    @Value("${server.cors.allowed-origins:http://localhost:5173}")
+    @Value("${server.cors.allowed-origins}")
     private String allowedOriginsStr;
 
-    @Value("${server.cors.allowed-methods:GET,POST,PUT,DELETE,OPTIONS}")
+    @Value("${server.cors.allowed-methods}")
     private String allowedMethodsStr;
 
-    @Value("${server.cors.allowed-headers:*}")
+    @Value("${server.cors.allowed-headers}")
     private String allowedHeadersStr;
 
-    @Value("${server.cors.allow-credentials:true}")
+    @Value("${server.cors.allow-credentials}")
     private boolean allowCredentials;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter, AuthenticationProvider authenticationProvider) {
+        this.jwtAuthFilter = jwtAuthFilter;
+        this.authenticationProvider = authenticationProvider;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -52,62 +56,41 @@ public class SecurityConfig {
         log.info("Setting up CORS configuration");
         
         // Set allowed origins
-        corsConfiguration.setAllowedOrigins(Arrays.asList(allowedOriginsStr.split(",")));
-        log.info("Allowed origins configured: {}", allowedOriginsStr);
+        String[] origins = allowedOriginsStr.split(",");
+        corsConfiguration.setAllowedOrigins(Arrays.asList(origins));
+        log.info("Allowed origins configured: {}", Arrays.toString(origins));
         
         // Set allowed methods
-        List<String> allowedMethods = Arrays.asList(
-            "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"
-        );
-        corsConfiguration.setAllowedMethods(allowedMethods);
-        log.info("Allowed methods: {}", allowedMethods);
+        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"));
         
         // Set allowed headers
-        List<String> allowedHeaders = Arrays.asList(allowedHeadersStr.split(","));
-        if (allowedHeaders.size() == 1 && allowedHeaders.get(0).equals("*")) {
-            corsConfiguration.setAllowedHeaders(Arrays.asList(
-                "Authorization",
-                "Content-Type",
-                "Accept",
-                "Origin",
-                "X-Requested-With",
-                "Access-Control-Request-Method",
-                "Access-Control-Request-Headers"
-            ));
-        } else {
-            corsConfiguration.setAllowedHeaders(allowedHeaders);
-        }
-        log.info("Allowed headers: {}", allowedHeaders);
+        corsConfiguration.setAllowedHeaders(Arrays.asList(
+            "Authorization",
+            "Content-Type",
+            "Accept",
+            "Origin",
+            "X-Requested-With",
+            "Access-Control-Request-Method",
+            "Access-Control-Request-Headers"
+        ));
         
         // Set exposed headers
-        List<String> exposedHeaders = Arrays.asList(
+        corsConfiguration.setExposedHeaders(Arrays.asList(
             "Authorization",
             "Access-Control-Allow-Origin",
             "Access-Control-Allow-Credentials"
-        );
-        corsConfiguration.setExposedHeaders(exposedHeaders);
-        log.info("Exposed headers: {}", exposedHeaders);
+        ));
         
-        // Set other CORS properties
-        corsConfiguration.setAllowCredentials(allowCredentials);
+        corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setMaxAge(3600L);
-        log.info("CORS credentials allowed: {}, Max age: 3600", allowCredentials);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
-        log.info("Registered CORS configuration for all paths /**");
 
         return http
-            .cors(cors -> {
-                cors.configurationSource(source);
-                log.info("Applied CORS configuration to security chain");
-            })
-            .csrf(csrf -> {
-                csrf.disable();
-                log.info("CSRF disabled");
-            })
+            .cors(cors -> cors.configurationSource(source))
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> {
-                log.debug("Configuring authorization rules");
                 auth
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers(
@@ -132,12 +115,8 @@ public class SecurityConfig {
                     .requestMatchers("/clients/**", "/providers/**").hasRole("PROVIDER")
                     .anyRequest()
                     .authenticated();
-                log.info("Authorization rules configured");
             })
-            .sessionManagement(session -> {
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-                log.info("Session management configured to STATELESS");
-            })
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authenticationProvider(authenticationProvider)
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
             .build();

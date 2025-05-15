@@ -38,7 +38,7 @@ public class Notification {
     private String relatedEntityType;
 
     @Column(name = "related_entity_id")
-    private Long relatedEntityId;
+    private UUID relatedEntityId;
 
     @Builder.Default
     @Column(nullable = false)

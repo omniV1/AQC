@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { User, LoginCredentials, RegisterData } from '../types/models';
-import { AuthContextType } from '../types/auth';
+import { toast } from 'react-toastify';
+import { User, LoginCredentials, ProviderRegistrationData, ClientRegistrationData } from '../types/models';
+import { AuthContextType, AuthResponse } from '../types/auth';
 import { AuthService } from '../services/authService';
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -12,7 +13,8 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const initAuth = async () => {
+        // Check for stored auth token and validate it
+        const checkAuth = async () => {
             try {
                 const token = localStorage.getItem('token');
                 if (token) {
@@ -20,13 +22,13 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                     setUser(user);
                 }
             } catch (err) {
+                console.error('Auth validation failed:', err);
                 localStorage.removeItem('token');
             } finally {
                 setLoading(false);
             }
         };
-
-        initAuth();
+        checkAuth();
     }, []);
 
     const handleAuthResponse = (token: string, user: User) => {
@@ -35,67 +37,63 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         setError(null);
     };
 
-    const providerLogin = async (credentials: LoginCredentials) => {
+    const registerProvider = async (data: ProviderRegistrationData): Promise<AuthResponse> => {
+        try {
+            const response = await authService.registerProvider(data);
+            handleAuthResponse(response.token, response.user);
+            toast.success('Registration successful! Welcome to Lunara.');
+            return response;
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.message || error.message || 'Registration failed';
+            toast.error(errorMessage);
+            throw error;
+        }
+    };
+
+    const registerClient = async (data: ClientRegistrationData): Promise<AuthResponse> => {
+        try {
+            const response = await authService.registerClient(data);
+            handleAuthResponse(response.token, response.user);
+            toast.success('Client registered successfully!');
+            return response;
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.message || error.message || 'Client registration failed';
+            toast.error(errorMessage);
+            throw error;
+        }
+    };
+
+    const providerLogin = async (credentials: LoginCredentials): Promise<AuthResponse> => {
         try {
             const response = await authService.providerLogin(credentials);
-            if (response && response.token && response.user) {
-                handleAuthResponse(response.token, response.user);
-            } else {
-                throw new Error('Invalid response from server');
-            }
-        } catch (err: any) {
-            const errorMessage = err.response?.data?.message || err.response?.data?.errors?.join(', ') || 'Invalid provider credentials';
-            setError(errorMessage);
-            throw err;
+            handleAuthResponse(response.token, response.user);
+            toast.success('Login successful! Welcome back.');
+            return response;
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.message || error.message || 'Login failed';
+            toast.error(errorMessage);
+            throw error;
         }
     };
 
-    const clientLogin = async (credentials: LoginCredentials) => {
+    const clientLogin = async (credentials: LoginCredentials): Promise<AuthResponse> => {
         try {
-            const { token, user } = await authService.clientLogin(credentials);
-            handleAuthResponse(token, user);
-        } catch (err) {
-            setError('Invalid client credentials');
-            throw err;
+            const response = await authService.clientLogin(credentials);
+            handleAuthResponse(response.token, response.user);
+            toast.success('Login successful! Welcome back.');
+            return response;
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.message || error.message || 'Login failed';
+            toast.error(errorMessage);
+            throw error;
         }
     };
 
-    const registerProvider = async (data: { 
-        email: string; 
-        firstName: string; 
-        lastName: string; 
-        password: string;
-        registrationCode: string;
-    }) => {
-        try {
-            await authService.registerProvider(data);
-            setError(null);
-        } catch (err) {
-            setError('Failed to register provider');
-            throw err;
-        }
-    };
-
-    const registerClient = async (data: RegisterData & { providerId: number }) => {
-        try {
-            await authService.registerClient(data);
-            setError(null);
-        } catch (err) {
-            setError('Failed to register client');
-            throw err;
-        }
-    };
-
-    const logout = async () => {
-        try {
-            await authService.logout();
-            localStorage.removeItem('token');
-            setUser(null);
-            setError(null);
-        } catch (err) {
-            setError('Failed to logout');
-            throw err;
-        }
+    const logout = () => {
+        localStorage.removeItem('token');
+        setUser(null);
+        setError(null);
+        toast.info('You have been logged out.');
     };
 
     const clearError = () => setError(null);
@@ -108,26 +106,22 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         isProvider: user?.role === 'PROVIDER',
         isClient: user?.role === 'CLIENT',
         isAdmin: user?.role === 'ADMIN',
-        providerLogin,
-        clientLogin,
         registerProvider,
         registerClient,
+        providerLogin,
+        clientLogin,
         logout,
         clearError
     };
 
-    if (loading) {
-        return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
-    }
-
     return (
         <AuthContext.Provider value={value}>
-            {children}
+            {!loading && children}
         </AuthContext.Provider>
     );
 };
 
-const useAuth = () => {
+export const useAuth = () => {
     const context = useContext(AuthContext);
     if (context === undefined) {
         throw new Error('useAuth must be used within an AuthProvider');
@@ -135,4 +129,4 @@ const useAuth = () => {
     return context;
 };
 
-export { AuthProvider, useAuth }; 
+export default AuthProvider; 

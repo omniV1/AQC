@@ -3,8 +3,8 @@ spring:
     name: lunara-api
   datasource:
     url: jdbc:postgresql://localhost:5432/${POSTGRES_DB:lunara_db}
-    username: ${POSTGRES_USER:Owen}
-    password: ${POSTGRES_PASSWORD:omni}
+    username: ${POSTGRES_USER:USERNAME}
+    password: ${POSTGRES_PASSWORD:PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:

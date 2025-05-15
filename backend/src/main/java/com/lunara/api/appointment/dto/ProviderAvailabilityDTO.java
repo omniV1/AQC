@@ -1,9 +1,10 @@
 package com.lunara.api.appointment.dto;
 
 import java.time.LocalTime;
+import java.util.UUID;
 
 public interface ProviderAvailabilityDTO {
-    Long getProviderId();
+    UUID getProviderId();
     String getProviderName();
     Integer getDayOfWeek();
     LocalTime getStartTime();

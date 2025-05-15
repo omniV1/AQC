@@ -1,33 +1,76 @@
 /* Import OpenDyslexic font for better readability */
 @import url('https://fonts.cdnfonts.com/css/opendyslexic');
 
+/* Import Luxurious Script and Roman fonts */
+@import url('https://fonts.googleapis.com/css2?family=Luxurious+Script&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Luxurious+Roman&display=swap');
+
 /* Import a complementary serif font for headings */
 @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap');
 
 :root {
-  --font-primary: 'OpenDyslexic', system-ui, -apple-system, sans-serif;
+  --font-primary: 'Lora', serif;
+  --font-script: 'Luxurious Script', cursive;
+  --font-roman: 'Luxurious Roman', Helvetica;
   --font-heading: 'Lora', serif;
   
   /* Color variables */
-  --color-text: #2D3748;
-  --color-heading: #1A202C;
-  --color-accent: #7C6F8A;
-  --color-background: #FAF5F5;
+  --color-brown: #571e00;
+  --color-cream: #faf7f2;
+  --color-sage: #8B9D83;
+  --color-background: var(--color-cream);
 }
 
 body {
-  font-family: var(--font-primary);
-  color: var(--color-text);
-  line-height: 1.7;
-  background-color: var(--color-background);
+  font-family: 'Luxurious Roman', Helvetica;
+  color: var(--color-brown);
+  background-color: var(--color-cream);
+  line-height: 1.5;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
-  color: var(--color-heading);
+h1, h2, h3 {
+  font-family: 'Luxurious Script', cursive;
+  font-weight: normal;
+  color: var(--color-brown);
+}
+
+h4, h5, h6 {
+  font-family: var(--font-script);
+  color: var(--color-brown);
   line-height: 1.3;
   margin-bottom: 1rem;
-  font-weight: 600;
+}
+
+.script-text {
+  font-family: var(--font-script);
+}
+
+.roman-text {
+  font-family: var(--font-roman);
+}
+
+.hero-text {
+  text-shadow: 0px 4px 4px rgba(226, 215, 202, 0.67);
+}
+
+.nav-link {
+  font-family: 'Luxurious Roman', Helvetica;
+  color: var(--color-brown);
+  transition: opacity 0.2s;
+}
+
+.nav-link:hover {
+  opacity: 0.8;
+}
+
+.letter-text {
+  font-family: 'Luxurious Roman', Helvetica;
+  line-height: 1.8;
+}
+
+.testimonial-text {
+  font-family: 'Luxurious Roman', Helvetica;
+  letter-spacing: 0.05em;
 }
 
 .centered-container {
@@ -40,12 +83,12 @@ h1, h2, h3, h4, h5, h6 {
 .section-title {
   font-size: 2.5rem;
   margin-bottom: 2rem;
-  color: var(--color-heading);
+  color: var(--color-brown);
 }
 
 .section-subtitle {
   font-size: 2rem;
-  color: var(--color-accent);
+  color: var(--color-sage);
   margin-bottom: 1.5rem;
 }
 
@@ -55,18 +98,62 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .button-primary {
-  background-color: var(--color-accent);
+  background-color: var(--color-sage);
   color: white;
   padding: 0.75rem 2rem;
-  border-radius: 0.5rem;
+  border-radius: 9999px;
   font-family: var(--font-primary);
   font-size: 1.125rem;
   transition: all 0.2s ease-in-out;
   display: inline-block;
-  margin-top: 1.5rem;
 }
 
 .button-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  opacity: 0.9;
+}
+
+/* Text shadow utilities */
+.text-shadow-white {
+  text-shadow: 0px 4px 4px rgba(255, 255, 255, 0.27);
+}
+
+.text-shadow-cream {
+  text-shadow: 0px 4px 4px rgba(226, 215, 202, 0.67);
+}
+
+.font-script {
+  font-family: 'Luxurious Script', cursive;
+  font-weight: normal;
+}
+
+/* Navigation */
+nav a {
+  color: var(--color-brown);
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+nav a:hover {
+  opacity: 0.8;
+}
+
+/* Hero Text */
+h1 {
+  font-family: 'Luxurious Script', cursive;
+  text-shadow: 0px 4px 4px rgba(226, 215, 202, 0.67);
+}
+
+/* Letter Content */
+.letter-content {
+  font-family: 'Times New Roman', serif;
+  line-height: 1.6;
+  color: var(--color-brown);
+}
+
+/* Testimonials */
+.testimonial-text {
+  font-family: 'Times New Roman', serif;
+  letter-spacing: 0.05em;
+  color: var(--color-brown);
 } 

@@ -9,27 +9,25 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "provider_availability",
-    uniqueConstraints = @UniqueConstraint(columnNames = {"provider_id", "day_of_week"}))
+@Table(name = "provider_availability")
+@IdClass(ProviderAvailabilityId.class)
 public class ProviderAvailability {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "provider_id", nullable = false)
     private User provider;
 
+    @Id
     @Column(name = "day_of_week", nullable = false)
     private Integer dayOfWeek;
 
+    @Id
     @Column(name = "start_time", nullable = false)
     private LocalTime startTime;
 

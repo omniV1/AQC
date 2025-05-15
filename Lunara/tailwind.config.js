@@ -1,31 +1,27 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
-      colors: {
-        'cream': '#FAF7F2',
-        'warm-brown': '#6B4D37',
-        'sage': '#8C9A8C',
-        'sage-light': '#F5F7F5',
-        'forest-green': '#4A5D4C',
-        'olive': '#8B8356',
-        'purple': '#9D98B5',
-        'soft-rose': '#F8E5E5',
-        'brown': {
-          DEFAULT: '#6B4D37',
-          dark: '#5A3E2E',
-          light: '#8E6F5A'
-        }
-      },
       fontFamily: {
-        'sans': ['Atkinson Hyperlegible', 'system-ui', 'sans-serif'],
-        'serif': ['Lora', 'serif'],
-        'heading': ['Playfair Display', 'serif'],
-        'body': ['Atkinson Hyperlegible', 'system-ui', 'sans-serif']
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        serif: ['Lora', 'serif'],
+        playfair: ['Playfair Display', 'serif'],
+      },
+      colors: {
+        cream: '#FAF7F2',
+        brown: {
+          light: '#A27B5C',
+          DEFAULT: '#6B4D37',
+          dark: '#2C3639',
+        },
+        sage: {
+          light: '#8C9A8C',
+          DEFAULT: '#3F4E4F',
+        },
       },
       backgroundImage: {
         'hero-pattern': "url('/images/leaf-pattern.png')",
@@ -39,5 +35,7 @@ module.exports = {
       }
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 } 

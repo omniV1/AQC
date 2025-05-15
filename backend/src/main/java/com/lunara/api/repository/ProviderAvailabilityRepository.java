@@ -1,6 +1,7 @@
 package com.lunara.api.repository;
 
 import com.lunara.api.availability.ProviderAvailability;
+import com.lunara.api.availability.ProviderAvailabilityId;
 import com.lunara.api.appointment.dto.ProviderAvailabilityDTO;
 import com.lunara.api.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface ProviderAvailabilityRepository extends JpaRepository<ProviderAvailability, UUID> {
+public interface ProviderAvailabilityRepository extends JpaRepository<ProviderAvailability, ProviderAvailabilityId> {
     List<ProviderAvailability> findByProvider(User provider);
     Optional<ProviderAvailability> findByProviderAndDayOfWeek(User provider, Integer dayOfWeek);
     boolean existsByProviderAndDayOfWeek(User provider, Integer dayOfWeek);
@@ -27,7 +28,7 @@ public interface ProviderAvailabilityRepository extends JpaRepository<ProviderAv
             pa.end_time as endTime,
             pa.is_available as isAvailable
         FROM provider_availability pa
-        JOIN _user u ON pa.provider_id = u.id
+        JOIN users u ON pa.provider_id = u.id
         WHERE pa.provider_id = :providerId
         AND pa.is_available = true
         AND pa.day_of_week BETWEEN 

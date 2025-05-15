@@ -101,6 +101,7 @@ export interface RegisterData {
     firstName: string;
     lastName: string;
     password: string;
+    registrationCode?: string;
 }
 
 export interface AuthResponse {
@@ -165,4 +166,12 @@ export interface Appointment {
     status: string;
     location: string;
     notes?: string;
+}
+
+export interface ProviderRegistrationData extends RegisterData {
+    registrationCode: string;
+}
+
+export interface ClientRegistrationData extends RegisterData {
+    providerId: number;
 } 
