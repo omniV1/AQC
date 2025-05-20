@@ -108,7 +108,10 @@ public class SecurityConfig {
                         "/configuration/security",
                         "/swagger-ui/**",
                         "/webjars/**",
-                        "/swagger-ui.html"
+                        "/swagger-ui.html",
+                        // Public blog endpoints
+                        "/api/v1/blog", 
+                        "/api/v1/blog/**"
                     ).permitAll()
                     .requestMatchers("/auth/me").authenticated()
                     .requestMatchers("/auth/register/client").hasRole("PROVIDER")

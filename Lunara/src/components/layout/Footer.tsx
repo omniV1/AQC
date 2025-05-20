@@ -1,45 +1,62 @@
 import React from 'react';
 import lunaraLogoSmall from '../../Assets/lunara logo small.png';
-import insta from '../../Assets/insta.png';
-import spotify from '../../Assets/spotify.png';
+import instaIcon from '../../Assets/insta.png';
+import spotifyIcon from '../../Assets/spotify.png';
+import pinsImage from '../../Assets/pins.png';
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-[#faf7f2] py-12">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="flex justify-center items-center gap-24">
-          <a 
-            href="https://instagram.com" 
-            className="w-20 h-20 transition-opacity hover:opacity-80"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src={insta}
-              alt="Instagram"
-              className="w-full h-full object-contain sepia"
-            />
-          </a>
-          <img
-            src={lunaraLogoSmall}
-            alt="Lunara"
-            className="w-24 h-24 object-contain"
-          />
-          <a 
-            href="https://spotify.com"
-            className="w-20 h-20 transition-opacity hover:opacity-80"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src={spotify}
-              alt="Spotify"
-              className="w-full h-full object-contain sepia"
-            />
-          </a>
+    <footer className="relative w-full flex flex-col items-center bg-transparent px-4 py-16 mt-12">
+      {/* Pins Image - Positioned to the left */}
+      <img 
+        src={pinsImage} 
+        alt="Decorative pins" 
+        className="absolute left-4 md:left-8 top-1/2 transform -translate-y-1/2 w-36 h-auto md:w-48 z-10"
+      />
+
+      <div className="flex flex-col md:flex-row justify-around w-full max-w-2xl mb-8">
+        {/* Quick Links */}
+        <div className="flex flex-col items-center md:items-start mb-6 md:mb-0">
+          <h3 className="[font-family:'Luxurious_Roman-Regular',Helvetica] font-normal text-[#571e00] text-lg mb-2">Quick Links</h3>
+          <a href="/about" className="[font-family:'Luxurious_Roman-Regular',Helvetica] font-normal text-[#571e00] text-base mb-1 hover:underline">About</a>
+          <a href="/services" className="[font-family:'Luxurious_Roman-Regular',Helvetica] font-normal text-[#571e00] text-base mb-1 hover:underline">Services</a>
+          <a href="/contact" className="[font-family:'Luxurious_Roman-Regular',Helvetica] font-normal text-[#571e00] text-base hover:underline">Contact</a>
         </div>
-        <p className="text-center text-[#571e00] text-lg mt-6">© 2025 Lunara. All rights reserved.</p>
+
+        {/* Connect With Us */}
+        <div className="flex flex-col items-center md:items-start">
+          <h3 className="[font-family:'Luxurious_Roman-Regular',Helvetica] font-normal text-[#571e00] text-lg mb-2">Connect With Us</h3>
+          <div className="flex flex-row">
+            <a href="#" target="_blank" rel="noopener noreferrer">
+              <img
+                className="w-[40px] h-[40px] object-cover mr-2 transition-transform hover:scale-110"
+                alt="Instagram"
+                src={instaIcon}
+              />
+            </a>
+            <a href="#" target="_blank" rel="noopener noreferrer">
+              <img
+                className="w-[40px] h-[40px] object-cover transition-transform hover:scale-110"
+                alt="Spotify"
+                src={spotifyIcon}
+              />
+            </a>
+          </div>
+        </div>
       </div>
+
+      {/* Logo and Tagline */}
+      <div className="flex flex-col items-center my-8">
+         <img src={lunaraLogoSmall} alt="Lunara Logo" className="h-12 mb-3" />
+         <p className="[font-family:'Luxurious_Roman-Regular',Helvetica] font-normal text-[#571e00] text-center text-sm max-w-xs">
+          Care that honors the sacred rhythm of birth, rest, and renewal.
+         </p>
+      </div>
+
+      {/* Copyright */}
+      <p className="[font-family:'Luxurious_Roman-Regular',Helvetica] font-normal text-[#571e00] text-xs">
+        © 2025 Lunara. All rights reserved.
+      </p>
     </footer>
   );
 } 

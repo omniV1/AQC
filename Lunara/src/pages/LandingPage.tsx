@@ -2,20 +2,20 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import babyOllie from "../Assets/baby ollie.png";
 import meadowBackground from "../Assets/meadow background.png";
-import paper from "../Assets/paper.png";
+import note from "../Assets/note.png";
 import babyEli from "../Assets/baby eli.png";
-import polaroidFrame from "../Assets/polaroid frame.png";
 import leftCorn from "../Assets/left corn.png";
 import rightCorn from "../Assets/right corn.png";
-import lunaraLogo from "../Assets/lunara logo.png";
+// lunaraLogo import might be removed if Header.tsx handles it globally and is used here
+// import lunaraLogo from "../Assets/lunara logo.png"; 
 import beeImage from "../Assets/image 2.png";
-import Footer from '../components/layout/Footer';
+// import Footer from '../components/layout/Footer'; // Footer is now provided by MainLayout
 
 export const LandingPage: React.FC = () => {
   return (
-    <div className="w-full min-h-screen bg-white">
-      {/* Header */}
-      <div className="flex flex-col items-center py-8">
+    <div className="w-full min-h-screen bg-white pt-32">
+      {/* Header section removed - assuming global Header.tsx is used */}
+      {/* <div className="flex flex-col items-center py-8">
         <Link to="/">
           <img src={lunaraLogo} alt="Lunara" className="w-[120px] md:w-[150px] mb-8" />
         </Link>
@@ -25,7 +25,7 @@ export const LandingPage: React.FC = () => {
           <Link to="/blog" className="text-[#571e00] hover:text-[#8B4513] transition-colors">Blog</Link>
           <Link to="/login" className="text-[#571e00] hover:text-[#8B4513] transition-colors">Login</Link>
         </nav>
-      </div>
+      </div> */}
 
       {/* Hero Banner */}
       <div className="relative">
@@ -71,7 +71,7 @@ export const LandingPage: React.FC = () => {
             {/* Letter */}
             <div className="relative w-full max-w-[400px] md:max-w-[500px]">
               <img 
-                src={paper} 
+                src={note} 
                 alt="" 
                 className="w-full rotate-[4deg]"
               />
@@ -85,21 +85,16 @@ export const LandingPage: React.FC = () => {
             {/* Photo */}
             <div className="relative w-full max-w-[300px] md:max-w-[400px]">
               <img 
-                src={polaroidFrame} 
-                alt="" 
-                className="w-full"
-              />
-              <img 
                 src={babyEli} 
                 alt="Baby portrait" 
-                className="absolute top-[5%] left-[5%] w-[90%] h-[90%] object-cover grayscale"
+                className="w-full h-auto object-cover grayscale"
               />
             </div>
           </div>
         </div>
       </div>
 
-      <Footer />
+      {/* <Footer /> */}{/* Footer is now provided by MainLayout */}
     </div>
   );
 };
