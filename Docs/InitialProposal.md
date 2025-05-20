@@ -56,26 +56,24 @@ As software development students at Grand Canyon University, we're excited to bu
 
 As senior software development students at Grand Canyon University, we're committed to applying our education and skills to create a meaningful solution for postpartum care. **While all team members will collaborate across the entire stack and contribute to all aspects of development throughout the project lifecycle**, each member will leverage their unique strengths and take leadership in specific areas:
 
-**Owen Lindsey** (Full Stack Developer & Project Lead):
+**Owen Lindsey** (Full Stack Develope):
 - **Primary Responsibilities**: Project management, architecture design, backend API development
 - **Technical Focus**: System architecture, database design, API security
 - **Leadership Role**: Directs overall project vision, manages timeline, leads team meetings
-- **Skills**: JavaScript, TypeScript, C#, Java, various frameworks
-- **Background**: Air Force veteran with experience in team coordination and detail-oriented execution
+- **Skills**: JavaScript, TypeScript, C#, Java, various 
 
-**Carter Wright** (Full Stack Developer & UI/UX Lead):
+**Carter Wright** (Full Stack Developer):
 - **Primary Responsibilities**: Frontend development, UI/UX design, component library creation
 - **Technical Focus**: React implementation, responsive design, animation and transitions
 - **Leadership Role**: Drives interface decisions, creates design system, conducts usability testing
 - **Skills**: React development, UI/UX design principles, frontend optimization
-- **Background**: Experience in creating intuitive user interfaces with aesthetic appeal
 
-**Andrew Mack** (Full Stack Developer & DevOps Lead):
+**Andrew Mack** (Full Stack Develope):
 - **Primary Responsibilities**: Backend services, infrastructure setup, CI/CD implementation
 - **Technical Focus**: System security, deployment pipelines, AI integration
 - **Leadership Role**: Manages development workflow, ensures code quality, maintains infrastructure
 - **Skills**: Backend development, cloud infrastructure, security implementation
-- **Background**: Strong technical foundations with focus on system reliability and security
+
 
 **Collaborative Development Approach**:
 Our team recognizes that modern software development requires versatility and cross-functional collaboration. While each member has designated areas of leadership based on their strengths, we will all actively participate in full-stack development throughout the project. This approach ensures:
