@@ -68,7 +68,7 @@ As senior software development students at Grand Canyon University, we're commit
 - **Leadership Role**: Drives interface decisions, creates design system, conducts usability testing
 - **Skills**: React development, UI/UX design principles, frontend optimization
 
-**Andrew Mack** (Full Stack Develope):
+**Andrew Mack** (Full Stack Developer):
 - **Primary Responsibilities**: Backend services, infrastructure setup, CI/CD implementation
 - **Technical Focus**: System security, deployment pipelines, AI integration
 - **Leadership Role**: Manages development workflow, ensures code quality, maintains infrastructure
