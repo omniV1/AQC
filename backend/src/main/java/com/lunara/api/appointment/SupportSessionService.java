@@ -3,10 +3,10 @@ package com.lunara.api.appointment;
 import com.lunara.api.appointment.dto.SupportSessionDTO;
 import com.lunara.api.appointment.dto.CreateSupportSessionRequest;
 import com.lunara.api.appointment.dto.ProviderAvailabilityDTO;
-import com.lunara.api.availability.ProviderAvailability;
 import com.lunara.api.exception.ResourceNotFoundException;
 import com.lunara.api.repository.SupportSessionRepository;
 import com.lunara.api.repository.ProviderAvailabilityRepository;
+import com.lunara.api.repository.AppointmentRepository;
 import com.lunara.api.user.User;
 import com.lunara.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,6 +27,7 @@ public class SupportSessionService {
     private final SupportSessionRepository supportSessionRepository;
     private final ProviderAvailabilityRepository availabilityRepository;
     private final UserRepository userRepository;
+    private final AppointmentRepository appointmentRepository;
 
     @Transactional(readOnly = true)
     public List<ProviderAvailabilityDTO> getProviderAvailability(UUID providerId, LocalDateTime startDate, LocalDateTime endDate) {
@@ -40,82 +40,152 @@ public class SupportSessionService {
     }
 
     @Transactional
-    public SupportSessionDTO scheduleSupportSession(User client, CreateSupportSessionRequest request) {
-        // Validate provider availability
-        var provider = userRepository.findById(request.getProviderId())
-            .orElseThrow(() -> new ResourceNotFoundException("Provider not found"));
+    public SupportSessionDTO scheduleSupportSession(User currentClient, CreateSupportSessionRequest request) {
+        User provider = userRepository.findById(request.getProviderId())
+            .orElseThrow(() -> new ResourceNotFoundException("Provider not found: " + request.getProviderId()));
 
-        var providerAvailability = availabilityRepository
-            .findByProviderIdAndDayOfWeek(request.getProviderId(), request.getStartTime().getDayOfWeek().getValue() % 7)
-            .orElseThrow(() -> new ResourceNotFoundException("Provider not available on this day"));
-
-        LocalTime sessionStartTime = request.getStartTime().toLocalTime();
-        LocalTime sessionEndTime = request.getEndTime().toLocalTime();
-
-        // Check if the support session falls within provider's available hours
-        if (sessionStartTime.isBefore(providerAvailability.getStartTime()) ||
-            sessionEndTime.isAfter(providerAvailability.getEndTime())) {
-            throw new IllegalArgumentException("Support session time outside provider's available hours");
-        }
-
-        // Check for conflicts with existing support sessions
-        boolean hasConflict = supportSessionRepository.hasConflictingSupportSessions(
+        availabilityRepository
+            .findByProviderIdAndDayOfWeekAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(
+                request.getProviderId(), 
+                request.getStartTime().getDayOfWeek().getValue(),
+                request.getStartTime().toLocalTime(),
+                request.getEndTime().toLocalTime()
+            )
+            .orElseThrow(() -> new IllegalArgumentException("Provider not available at the requested time or slot definition not found."));
+        
+        boolean hasConflict = appointmentRepository.hasConflictingAppointments(
             request.getProviderId(),
             request.getStartTime(),
-            request.getEndTime()
+            request.getEndTime(),
+            null
         );
 
         if (hasConflict) {
-            throw new IllegalArgumentException("Selected time slot is already booked");
+            throw new IllegalArgumentException("Selected time slot is already booked for an appointment.");
         }
 
-        // Create the support session
-        var session = SupportSession.builder()
-            .client(client)
+        Appointment appointment = Appointment.builder()
+            .client(currentClient)
             .provider(provider)
             .startTime(request.getStartTime())
             .endTime(request.getEndTime())
-            .status(SupportSessionStatus.SCHEDULED)
+            .status("SCHEDULED")
+            .appointmentType(request.getAppointmentType())
+            .notes(request.getNotes())
+            .build();
+        Appointment savedAppointment = appointmentRepository.save(appointment);
+
+        SupportSession supportSession = SupportSession.builder()
+            .appointment(savedAppointment)
             .approvalStatus(ApprovalStatus.PENDING)
             .sessionType(request.getSessionType())
-            .notes(request.getNotes())
+            .recommendations(request.getRecommendations())
+            .resourcesProvided(request.getResourcesProvided())
+            .followUpRequired(request.getFollowUpRequired() != null ? request.getFollowUpRequired() : false)
+            .followUpDate(request.getFollowUpDate())
+            .followUpNotes(request.getFollowUpNotes())
             .location(request.getLocation())
             .build();
 
-        var savedSession = supportSessionRepository.save(session);
-        return SupportSessionDTO.fromEntity(savedSession);
+        SupportSession savedSupportSession = supportSessionRepository.save(supportSession);
+        return SupportSessionDTO.fromEntity(savedSupportSession);
     }
 
     @Transactional
-    public void cancelSupportSession(UUID sessionId, UUID userId) {
-        var session = supportSessionRepository.findById(sessionId)
-            .orElseThrow(() -> new ResourceNotFoundException("Support session not found"));
-
-        // Verify the user owns this support session
-        if (!session.getClient().getId().equals(userId) && !session.getProvider().getId().equals(userId)) {
-            throw new IllegalArgumentException("Not authorized to cancel this support session");
+    public void cancelSupportSession(UUID supportSessionId, UUID userId, String cancellationReason) {
+        SupportSession session = supportSessionRepository.findById(supportSessionId)
+            .orElseThrow(() -> new ResourceNotFoundException("Support session not found: " + supportSessionId));
+        
+        Appointment appointment = session.getAppointment();
+        if (appointment == null) {
+            throw new IllegalStateException("Support session is not associated with an appointment.");
         }
 
-        session.setStatus(SupportSessionStatus.CANCELLED);
-        session.setApprovalStatus(ApprovalStatus.CANCELLED_BY_CLIENT);
+        User clientUser = appointment.getClient();
+        User providerUser = appointment.getProvider();
+
+        if ((clientUser == null || !clientUser.getId().equals(userId)) && 
+            (providerUser == null || !providerUser.getId().equals(userId))) {
+            throw new IllegalArgumentException("Not authorized to modify this support session/appointment.");
+        }
+
+        appointment.setStatus("CANCELLED");
+        appointmentRepository.save(appointment);
+        
+        ApprovalStatus cancelStatus = ApprovalStatus.CANCELLED_BY_CLIENT;
+        if (providerUser != null && providerUser.getId().equals(userId)) {
+            cancelStatus = ApprovalStatus.CANCELLED_BY_PROVIDER;
+        }
+        session.setApprovalStatus(cancelStatus);
+        session.setCancellationReason(cancellationReason);
         supportSessionRepository.save(session);
     }
 
     @Transactional
-    public SupportSession updateSupportSessionStatus(UUID sessionId, String status) {
-        var session = supportSessionRepository.findById(sessionId)
-            .orElseThrow(() -> new ResourceNotFoundException("Support session not found"));
+    public SupportSessionDTO updateSupportSessionApproval(UUID supportSessionId, ApprovalStatus approvalStatus, User approver) {
+        SupportSession session = supportSessionRepository.findById(supportSessionId)
+            .orElseThrow(() -> new ResourceNotFoundException("Support session not found: " + supportSessionId));
         
-        try {
-            session.setStatus(SupportSessionStatus.valueOf(status.toUpperCase()));
-            return supportSessionRepository.save(session);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid support session status: " + status);
+        Appointment appointment = session.getAppointment();
+        if (appointment == null) {
+             throw new IllegalStateException("Support session is not associated with an appointment for approval.");
         }
+        
+        if (appointment.getProvider() == null || !appointment.getProvider().getId().equals(approver.getId())) {
+            // This logic can be refined based on roles if admins, etc., can also approve
+            // throw new IllegalArgumentException("User not authorized to approve/reject this session.");
+        }
+
+        session.setApprovalStatus(approvalStatus);
+        SupportSession updatedSession = supportSessionRepository.save(session);
+        
+        if (approvalStatus == ApprovalStatus.APPROVED) {
+            appointment.setStatus("CONFIRMED"); 
+            appointmentRepository.save(appointment);
+        } else if (approvalStatus == ApprovalStatus.REJECTED) {
+            // Optionally, set appointment status differently if rejected
+            // appointment.setStatus("PENDING_CLIENT_ACTION"); 
+            // appointmentRepository.save(appointment);
+        }
+        
+        return SupportSessionDTO.fromEntity(updatedSession);
     }
 
     @Transactional(readOnly = true)
     public List<SupportSession> getSupportSessionsByDateRange(LocalDateTime start, LocalDateTime end) {
-        return supportSessionRepository.findByStartTimeBetween(start, end);
+        return supportSessionRepository.findByAppointment_StartTimeBetween(start, end);
+    }
+
+    @Transactional
+    public SupportSessionDTO updateAppointmentStatus(UUID supportSessionId, String newStatus, User currentUser) {
+        SupportSession session = supportSessionRepository.findById(supportSessionId)
+            .orElseThrow(() -> new ResourceNotFoundException("Support session not found: " + supportSessionId));
+
+        Appointment appointment = session.getAppointment();
+        if (appointment == null) {
+            throw new IllegalStateException("Support session is not associated with an appointment.");
+        }
+
+        // Authorization check: Ensure the current user is either the client or the provider
+        User clientUser = appointment.getClient();
+        User providerUser = appointment.getProvider();
+
+        boolean isClient = clientUser != null && clientUser.getId().equals(currentUser.getId());
+        boolean isProvider = providerUser != null && providerUser.getId().equals(currentUser.getId());
+
+        if (!isClient && !isProvider) {
+            // Potentially allow admins or other roles here in the future
+            throw new IllegalArgumentException("User not authorized to update the status of this appointment.");
+        }
+
+        // Validate newStatus if necessary (e.g., against an enum or a list of allowed statuses)
+        // For now, directly setting it. Consider an AppointmentStatus enum in the Appointment entity.
+        appointment.setStatus(newStatus);
+        Appointment updatedAppointment = appointmentRepository.save(appointment);
+        
+        // The session itself might not have changed, but we return its DTO
+        // as the update was initiated via the session.
+        // If only appointment changed, one might also consider returning an AppointmentDTO.
+        return SupportSessionDTO.fromEntity(session); 
     }
 } 

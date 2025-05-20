@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 /**
  * Entity representing a daily wellness check-in.
@@ -29,11 +31,11 @@ public class DailyCheckIn {
 
     /** Client who submitted the check-in */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "client_id")
+    @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 
     /** Current mood level (e.g., VERY_LOW, LOW, NEUTRAL, GOOD, EXCELLENT) */
-    @Column(name = "mood_level")
+    @Column(name = "mood_level", nullable = false, length = 50)
     private String moodLevel;
 
     /** Hours of sleep in the last 24 hours */
@@ -41,11 +43,11 @@ public class DailyCheckIn {
     private Integer sleepHours;
 
     /** Description of any physical symptoms or discomfort */
-    @Column(name = "physical_symptoms")
+    @Column(name = "physical_symptoms", columnDefinition = "TEXT")
     private String physicalSymptoms;
 
     /** Notes about emotional state and feelings */
-    @Column(name = "emotional_notes")
+    @Column(name = "emotional_notes", columnDefinition = "TEXT")
     private String emotionalNotes;
 
     /** Description of support or resources needed */
@@ -53,35 +55,24 @@ public class DailyCheckIn {
     private Boolean tookMedication;
 
     /** Type of support needed */
-    @Column(name = "medication_notes")
+    @Column(name = "medication_notes", columnDefinition = "TEXT")
     private String medicationNotes;
 
     /** Description of support or resources needed */
-    @Column(name = "support_needed")
+    @Column(name = "support_needed", columnDefinition = "TEXT")
     private String supportNeeded;
 
     /** Notes about the check-in */
-    @Column(name = "notes")
+    @Column(name = "notes", columnDefinition = "TEXT")
     private String notes;
 
     /** Timestamp when check-in was submitted */
-    @Column(name = "created_at", updatable = false)
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     /** Timestamp when check-in was last updated */
-    @Column(name = "updated_at")
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
-    
-    /** Sets creation timestamp before persisting */
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    /** Updates the updated_at timestamp before persisting */
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
 } 

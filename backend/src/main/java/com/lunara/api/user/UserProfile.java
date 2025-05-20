@@ -6,19 +6,21 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Builder;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "user_profiles")
+@Table(name = "user_profiles", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id"})})
 public class UserProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     private LocalDateTime dueDate;
@@ -30,27 +32,22 @@ public class UserProfile {
     @Enumerated(EnumType.STRING)
     private FeedingStyle feedingStyle;
     
+    @Column(columnDefinition = "TEXT")
     private String birthLocation;
+    @Column(columnDefinition = "TEXT")
     private String supportSystem;
+    @Column(columnDefinition = "TEXT")
     private String concerns;
+    @Column(columnDefinition = "TEXT")
     private String goals;
     
-    @Column(name = "created_at")
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
     
-    @Column(name = "updated_at")
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
 
     public UUID getId() {
         return id;

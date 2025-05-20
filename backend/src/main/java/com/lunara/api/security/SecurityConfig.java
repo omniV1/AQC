@@ -98,6 +98,7 @@ public class SecurityConfig {
                         "/auth/register",
                         "/auth/register/provider",
                         "/health",
+                        "/api-docs/**",
                         "/v2/api-docs",
                         "/v3/api-docs",
                         "/v3/api-docs/**",

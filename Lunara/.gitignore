@@ -81,3 +81,5 @@ frontend/.vite-cache/
 .trash/
 *.sublime-workspace
 *.sublime-project
+
+.fake

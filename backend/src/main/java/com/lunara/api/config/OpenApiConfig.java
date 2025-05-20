@@ -20,17 +20,8 @@ import io.swagger.v3.oas.annotations.servers.Server;
 @OpenAPIDefinition(
     info = @Info(
         title = "Lunara API",
-        version = "1.0",
-        description = "REST API for Lunara Postpartum Support Platform",
-        contact = @Contact(
-            name = "Lunara Support",
-            email = "support@lunara.com",
-            url = "https://lunara.com"
-        ),
-        license = @License(
-            name = "Private License",
-            url = "https://lunara.com/license"
-        )
+        version = "1.0.0",
+        description = "API for the Lunara Postpartum Support Platform. Note: Most session management endpoints require 'Client' or 'Provider' roles."
     ),
     servers = {
         @Server(
@@ -46,11 +37,11 @@ import io.swagger.v3.oas.annotations.servers.Server;
 )
 @SecurityScheme(
     name = "Bearer Authentication",
-    description = "JWT token authentication",
-    scheme = "bearer",
     type = SecuritySchemeType.HTTP,
     bearerFormat = "JWT",
-    in = SecuritySchemeIn.HEADER
+    scheme = "bearer",
+    in = SecuritySchemeIn.HEADER,
+    description = "Enter JWT Bearer token"
 )
 public class OpenApiConfig {
     // Configuration is handled by annotations

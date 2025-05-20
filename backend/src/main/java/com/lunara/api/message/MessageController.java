@@ -14,6 +14,7 @@ import com.lunara.api.repository.MessageRepository;
 import com.lunara.api.user.User;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/messages")
@@ -72,7 +73,7 @@ public class MessageController {
     })
     @PutMapping("/{id}/read")
     public ResponseEntity<Message> markAsRead(
-            @Parameter(description = "Message ID") @PathVariable Long id) {
+            @Parameter(description = "Message ID") @PathVariable UUID id) {
         Message message = messageRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Message not found"));
         message.setRead(true);

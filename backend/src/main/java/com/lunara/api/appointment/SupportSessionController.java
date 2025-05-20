@@ -3,7 +3,6 @@ package com.lunara.api.appointment;
 import com.lunara.api.appointment.dto.SupportSessionDTO;
 import com.lunara.api.appointment.dto.CreateSupportSessionRequest;
 import com.lunara.api.appointment.dto.ProviderAvailabilityDTO;
-import com.lunara.api.repository.UserRepository;
 import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,6 +20,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import com.lunara.api.user.User;
 import com.lunara.api.error.ErrorResponse;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,18 +36,20 @@ import java.util.stream.Collectors;
  * All endpoints require authentication.
  */
 @RestController
-@RequestMapping("/api/v1/support-sessions")
+@RequestMapping("/v1/support-sessions")
 @RequiredArgsConstructor
 @Tag(name = "Support Sessions", description = "Support session management endpoints")
 @SecurityRequirement(name = "Bearer Authentication")
 public class SupportSessionController {
 
-    private SupportSessionService supportSessionService;
-    private UserRepository userRepository;
+    private final SupportSessionService supportSessionService;
 
-    public SupportSessionController(SupportSessionService supportSessionService, UserRepository userRepository) {
-        this.supportSessionService = supportSessionService;
-        this.userRepository = userRepository;
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    private static class CancelRequest {
+        private String reason;
     }
 
     @Operation(
@@ -199,12 +204,13 @@ public class SupportSessionController {
     })
     @PutMapping("/{id}/status")
     public ResponseEntity<SupportSessionDTO> updateSupportSessionStatus(
+            @AuthenticationPrincipal User currentUser,
             @Parameter(description = "Support session ID") @PathVariable UUID id,
             @Parameter(description = "New status (SCHEDULED, COMPLETED, CANCELLED)")
             @Schema(allowableValues = {"SCHEDULED", "COMPLETED", "CANCELLED"})
             @RequestParam String status) {
-        SupportSession updated = supportSessionService.updateSupportSessionStatus(id, status);
-        return ResponseEntity.ok(SupportSessionDTO.fromEntity(updated));
+        SupportSessionDTO updatedSessionDTO = supportSessionService.updateAppointmentStatus(id, status, currentUser);
+        return ResponseEntity.ok(updatedSessionDTO);
     }
 
     @Operation(summary = "Get provider availability")
@@ -220,8 +226,9 @@ public class SupportSessionController {
     @PostMapping("/{sessionId}/cancel")
     public ResponseEntity<Void> cancelSupportSession(
             @AuthenticationPrincipal User user,
-            @PathVariable UUID sessionId) {
-        supportSessionService.cancelSupportSession(sessionId, user.getId());
+            @PathVariable UUID sessionId,
+            @RequestBody CancelRequest cancelRequest) {
+        supportSessionService.cancelSupportSession(sessionId, user.getId(), cancelRequest.getReason());
         return ResponseEntity.ok().build();
     }
 } 

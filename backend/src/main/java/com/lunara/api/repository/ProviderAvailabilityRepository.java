@@ -39,4 +39,11 @@ public interface ProviderAvailabilityRepository extends JpaRepository<ProviderAv
     List<ProviderAvailabilityDTO> findAvailabilityInRange(UUID providerId, LocalDateTime startDate, LocalDateTime endDate);
 
     Optional<ProviderAvailability> findByProviderIdAndDayOfWeek(UUID providerId, Integer dayOfWeek);
+
+    Optional<ProviderAvailability> findByProviderIdAndDayOfWeekAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(
+        UUID providerId, 
+        Integer dayOfWeek, 
+        java.time.LocalTime startTime, 
+        java.time.LocalTime endTime
+    );
 } 

@@ -102,3 +102,8 @@ backend/src/main/resources/application-*.yml
 setup-env.ps1
 *.env
 .env*
+
+# Docker files with sensitive data
+docker-compose.yml
+backend/Dockerfile
+Lunara/Dockerfile

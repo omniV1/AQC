@@ -2,6 +2,7 @@ package com.lunara.api.user;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.lunara.api.availability.ProviderAvailability;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,16 +29,15 @@ public class Provider extends User {
     @Column(name = "specialty")
     private Set<String> specialties = new HashSet<>();
     
-    @Column(name = "bio", length = 1000)
+    @Column(name = "bio", columnDefinition = "TEXT")
     private String bio;
     
     @OneToMany(mappedBy = "provider", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JsonManagedReference
     private Set<Client> clients = new HashSet<>();
     
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "provider_availability", joinColumns = @JoinColumn(name = "provider_id"))
-    private Set<AvailabilitySlot> availability = new HashSet<>();
+    @OneToMany(mappedBy = "provider", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<ProviderAvailability> availability = new HashSet<>();
 
     public Set<Client> getClients() {
         return clients;
