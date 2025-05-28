@@ -228,7 +228,7 @@ The LUNARA platform follows a three-tier architecture pattern with clear separat
 
 
 
-![Lunara ERD](LunaraERD.png)
+![Lunara ERD](https://github.com/omniV1/AQC/blob/main/Docs/img/LunaraERD.png)
 
 The Entity-Relationship Diagram (ERD) for the Lunara platform illustrates the relationships between various entities within the system. Here's a breakdown of the key relationships:
 
