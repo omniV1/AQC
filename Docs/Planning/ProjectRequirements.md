@@ -364,13 +364,29 @@ LUNARA Platform Sitemap
 ### User Interface Design Specifications
 
 #### Design System
-- **Color Palette**: Ghibli-inspired soft, warm tones (sage greens, warm whites, gentle golds)
+- **Color Palette**: soft warm tones (sage greens, warm whites, gentle golds)
 - **Typography**: Modern, readable fonts with hierarchy (headings, body text, captions)
 - **Spacing**: Consistent 8px grid system for alignment and spacing
 - **Components**: Reusable UI components (buttons, forms, cards, modals)
 
-#### Key Interface Screens
+#### Wireframes
 
+![About Doula Page](https://github.com/omniV1/AQC/blob/main/Docs/img/Wireframes/about%20doula%20page2.png)
+
+![About Lunara Page](https://github.com/omniV1/AQC/blob/main/Docs/img/Wireframes/about%20lunara%20page2.png)
+
+![Contact Page](https://github.com/omniV1/AQC/blob/main/Docs/img/Wireframes/contact%20page2.png)
+
+![Home Page](https://github.com/omniV1/AQC/blob/main/Docs/img/Wireframes/home%20page2.png)
+
+![Login Page](https://github.com/omniV1/AQC/blob/main/Docs/img/Wireframes/login%20page2.png)
+
+![Provider Page](https://github.com/omniV1/AQC/blob/main/Docs/img/Wireframes/provider%20page2.png)
+
+Currently, the designs for the Doula Dashboard, Client Dashboard, Appointment Scheduling, and Messaging Interface are not yet available. Only the above wireframes have been designed at this stage.
+
+
+#### Key Interface Screens
 **1. Client Dashboard**
 - Welcome banner with personalized greeting and current week
 - Quick action cards for common tasks (new message, schedule appointment, daily check-in)
@@ -405,6 +421,30 @@ LUNARA Platform Sitemap
 - Wellness alerts for clients needing attention
 - Quick message composition and template access
 - Analytics summary for practice management
+  
+**6. About Doula Page**
+- Provides an overview of the doula's philosophy and services.
+- Includes contact information and links to related resources.
+
+**7. About Lunara Page**
+- Describes the mission and values of the Lunara platform.
+- Offers insights into the postpartum support services provided.
+
+**8. Contact Page**
+- Features a form for inquiries and support requests.
+- Collects user information for follow-up communication.
+
+**9. Home Page**
+- Welcomes users with an introduction to the platform.
+- Highlights key services and features available to users.
+
+**10. Client Login Page**
+- Provides secure access to the platform for registered users.
+- Includes options for password recovery and account creation.
+
+**11. Provider Login Page**
+- Offers access to provider-specific tools and resources.
+- Facilitates communication and scheduling with clients.
 
 #### Mobile Responsiveness Guidelines
 - Touch-friendly button sizes (minimum 44px tap targets)
@@ -586,3 +626,5 @@ The LUNARA platform generates various reports to support both client care and do
 ---
 
 ***Note: This comprehensive requirements document serves as the foundation for the LUNARA platform development. All team members should reference this document throughout the development process. Any questions or clarifications should be addressed during sprint planning sessions and documented in the change management section.***
+
+
