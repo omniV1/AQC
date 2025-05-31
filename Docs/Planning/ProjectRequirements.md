@@ -129,45 +129,26 @@ Any changes to approved functional or non-functional requirements must be docume
 
 ## Technical Requirements
 
-### Development Stack and Tools
 
-The LUNARA platform utilizes modern, industry-standard technologies to ensure reliability, security, and maintainability.
+# 🛠️ LUNARA Full Stack & Tooling Overview
 
-#### Backend Technologies
-- **Java 17+** - Programming language for backend development
-- **Spring Boot 3.x** - Application framework for rapid development
-- **Spring Security** - Authentication and authorization framework
-- **Spring Data JPA** - Data persistence layer
-- **JWT (JSON Web Tokens)** - Stateless authentication mechanism
-- **Swagger/OpenAPI 3** - API documentation and testing
-- **Flyway** - Database migration tool
-- **Lombok** - Code reduction and simplification
-- **PostgreSQL** - Primary relational database
-- **JUnit** - Testing framework
-- **Springdoc OpenAPI** - API documentation
-- **Slugify** - URL-friendly string generation
+| Category               | Tool / Technology                         | Purpose                                                                 |
+|------------------------|-------------------------------------------|-------------------------------------------------------------------------|
+| **Frontend Framework** | **Next.js (React)**                       | Fast, SEO-friendly frontend with server-side rendering                  |
+| **Frontend Styling**   | **CSS Modules** or **Styled Components**  | Scoped, maintainable CSS without utility classes                        |
+|                        | *(Optional)* SCSS / SASS                  | Advanced syntax & nesting for structured custom styles                  |
+| **Component Library**  | *(None – custom components only)*         | Full creative control over UI and layout                               |
+| **Backend Framework**  | **Express.js (TypeScript)**               | Lightweight server with custom REST APIs                               |
+| **API Layer**          | REST (Express Router)                     | Define endpoints for auth, scheduling, messaging, journaling            |
+| **Database**           | **MongoDB (Atlas)**                       | Flexible, document-based database for user data and features            |
+| **ODM**                | Mongoose or MongoDB Native Driver         | Schema modeling & validation                                            |
+| **Authentication**     | Passport.js + OAuth (Google, Apple)       | Secure login using third-party OAuth providers                          |
+|                        | JWT (JSON Web Tokens)                     | Stateless session handling and role-based access                        |
+| **Authorization**      | Custom middleware (admin, client, doula)  | Protect routes based on user type                                       |
+| **Deployment**         | Vercel (frontend) + Render / Fly.io       | Simple hosting with CI/CD for full stack                                |
+| **Project Management** | GitHub Projects + Notion + Figma          | Task tracking, design documentation, and team collaboration             |
+| **Monitoring**         | LogRocket or Sentry                       | Frontend performance and error tracking                                 |
 
-#### Frontend Technologies
-- **React 18+** - Modern JavaScript framework for building user interfaces
-- **Tailwind CSS** - Utility-first CSS framework for responsive design
-- **React Router** - Client-side routing for single-page application navigation
-- **Axios** - HTTP client for API communication
-- **React Big Calendar** - Calendar component for appointment scheduling
-- **Lucide React** - Icon library for consistent UI elements
-- **Vite** - Frontend build tool
-- **Jest** - Testing framework
-- **React Toastify** - Notification library
-- **Date-fns** - Date utility library
-
-#### Development & Deployment Tools
-- **Maven** - Build automation and dependency management
-- **Git** - Version control system
-- **Docker** - Containerization for consistent deployments
-- **CI/CD Pipeline** - SonarQube for code quality analysis
-- **Swagger/OpenAPI 3** - API documentation and testing
-- **ESLint** - Linting tool for JavaScript and TypeScript
-- **PostCSS** - CSS processing tool
-- **TypeScript** - Typed superset of JavaScript
 
 #### Third-Party Integrations
 - **Email Service Provider** - Automated email notifications (SendGrid/AWS SES)
