@@ -16,10 +16,11 @@
 
 ## TABLE OF CONTENTS
 
-### 1. [PROJECT OVERVIEW](#abstract)
+### 1. [PROJECT OVERVIEW](#project-overview)
 - [Abstract](#abstract)
+- [Project Information](#project-overview)
 
-### 2. [REQUIREMENTS SPECIFICATION](#functional-requirements)
+### 2. [REQUIREMENTS SPECIFICATION](#requirements-specification)
 - [2.1 Functional Requirements](#functional-requirements)
 - [2.2 Non-Functional Requirements](#non-functional-requirements)
 
@@ -78,6 +79,8 @@ The completed platform will serve as a bridge between traditional doula services
 ---
 
 ## Functional Requirements
+
+### Use Cases
 
 The following functional requirements define the core capabilities that the LUNARA platform must provide to support both clients (new parents) and service providers (doulas).
 
@@ -420,32 +423,32 @@ The following wireframes represent the visual design specifications for the Spri
 ### Public Website Wireframes
 
 **Home Page Design**
-- **Reference**: ![Home Page Wireframe](https://github.com/omniV1/AQC/blob/main/Docs/img/Wireframes/home%20page2.png)
+- **Reference**: [Home Page Wireframe](https://github.com/omniV1/AQC/blob/main/Docs/img/Wireframes/home%20page2.png)
 - **Purpose**: Primary landing page showcasing LUNARA's value proposition
 - **Key Elements**: Hero section, service overview, call-to-action buttons, navigation
 
 **About LUNARA Page**
-- **Reference**: ![About LUNARA Wireframe](https://github.com/omniV1/AQC/blob/main/Docs/img/Wireframes/about%20lunara%20page2.png)
+- **Reference**: [About LUNARA Wireframe](https://github.com/omniV1/AQC/blob/main/Docs/img/Wireframes/about%20lunara%20page2.png)
 - **Purpose**: Platform information and mission statement
 - **Key Elements**: Platform overview, features explanation, benefits for new parents
 
 **About Doula Page**
-- **Reference**: ![About Doula Wireframe](https://github.com/omniV1/AQC/blob/main/Docs/img/Wireframes/about%20doula%20page2.png)
+- **Reference**: [About Doula Wireframe](https://github.com/omniV1/AQC/blob/main/Docs/img/Wireframes/about%20doula%20page2.png)
 - **Purpose**: Doula biography, credentials, and service approach
 - **Key Elements**: Professional photo, credentials, experience, service philosophy
 
 **Provider Services Page**
-- **Reference**: ![Provider Page Wireframe](https://github.com/omniV1/AQC/blob/main/Docs/img/Wireframes/provider%20page2.png)
+- **Reference**: [Provider Page Wireframe](https://github.com/omniV1/AQC/blob/main/Docs/img/Wireframes/provider%20page2.png)
 - **Purpose**: Detailed service offerings and pricing information
 - **Key Elements**: Service packages, pricing tiers, booking call-to-action
 
 **Contact Page**
-- **Reference**: ![Contact Page Wireframe](https://github.com/omniV1/AQC/blob/main/Docs/img/Wireframes/contact%20page2.png)
+- **Reference**: [Contact Page Wireframe](https://github.com/omniV1/AQC/blob/main/Docs/img/Wireframes/contact%20page2.png)
 - **Purpose**: Contact information and inquiry form
 - **Key Elements**: Contact form, office hours, location, social media links
 
 **Login Page**
-- **Reference**: ![Login Page Wireframe](https://github.com/omniV1/AQC/blob/main/Docs/img/Wireframes/login%20page2.png)
+- **Reference**: [Login Page Wireframe](https://github.com/omniV1/AQC/blob/main/Docs/img/Wireframes/login%20page2.png)
 - **Purpose**: User authentication entry point
 - **Key Elements**: Email/password fields, OAuth options, registration link, password reset
 
@@ -676,7 +679,7 @@ While LUNARA is positioned as a wellness and support platform rather than a medi
 
 ---
 
-### Development Team Signatures
+**Development Team Signatures:**
 
 **Owen Lindsey** - Project Lead & DevOps Engineer & UI/UX Developer & Full Stack Developer  
 *Responsibilities: Architecture, Backend APIs, Project Management*
