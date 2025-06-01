@@ -16,96 +16,52 @@
 
 ## TABLE OF CONTENTS
 
-### 1. PROJECT OVERVIEW
-- **Abstract** ................................................................. 3
-- **Project Information** .................................................... 3
-  - Author(s)
-  - Course Details
-  - Revision History
+### 1. [PROJECT OVERVIEW](#project-overview)
+- [Abstract](#abstract)
+- [Project Information](#project-overview)
 
-### 2. REQUIREMENTS SPECIFICATION
-- **2.1 Functional Requirements** ............................................ 4
-  - Use Cases Overview
-  - Core Platform Features (FR1-FR15)
-  - Priority Classifications
-- **2.2 Non-Functional Requirements** ....................................... 8
-  - System Quality Requirements (NFR1-NFR10)
-  - Performance Standards
-  - Security Specifications
+### 2. [REQUIREMENTS SPECIFICATION](#requirements-specification)
+- [2.1 Functional Requirements](#functional-requirements)
+- [2.2 Non-Functional Requirements](#non-functional-requirements)
 
-### 3. TECHNICAL ARCHITECTURE
-- **3.1 Technology Stack** .................................................. 11
-  - Frontend Technologies
-  - Backend Technologies
-  - Third-Party Services
-- **3.2 System Architecture** ............................................... 12
-  - Layer Architecture Diagram
-  - Component Interactions
-- **3.3 Database Schema Design** ............................................ 13
-  - MongoDB Collections
-  - Data Relationships
-  - Schema Specifications
+### 3. [TECHNICAL ARCHITECTURE](#technical-architecture)
+- [3.1 Technology Stack](#technology-stack)
+- [3.2 System Architecture](#system-architecture)
+- [3.3 Database Schema Design](#database-schema-design)
 
-### 4. PROJECT MANAGEMENT
-- **4.1 Sprint Planning & Timeline** ........................................ 15
-  - 20-Week Development Timeline
-  - Sprint Breakdown (7 Sprints)
-  - Resource Allocation
-- **4.2 Features Roadmap** .................................................. 18
-  - Launch Features
-  - Post-Launch Phase 1
-  - Future AI Integration
+### 4. [PROJECT MANAGEMENT](#sprint-planning--timeline)
+- [4.1 Sprint Planning & Timeline](#sprint-planning--timeline)
+- [4.2 Features Roadmap](#features-deferred-to-post-launch)
 
-### 5. DESIGN & USER EXPERIENCE
-- **5.1 User Interface Design** ............................................. 19
-  - Design System
-  - Key Interface Specifications
-  - Mobile Responsiveness
-- **5.2 Accessibility Requirements** ........................................ 21
-  - WCAG 2.1 AA Compliance
-  - Screen Reader Compatibility
+### 5. [DESIGN & USER EXPERIENCE](#user-interface-design)
+- [5.1 Wireframes & Design References](#wireframes--design-references)
+- [5.2 User Interface Design](#user-interface-design)
+- [5.3 Accessibility Requirements](#user-interface-design)
 
-### 6. SECURITY & PRIVACY
-- **6.1 Data Protection Strategy** .......................................... 22
-  - Security Measures
-  - Privacy Compliance
-- **6.2 Backup & Recovery** ................................................. 23
-  - Data Backup Procedures
-  - Disaster Recovery
+### 6. [SECURITY & PRIVACY](#security--privacy-specifications)
+- [6.1 Data Protection Strategy](#data-protection-strategy)
+- [6.2 Backup & Recovery](#data-protection-strategy)
 
-### 7. QUALITY ASSURANCE
-- **7.1 Testing Strategy** .................................................. 24
-  - Unit Testing
-  - Integration Testing
-  - User Acceptance Testing
-- **7.2 Performance Benchmarks** ............................................ 25
-  - Load Time Requirements
-  - API Response Standards
+### 7. [QUALITY ASSURANCE](#quality-assurance--testing)
+- [7.1 Testing Strategy](#testing-strategy)
+- [7.2 Performance Benchmarks](#performance-benchmarks)
 
-### 8. PROJECT GOVERNANCE
-- **8.1 Risk Management** ................................................... 26
-  - Technical Risks
-  - Project Risks
-  - Mitigation Strategies
-- **8.2 Success Metrics & KPIs** ............................................ 27
-  - Technical Performance
-  - User Engagement
-  - Business Metrics
+### 8. [PROJECT GOVERNANCE](#risk-management)
+- [8.1 Risk Management](#risk-management)
+- [8.2 Success Metrics & KPIs](#success-metrics--kpis)
 
-### 9. DEPLOYMENT & OPERATIONS
-- **9.1 Development Workflow** .............................................. 28
-  - Git Flow Process
-  - Code Review Standards
-- **9.2 Deployment Strategy** ............................................... 29
-  - Infrastructure Setup
-  - Environment Management
+### 9. [DEPLOYMENT & OPERATIONS](#deployment--devops)
+- [9.1 Development Workflow](#development-workflow)
+- [9.2 Deployment Strategy](#deployment-strategy)
 
-### 10. APPENDICES
-- **10.1 Requirements Traceability Matrix** ................................ 30
-- **10.2 Change Management** ................................................ 31
-  - Change Process
-  - Change History
-- **10.3 Team Signatures & Approval** ....................................... 32
+### 10. [APPENDICES](#requirements-traceability-matrix)
+- [10.1 Requirements Traceability Matrix](#requirements-traceability-matrix)
+- [10.2 Change Management](#change-management)
+- [10.3 Team Signatures & Approval](#development-team-signatures)
+
+- [Glossary](#glossary)
+- [Abbreviations & Acronyms](#abbreviations--acronyms)
+- [Technical Terms Reference](#technical-terms-reference)
 
 ---
 
@@ -459,66 +415,78 @@ The MongoDB collections will be structured as follows:
 
 ## User Interface Design
 
-### Design System
-- **Color Palette**: Warm, nurturing tones (sage greens, soft peaches, cream whites, warm grays)
-- **Typography**: Inter for UI, Lora for content (accessible, readable fonts)
-- **Spacing**: 8px grid system for consistent alignment
-- **Components**: Reusable component library with consistent patterns
 
-### Key Interface Specifications
+## Wireframes & Design References
 
-#### 1. Public Website
-- Hero section with clear value proposition
-- Services overview with pricing transparency
-- Doula biography and credentials
-- Contact form and booking CTA
-- Blog section with latest posts
-- Mobile-first responsive design
+The following wireframes represent the visual design specifications for the Sprint 1 deliverables of the LUNARA platform. These wireframes serve as the design foundation for our public website implementation and guide the user interface development process.
 
-#### 2. Authentication Flows
-- Clean, minimal login/register forms
-- OAuth buttons with clear branding
-- Progressive registration with email verification
-- Password strength indicators
-- Accessible error messages and validation
+### Public Website Wireframes
 
-#### 3. Client Dashboard
-- Personalized welcome with postpartum week progress
-- Quick action cards (message doula, book appointment, daily check-in)
-- Recent activity feed
-- Resource recommendations
-- Appointment reminders and upcoming sessions
+**Home Page Design**
+- **Reference**: [Home Page Wireframe](https://github.com/omniV1/AQC/blob/main/Docs/img/Wireframes/home%20page2.png)
+- **Purpose**: Primary landing page showcasing LUNARA's value proposition
+- **Key Elements**: Hero section, service overview, call-to-action buttons, navigation
 
-#### 4. Messaging Interface
-- WhatsApp-style conversation threads
-- Real-time message delivery indicators
-- File attachment with drag-and-drop
-- Emoji picker and message formatting
-- Search and filter conversations
+**About LUNARA Page**
+- **Reference**: [About LUNARA Wireframe](https://github.com/omniV1/AQC/blob/main/Docs/img/Wireframes/about%20lunara%20page2.png)
+- **Purpose**: Platform information and mission statement
+- **Key Elements**: Platform overview, features explanation, benefits for new parents
 
-#### 5. Appointment Scheduling
-- Calendar grid with available slots highlighted
-- Time zone awareness and conversion
-- Appointment type selection (virtual/in-person)
-- Confirmation flow with calendar integration
-- Reminder preference settings
+**About Doula Page**
+- **Reference**: [About Doula Wireframe](https://github.com/omniV1/AQC/blob/main/Docs/img/Wireframes/about%20doula%20page2.png)
+- **Purpose**: Doula biography, credentials, and service approach
+- **Key Elements**: Professional photo, credentials, experience, service philosophy
 
-#### 6. Doula Portal
-- Client overview dashboard with status indicators
-- Quick client communication access
-- Appointment management calendar
-- Care plan template library
-- Blog post creation and management
+**Provider Services Page**
+- **Reference**: [Provider Page Wireframe](https://github.com/omniV1/AQC/blob/main/Docs/img/Wireframes/provider%20page2.png)
+- **Purpose**: Detailed service offerings and pricing information
+- **Key Elements**: Service packages, pricing tiers, booking call-to-action
 
-### Mobile Responsiveness Requirements
-- Touch targets minimum 44px
-- Swipe navigation where appropriate
-- Optimized form inputs for mobile keyboards
-- Progressive Web App capabilities
-- Offline functionality for core features
+**Contact Page**
+- **Reference**: [Contact Page Wireframe](https://github.com/omniV1/AQC/blob/main/Docs/img/Wireframes/contact%20page2.png)
+- **Purpose**: Contact information and inquiry form
+- **Key Elements**: Contact form, office hours, location, social media links
+
+**Login Page**
+- **Reference**: [Login Page Wireframe](https://github.com/omniV1/AQC/blob/main/Docs/img/Wireframes/login%20page2.png)
+- **Purpose**: User authentication entry point
+- **Key Elements**: Email/password fields, OAuth options, registration link, password reset
+
+### Design Implementation Guidelines
+
+**Responsive Design Standards:**
+- Mobile-first approach following wireframe specifications
+- Consistent spacing using 8px grid system
+- Touch-friendly interface elements (minimum 44px touch targets)
+- Optimized typography hierarchy and readability
+
+**Visual Design System:**
+- Color palette: Warm, nurturing tones (sage greens, soft peaches, cream whites)
+- Typography: Inter for UI elements, Lora for content sections
+- Component consistency across all wireframed pages
+- Accessibility compliance with WCAG 2.1 AA standards
+
+**User Experience Flow:**
+- Intuitive navigation between wireframed pages
+- Clear call-to-action placement and hierarchy
+- Progressive disclosure of information
+- Seamless transition from marketing to application functionality
+
+### Wireframe Status & Sprint 1 Implementation
+
+| Page | Wireframe Status | Implementation Status | Sprint |
+|------|------------------|----------------------|--------|
+| Home Page | ✅ Complete | ✅ Implemented | Sprint 1 |
+| About LUNARA | ✅ Complete | ✅ Implemented | Sprint 1 |
+| About Doula | ✅ Complete | ✅ Implemented | Sprint 1 |
+| Provider Services | ✅ Complete | ✅ Implemented | Sprint 1 |
+| Contact Page | ✅ Complete | ✅ Implemented | Sprint 1 |
+| Login Page | ✅ Complete | 🔄 In Progress | Sprint 2 |
+
+**Note**: Wireframes for post-Sprint 1 features (client dashboard, messaging interface, appointment scheduling, doula portal) are scheduled for creation during their respective development sprints to ensure design alignment with refined requirements and user feedback.
 
 ---
-**Terms Reference:** *UI, UX* (see **ABBREVIATIONS & ACRONYMS**); *OAuth, PWA* (see **GLOSSARY** sections O, P); *Component-Based Architecture* (see **TECHNICAL TERMS REFERENCE - Architecture Patterns**)
+**Terms Reference:** *UI, UX* (see **ABBREVIATIONS & ACRONYMS**); *Sprint* (see **GLOSSARY** section S); *WCAG* (see **ABBREVIATIONS & ACRONYMS**); *Component-Based Architecture* (see **TECHNICAL TERMS REFERENCE - Architecture Patterns**)
 
 ---
 
