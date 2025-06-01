@@ -16,7 +16,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
     List<Appointment> findByClientId(UUID clientId);
     List<Appointment> findByProviderId(UUID providerId);
 
-    @Query("SELECT CASE WHEN COUNT(a) > 0 THEN TRUE ELSE FALSE END FROM Appointment a WHERE a.provider.id = :providerId " +
+    @Query("SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END FROM Appointment a WHERE a.provider.id = :providerId " +
            "AND ((a.startTime < :endTime AND a.endTime > :startTime)) " +
            "AND (:excludeAppointmentId IS NULL OR a.id <> :excludeAppointmentId)")
     boolean hasConflictingAppointments(
