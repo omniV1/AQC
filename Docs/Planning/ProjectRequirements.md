@@ -16,11 +16,10 @@
 
 ## TABLE OF CONTENTS
 
-### 1. [PROJECT OVERVIEW](#project-overview)
+### 1. [PROJECT OVERVIEW](#abstract)
 - [Abstract](#abstract)
-- [Project Information](#project-overview)
 
-### 2. [REQUIREMENTS SPECIFICATION](#requirements-specification)
+### 2. [REQUIREMENTS SPECIFICATION](#functional-requirements)
 - [2.1 Functional Requirements](#functional-requirements)
 - [2.2 Non-Functional Requirements](#non-functional-requirements)
 
@@ -79,8 +78,6 @@ The completed platform will serve as a bridge between traditional doula services
 ---
 
 ## Functional Requirements
-
-### Use Cases
 
 The following functional requirements define the core capabilities that the LUNARA platform must provide to support both clients (new parents) and service providers (doulas).
 
@@ -679,7 +676,7 @@ While LUNARA is positioned as a wellness and support platform rather than a medi
 
 ---
 
-**Development Team Signatures:**
+### Development Team Signatures
 
 **Owen Lindsey** - Project Lead & DevOps Engineer & UI/UX Developer & Full Stack Developer  
 *Responsibilities: Architecture, Backend APIs, Project Management*
