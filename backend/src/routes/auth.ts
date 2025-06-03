@@ -115,12 +115,13 @@ router.post('/register', [
       res.status(400).json({
         success: false,
         error: 'Validation failed',
-        errors: errors.array().reduce((acc: Record<string, string>, error: ValidationError) => {
-          if (error.type === 'field') {
-            acc[error.path] = error.msg;
-          }
-          return acc;
-        }, {})
+        errors: (() => {
+          const errObj: Record<string, string> = {};
+          errors.array().forEach(error => {
+            errObj[error.param] = error.msg;
+          });
+          return errObj;
+        })()
       });
       return;
     }
@@ -130,10 +131,11 @@ router.post('/register', [
     // Check if user already exists
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
+      // Do not reveal if user exists for security
       res.status(400).json({
         success: false,
-        error: 'User already exists',
-        message: 'An account with this email address already exists'
+        error: 'Registration failed',
+        message: 'Unable to register. Please try again or use a different email.'
       });
       return;
     }
@@ -254,12 +256,13 @@ router.post('/login', [
       res.status(400).json({
         success: false,
         error: 'Validation failed',
-        errors: errors.array().reduce((acc: Record<string, string>, error: ValidationError) => {
-          if (error.type === 'field') {
-            acc[error.path] = error.msg;
-          }
-          return acc;
-        }, {})
+        errors: (() => {
+          const errObj: Record<string, string> = {};
+          errors.array().forEach(error => {
+            errObj[error.param] = error.msg;
+          });
+          return errObj;
+        })()
       });
       return;
     }
@@ -299,7 +302,11 @@ router.post('/login', [
         await user.save();
 
         // Generate tokens
-        const { accessToken, refreshToken } = generateTokens(user);
+        const { accessToken, refreshToken } = generateTokens({
+          _id: user._id as any as import('mongoose').Types.ObjectId,
+          email: user.email,
+          role: user.role
+        });
 
         // Save refresh token
         user.refreshTokens.push({ token: refreshToken });
@@ -404,7 +411,11 @@ router.get('/google/callback',
       }
 
       // Generate tokens
-      const { accessToken, refreshToken } = generateTokens(user);
+      const { accessToken, refreshToken } = generateTokens({
+        _id: user._id as any as import('mongoose').Types.ObjectId,
+        email: user.email,
+        role: user.role
+      });
 
       // Save refresh token
       user.refreshTokens.push({ token: refreshToken });
@@ -480,7 +491,11 @@ router.post('/refresh', async (req: Request<{}, ApiResponse, TokenRefreshRequest
     }
 
     // Generate new access token
-    const { accessToken } = generateTokens(user);
+    const { accessToken } = generateTokens({
+      _id: user._id as any as import('mongoose').Types.ObjectId,
+      email: user.email,
+      role: user.role
+    });
 
     res.json({
       success: true,
@@ -748,12 +763,13 @@ router.post('/reset-password', [
       res.status(400).json({
         success: false,
         error: 'Validation failed',
-        errors: errors.array().reduce((acc: Record<string, string>, error: ValidationError) => {
-          if (error.type === 'field') {
-            acc[error.path] = error.msg;
-          }
-          return acc;
-        }, {})
+        errors: (() => {
+          const errObj: Record<string, string> = {};
+          errors.array().forEach(error => {
+            errObj[error.param] = error.msg;
+          });
+          return errObj;
+        })()
       });
       return;
     }

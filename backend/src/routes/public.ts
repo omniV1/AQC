@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import { body, validationResult } from 'express-validator';
 
 const router = express.Router();
 
@@ -46,6 +47,7 @@ interface ContactFormResponse {
 interface ErrorResponse {
   error: string;
   message: string;
+  details?: any;
 }
 
 /**
@@ -170,21 +172,29 @@ router.get('/doula-profile', (req: Request, res: Response<DoulaProfile>) => {
  *       200:
  *         description: Contact form submitted successfully
  */
-router.post('/contact', async (req: Request<{}, ContactFormResponse | ErrorResponse, ContactFormBody>, res: Response<ContactFormResponse | ErrorResponse>) => {
-  try {
-    const { name, email, phone, message, dueDate } = req.body;
-
-    // Basic validation
-    if (!name || !email || !message) {
+router.post(
+  '/contact',
+  [
+    body('name').isString().trim().isLength({ min: 2, max: 100 }).withMessage('Name is required and must be 2-100 characters'),
+    body('email').isEmail().normalizeEmail().withMessage('Valid email is required'),
+    body('message').isString().trim().isLength({ min: 5, max: 1000 }).withMessage('Message is required and must be 5-1000 characters'),
+    body('phone').optional().isMobilePhone('any').withMessage('Phone must be a valid mobile number'),
+    body('dueDate').optional().isISO8601().withMessage('Due date must be a valid date'),
+  ],
+  (req: Request<{}, ContactFormResponse | ErrorResponse, ContactFormBody>, res: Response<ContactFormResponse | ErrorResponse>) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
       return res.status(400).json({
-        error: 'Missing required fields',
-        message: 'Name, email, and message are required'
+        error: 'Validation failed',
+        message: 'Invalid input',
+        details: errors.array()
       });
     }
 
+    const { name, email, phone, message, dueDate } = req.body;
+
     // TODO: In production, send email notification to doula
     // TODO: Store inquiry in database for follow-up
-    
     console.log('Contact form submission:', {
       name,
       email,
@@ -198,14 +208,7 @@ router.post('/contact', async (req: Request<{}, ContactFormResponse | ErrorRespo
       message: 'Thank you for your inquiry! We will get back to you within 24 hours.',
       status: 'success'
     });
-
-  } catch (error) {
-    console.error('Contact form error:', error);
-    res.status(500).json({
-      error: 'Internal server error',
-      message: 'Failed to submit contact form'
-    });
   }
-});
+);
 
 export default router;

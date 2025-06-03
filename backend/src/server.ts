@@ -37,6 +37,22 @@ const io = new SocketIOServer(server, {
   }
 });
 
+// Startup check for required environment variables
+const REQUIRED_ENV_VARS = [
+  'JWT_SECRET',
+  'JWT_REFRESH_SECRET',
+  'MONGODB_URI',
+  'EMAIL_USER',
+  'EMAIL_PASS',
+  'FRONTEND_URL',
+];
+
+const missingVars = REQUIRED_ENV_VARS.filter((v) => !process.env[v]);
+if (missingVars.length > 0) {
+  console.error(`FATAL: Missing required environment variables: ${missingVars.join(', ')}`);
+  process.exit(1);
+}
+
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/lunara', {
   // Note: useNewUrlParser and useUnifiedTopology are deprecated in newer versions
