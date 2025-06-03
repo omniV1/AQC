@@ -1,6 +1,7 @@
 {
   "devDependencies": {
     "@types/express-validator": "^2.20.33",
+    "@types/jest": "^29.5.14",
     "express-validator": "^7.2.1"
   }
 }

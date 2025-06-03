@@ -62,6 +62,22 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/lunara', 
 
 // Security Middleware
 app.use(helmet());
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'none'"],
+      scriptSrc: ["'none'"],
+      connectSrc: ["'self'", process.env.FRONTEND_URL].filter(Boolean) as string[],
+      imgSrc: ["'none'"],
+      styleSrc: ["'none'"],
+      fontSrc: ["'none'"],
+      objectSrc: ["'none'"],
+      frameSrc: ["'none'"],
+      baseUri: ["'none'"],
+      formAction: ["'none'"],
+    },
+  })
+);
 app.use(compression());
 
 // CORS Configuration

@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { body, validationResult } from 'express-validator';
+const { body, validationResult } = require('express-validator');
 
 const router = express.Router();
 
@@ -158,19 +158,65 @@ router.get('/doula-profile', (req: Request, res: Response<DoulaProfile>) => {
  *             properties:
  *               name:
  *                 type: string
+ *                 example: "Jane Doe"
  *               email:
  *                 type: string
  *                 format: email
+ *                 example: "jane@example.com"
  *               phone:
  *                 type: string
+ *                 example: "+1-555-123-4567"
  *               message:
  *                 type: string
+ *                 example: "I'm interested in postpartum support."
  *               dueDate:
  *                 type: string
  *                 format: date
+ *                 example: "2024-08-01"
  *     responses:
  *       200:
  *         description: Contact form submitted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Thank you for your inquiry! We will get back to you within 24 hours."
+ *                 status:
+ *                   type: string
+ *                   example: "success"
+ *       400:
+ *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Validation failed"
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid input"
+ *                 details:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       msg:
+ *                         type: string
+ *                         example: "Name is required and must be 2-100 characters"
+ *                       param:
+ *                         type: string
+ *                         example: "name"
+ *                       location:
+ *                         type: string
+ *                         example: "body"
+ *                       value:
+ *                         type: string
+ *                         example: ""
  */
 router.post(
   '/contact',

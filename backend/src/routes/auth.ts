@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import passport from 'passport';
 import crypto from 'crypto';
-import { body, validationResult, ValidationError } from 'express-validator';
+const { body, validationResult } = require('express-validator');
 import User from '@models/User';
 import Client from '@models/Client';
 import Provider from '@models/Provider';
@@ -12,7 +12,7 @@ import {
   ApiResponse, 
   UserRole,
   JWTPayload 
-} from '@types';
+} from '../types';
 
 const router = express.Router();
 
@@ -67,24 +67,92 @@ interface ResetPasswordRequest {
  *             properties:
  *               firstName:
  *                 type: string
+ *                 example: "Jane"
  *               lastName:
  *                 type: string
+ *                 example: "Doe"
  *               email:
  *                 type: string
  *                 format: email
+ *                 example: "jane@example.com"
  *               password:
  *                 type: string
  *                 minLength: 8
+ *                 example: "Password123"
  *               role:
  *                 type: string
  *                 enum: [client, provider]
+ *                 example: "client"
  *     responses:
  *       201:
  *         description: User registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "User registered successfully"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: "60f7c2b8e1d2c8a1b8e1d2c8"
+ *                     firstName:
+ *                       type: string
+ *                       example: "Jane"
+ *                     lastName:
+ *                       type: string
+ *                       example: "Doe"
+ *                     email:
+ *                       type: string
+ *                       example: "jane@example.com"
+ *                     role:
+ *                       type: string
+ *                       example: "client"
+ *                     isEmailVerified:
+ *                       type: boolean
+ *                       example: false
  *       400:
  *         description: Validation error or user already exists
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   example: "Validation failed"
+ *                 errors:
+ *                   type: object
+ *                   example: { "email": "Must be a valid email address" }
+ *                 message:
+ *                   type: string
+ *                   example: "Unable to register. Please try again or use a different email."
  *       500:
  *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   example: "Internal server error"
+ *                 message:
+ *                   type: string
+ *                   example: "Failed to register user"
  */
 router.post('/register', [
   body('firstName')
@@ -117,7 +185,7 @@ router.post('/register', [
         error: 'Validation failed',
         errors: (() => {
           const errObj: Record<string, string> = {};
-          errors.array().forEach(error => {
+          errors.array().forEach((error: any) => {
             errObj[error.param] = error.msg;
           });
           return errObj;
@@ -170,7 +238,7 @@ router.post('/register', [
         });
         await providerProfile.save();
       }
-    } catch (profileError) {
+    } catch (profileError: unknown) {
       console.error('Failed to create user profile:', profileError);
       // Rollback user creation
       await User.findByIdAndDelete(user._id);
@@ -189,7 +257,7 @@ router.post('/register', [
           verificationUrl
         }
       });
-    } catch (emailError) {
+    } catch (emailError: unknown) {
       console.error('Failed to send verification email:', emailError);
       // Don't fail registration if email fails
     }
@@ -207,7 +275,7 @@ router.post('/register', [
       }
     });
 
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Registration error:', error);
     res.status(500).json({
       success: false,
@@ -236,15 +304,106 @@ router.post('/register', [
  *               email:
  *                 type: string
  *                 format: email
+ *                 example: "jane@example.com"
  *               password:
  *                 type: string
+ *                 example: "Password123"
  *     responses:
  *       200:
  *         description: Login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Login successful"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     user:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: string
+ *                           example: "60f7c2b8e1d2c8a1b8e1d2c8"
+ *                         firstName:
+ *                           type: string
+ *                           example: "Jane"
+ *                         lastName:
+ *                           type: string
+ *                           example: "Doe"
+ *                         email:
+ *                           type: string
+ *                           example: "jane@example.com"
+ *                         role:
+ *                           type: string
+ *                           example: "client"
+ *                         isEmailVerified:
+ *                           type: boolean
+ *                           example: true
+ *                         lastLogin:
+ *                           type: string
+ *                           format: date-time
+ *                           example: "2024-06-01T12:00:00.000Z"
+ *                     accessToken:
+ *                       type: string
+ *                       example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                     refreshToken:
+ *                       type: string
+ *                       example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *       400:
+ *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   example: "Validation failed"
+ *                 errors:
+ *                   type: object
+ *                   example: { "email": "Must be a valid email address" }
  *       401:
  *         description: Invalid credentials or unverified email
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   example: "Invalid credentials"
+ *                 message:
+ *                   type: string
+ *                   example: "Login failed"
  *       500:
  *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   example: "Internal server error"
+ *                 message:
+ *                   type: string
+ *                   example: "Login failed"
  */
 router.post('/login', [
   body('email').isEmail().normalizeEmail(),
@@ -258,7 +417,7 @@ router.post('/login', [
         error: 'Validation failed',
         errors: (() => {
           const errObj: Record<string, string> = {};
-          errors.array().forEach(error => {
+          errors.array().forEach((error: any) => {
             errObj[error.param] = error.msg;
           });
           return errObj;
@@ -329,7 +488,7 @@ router.post('/login', [
             refreshToken
           }
         });
-      } catch (updateError) {
+      } catch (updateError: unknown) {
         console.error('Failed to update user login info:', updateError);
         res.status(500).json({
           success: false,
@@ -339,7 +498,7 @@ router.post('/login', [
 
     })(req, res, next);
 
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Login error:', error);
     res.status(500).json({
       success: false,
@@ -425,7 +584,7 @@ router.get('/google/callback',
       const redirectUrl = `${process.env.FRONTEND_URL}/auth/callback?token=${accessToken}&refresh=${refreshToken}`;
       res.redirect(redirectUrl);
 
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('OAuth callback error:', error);
       res.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_failed`);
     }
@@ -504,7 +663,7 @@ router.post('/refresh', async (req: Request<{}, ApiResponse, TokenRefreshRequest
       }
     });
 
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Token refresh error:', error);
     res.status(401).json({
       success: false,
@@ -564,7 +723,7 @@ router.post('/logout',
         message: 'Logout successful'
       });
 
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Logout error:', error);
       res.status(500).json({
         success: false,
@@ -635,7 +794,7 @@ router.post('/verify-email', async (req: Request<{}, ApiResponse, EmailVerificat
       message: 'Email verified successfully'
     });
 
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Email verification error:', error);
     res.status(500).json({
       success: false,
@@ -703,7 +862,7 @@ router.post('/forgot-password', [
           resetUrl
         }
       });
-    } catch (emailError) {
+    } catch (emailError: unknown) {
       console.error('Failed to send password reset email:', emailError);
     }
 
@@ -712,7 +871,7 @@ router.post('/forgot-password', [
       message: 'If an account with that email exists, a password reset link has been sent'
     });
 
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Forgot password error:', error);
     res.status(500).json({
       success: false,
@@ -765,7 +924,7 @@ router.post('/reset-password', [
         error: 'Validation failed',
         errors: (() => {
           const errObj: Record<string, string> = {};
-          errors.array().forEach(error => {
+          errors.array().forEach((error: any) => {
             errObj[error.param] = error.msg;
           });
           return errObj;
@@ -802,7 +961,7 @@ router.post('/reset-password', [
       message: 'Password reset successful'
     });
 
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Password reset error:', error);
     res.status(500).json({
       success: false,
@@ -811,4 +970,4 @@ router.post('/reset-password', [
   }
 });
 
-export default router; 
+export default router;
