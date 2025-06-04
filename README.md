@@ -4,18 +4,17 @@ Lunara is a comprehensive platform designed to provide support for individuals d
 
 ## Tech Stack
 
--   **Backend:** Java 17, Spring Boot, Spring Security, Spring Data JPA, Maven
+-   **Backend:** Node.js 18+, Express.js, TypeScript, Mongoose (MongoDB), Passport.js, JWT, Nodemailer
 -   **Frontend:** React (or similar, built with Vite), TypeScript, Tailwind CSS
--   **Database:** PostgreSQL
+-   **Database:** MongoDB
 -   **Containerization:** Docker, Docker Compose
 -   **Code Quality:** SonarQube
--   **API Documentation:** Swagger UI (Springdoc OpenAPI)
--   **Database Migrations:** Flyway
--   **Authentication:** JWT
+-   **API Documentation:** Swagger UI (swagger-jsdoc, swagger-ui-express)
+-   **Authentication:** JWT, Google OAuth
 
 ## Project Structure
 
--   `backend/`: Contains the Spring Boot backend application.
+-   `backend/`: Contains the Node.js/Express backend application (TypeScript, MongoDB, Passport.js, etc.)
 -   `Lunara/`: Contains the frontend application (React/Vite).
 -   `docker-compose.yml`: Defines and configures the services for the development environment (database, backend, frontend, SonarQube).
 
@@ -24,9 +23,8 @@ Lunara is a comprehensive platform designed to provide support for individuals d
 ### Prerequisites
 
 -   Docker and Docker Compose
--   Node.js and npm/yarn/pnpm (for frontend development)
--   Java JDK 17 (for backend development)
--   Maven (for backend development)
+-   Node.js and npm/yarn/pnpm (for backend and frontend development)
+-   MongoDB (local or via Docker)
 
 ### Running the Full Application (Docker)
 
@@ -38,7 +36,7 @@ Lunara is a comprehensive platform designed to provide support for individuals d
 
 2.  **Set up environment variables:**
     Rename `docker-compose.yml.example` to `docker-compose.yml` if you haven't already.
-    You might need to configure secrets like `SONAR_TOKEN` and `JWT_SECRET` in your `docker-compose.yml` or environment.
+    You might need to configure secrets like `JWT_SECRET`, `EMAIL_PASS`, and OAuth credentials in your `.env` files.
 
 3.  **Build and run the containers:**
     ```bash
@@ -47,15 +45,15 @@ Lunara is a comprehensive platform designed to provide support for individuals d
     The `-d` flag runs the containers in detached mode.
 
 4.  **Access the services:**
-    *   **Backend API:** `http://localhost:8080`
+    *   **Backend API:** `http://localhost:5000`
     *   **Frontend Application:** `http://localhost:5173` (Note: The frontend service is currently commented out in `docker-compose.yml`. You'll need to uncomment it or run it manually.)
-    *   **PostgreSQL Database:** Accessible on port `5432` (primarily for backend connection)
+    *   **MongoDB Database:** Accessible on port `27017` (primarily for backend connection)
     *   **SonarQube:** `http://localhost:9000`
-    *   **Swagger API Documentation:** `http://localhost:8080/swagger-ui.html` (once the backend is running)
+    *   **Swagger API Documentation:** `http://localhost:5000/api-docs` (once the backend is running)
 
 ## Backend Details (`backend/`)
 
-The backend is a Spring Boot application providing the API for Lunara.
+The backend is a Node.js/Express application written in TypeScript, providing the API for Lunara.
 
 ### Building and Running Manually
 
@@ -63,26 +61,30 @@ The backend is a Spring Boot application providing the API for Lunara.
     ```bash
     cd backend
     ```
-2.  **Build the project:**
+2.  **Install dependencies:**
     ```bash
-    ./mvnw clean install
+    npm install
     ```
-3.  **Run the application:**
+3.  **Run the development server:**
     ```bash
-    ./mvnw spring-boot:run
+    npm run dev
     ```
-    Alternatively, you can run the packaged JAR file from the `target` directory.
+    The server will run on `http://localhost:5000` by default.
+
+4.  **Build for production:**
+    ```bash
+    npm run build
+    npm start
+    ```
 
 ### API Documentation
 
 API documentation is available via Swagger UI when the backend application is running:
-`http://localhost:8080/swagger-ui.html`
-
-The `ENABLE_SWAGGER_UI` and `ENABLE_API_DOCS` environment variables in `docker-compose.yml` should be set to `true`.
+`http://localhost:5000/api-docs`
 
 ## Frontend Details (`Lunara/`)
 
-The frontend is a modern web application likely built with React, Vite, and TypeScript.
+The frontend is a modern web application built with React, Vite, and TypeScript.
 
 *(Note: The frontend service is commented out in the main `docker-compose.yml`. The instructions below assume you might run it standalone or uncomment it in the Docker setup.)*
 
@@ -112,6 +114,13 @@ This project uses SonarQube for static code analysis.
 -   Access the SonarQube dashboard at `http://localhost:9000` when running via Docker Compose.
 -   Backend SonarQube properties are configured in `backend/sonar-project.properties`.
 -   Frontend SonarQube properties are configured in `Lunara/sonar-project.properties`.
+
+## TypeScript & Documentation
+
+-   **Backend is fully converted to TypeScript** for type safety, maintainability, and better developer experience.
+-   **Comprehensive documentation**: Each major backend directory (`config`, `middleware`, `models`, `routes`, `services`, `types`, `utils`) now contains a `README.md` and JSDoc comments for all major files and exports.
+-   **Swagger/OpenAPI**: All API endpoints are documented and browsable at `/api-docs`.
+-   **See `Docs/Guides/TYPESCRIPT_CONVERSION.md`** for a summary of the conversion and documentation improvements.
 
 ## Contributing
 

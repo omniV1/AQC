@@ -197,8 +197,12 @@ const userSchema = new Schema<IUser>({
     },
     email: {
       type: String,
-      required: true
-    }
+      required: [true, 'Email is required'],
+      unique: true, // This creates a unique index
+      lowercase: true,
+      trim: true,
+      match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email']
+    },
   }],
   profile: {
     phone: {
@@ -344,7 +348,7 @@ userSchema.statics.findByEmail = function(email: string): Promise<IUser | null> 
 };
 
 // Indexes
-userSchema.index({ email: 1 });
+// userSchema.index({ email: 1 }); // Removed to avoid duplicate index warning
 userSchema.index({ role: 1 });
 userSchema.index({ 'oauthProviders.providerId': 1, 'oauthProviders.provider': 1 });
 userSchema.index({ createdAt: 1 });
