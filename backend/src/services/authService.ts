@@ -2,16 +2,17 @@ import crypto from 'crypto';
 import User from '../models/User';
 import Client from '../models/Client';
 import Provider from '../models/Provider';
-import { generateTokens, UserTokenPayload } from '../utils/tokenUtils';
+import { generateTokens } from '../utils/tokenUtils';
 import { sendEmail } from './emailService';
 import { ConflictError, NotFoundError, ValidationError, UnauthorizedError } from '../utils/errors';
+import { Types } from 'mongoose';
 
 interface RegisterUserData {
   firstName: string;
   lastName: string;
   email: string;
   password: string;
-  role: 'client' | 'doula' | 'admin';
+  role: 'client' | 'provider' | 'admin';
 }
 
 interface AuthResponse {
@@ -40,17 +41,6 @@ interface SanitizedUser {
 
 export class AuthService {
   /**
-   * Convert user document to token payload
-   */
-  private static userToTokenPayload(user: any): UserTokenPayload {
-    return {
-      _id: user._id.toString(),
-      email: user.email,
-      role: user.role
-    };
-  }
-
-  /**
    * Register a new user with comprehensive validation
    */
   static async registerUser({ firstName, lastName, email, password, role }: RegisterUserData): Promise<AuthResponse> {
@@ -78,7 +68,7 @@ export class AuthService {
     await user.save();
 
     // Create role-specific profile
-    await this.createRoleSpecificProfile(user._id.toString(), role);
+    await this.createRoleSpecificProfile((user._id as Types.ObjectId).toString(), role);
 
     // Send verification email
     await this.sendVerificationEmail(user, emailVerificationToken);
@@ -119,11 +109,14 @@ export class AuthService {
     user.lastLogin = new Date();
     await user.save();
 
-    // Generate tokens
-    const tokens = generateTokens(user);
+    const tokens = generateTokens({
+      _id: user._id as any as Types.ObjectId,
+      email: user.email,
+      role: user.role
+    });
 
     // Save refresh token
-    user.refreshTokens.push({ token: tokens.refreshToken });
+    user.refreshTokens.push({ token: tokens.refreshToken, createdAt: new Date() });
     await user.save();
 
     return {
@@ -144,11 +137,14 @@ export class AuthService {
     // Ensure role-specific profile exists
     await this.ensureRoleSpecificProfile(user._id, user.role);
 
-    // Generate tokens
-    const tokens = generateTokens(user);
+    const tokens = generateTokens({
+      _id: user._id as any as Types.ObjectId,
+      email: user.email,
+      role: user.role
+    });
 
     // Save refresh token
-    user.refreshTokens.push({ token: tokens.refreshToken });
+    user.refreshTokens.push({ token: tokens.refreshToken, createdAt: new Date() });
     await user.save();
 
     return {
@@ -173,10 +169,13 @@ export class AuthService {
       throw new UnauthorizedError('Refresh token not found');
     }
 
-    // Generate new access token
-    const { accessToken } = generateTokens(user);
+    const tokens = generateTokens({
+      _id: user._id as any as Types.ObjectId,
+      email: user.email,
+      role: user.role
+    });
 
-    return { accessToken };
+    return { accessToken: tokens.accessToken };
   }
 
   /**
@@ -268,7 +267,7 @@ export class AuthService {
     if (role === 'client') {
       const clientProfile = new Client({ userId });
       await clientProfile.save();
-    } else if (role === 'doula') {
+    } else if (role === 'provider') {
       const providerProfile = new Provider({ userId });
       await providerProfile.save();
     }
@@ -281,7 +280,7 @@ export class AuthService {
         const clientProfile = new Client({ userId });
         await clientProfile.save();
       }
-    } else if (role === 'doula') {
+    } else if (role === 'provider') {
       const existingProvider = await Provider.findOne({ userId });
       if (!existingProvider) {
         const providerProfile = new Provider({ userId });
