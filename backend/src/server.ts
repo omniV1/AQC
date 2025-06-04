@@ -88,7 +88,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Rate Limiting - FIXED: Removed trailing slash
+// Rate Limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
@@ -109,9 +109,27 @@ app.use(morgan('combined'));
 app.use(passport.initialize());
 
 // Swagger Documentation
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'LUNARA API',
+      version: '1.0.0',
+      description: 'Postpartum Support Platform API',
+    },
+    servers: [
+      {
+        url: process.env.API_URL || 'http://localhost:5000/api',
+      },
+    ],
+  },
+  apis: ['./src/routes/**/*.ts', './src/models/**/*.ts'],
+};
 
-// Set a permissive CSP for Swagger UI to allow scripts, styles, and images - FIXED: Proper middleware function
-const swaggerCSP = (req: Request, res: Response, next: NextFunction) => {
+const specs = swaggerJsdoc(swaggerOptions);
+
+// FIXED: Proper middleware setup for Swagger
+const swaggerCSPMiddleware = (req: Request, res: Response, next: NextFunction) => {
   res.setHeader('Content-Security-Policy',
     "default-src 'self'; " +
     "script-src 'self' 'unsafe-inline'; " +
@@ -127,31 +145,10 @@ const swaggerCSP = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-const swaggerOptions = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'LUNARA API',
-      version: '1.0.0',
-      description: 'Postpartum Support Platform API',
-    },
-    servers: [
-      {
-        url: process.env.API_URL || 'http://localhost:5000/api',
-      },
-    ],
-  },
-  apis: ['./src/routes/**/*.ts', './src/models/**/*.ts'], // Updated for all TypeScript route/model files
-};
+// FIXED: Correct way to setup Swagger UI
+app.use('/api-docs', swaggerCSPMiddleware, swaggerUi.serve, swaggerUi.setup(specs));
 
-const specs = swaggerJsdoc(swaggerOptions);
-
-// FIXED: Separate the swagger middleware setup
-app.use('/api-docs', swaggerCSP);
-app.use('/api-docs', swaggerUi.serve);
-app.get('/api-docs', swaggerUi.setup(specs));
-
-// Routes (TypeScript routes) - FIXED: Ensure proper router typing
+// Routes
 app.use('/api/appointments', appointmentsRouter);
 app.use('/api/messages', messagesRouter);
 app.use('/api/resources', resourcesRouter);
@@ -212,7 +209,7 @@ interface CustomError extends Error {
   name: string;
 }
 
-// Error Handling Middleware - FIXED: Proper error handler signature
+// Error Handling Middleware
 const errorHandler = (err: CustomError, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
   
@@ -245,9 +242,10 @@ app.use('*', (req: Request, res: Response) => {
   });
 });
 
-const PORT = process.env.PORT || 5000;
+// FIXED: Proper port binding for Render
+const PORT = process.env.PORT || 10000;
 
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`API Documentation available at http://localhost:${PORT}/api-docs`);
 });
