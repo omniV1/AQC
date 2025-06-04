@@ -109,6 +109,24 @@ app.use(morgan('combined'));
 app.use(passport.initialize());
 
 // Swagger Documentation
+
+// Set a permissive CSP for Swagger UI to allow scripts, styles, and images
+app.use('/api-docs', (req, res, next) => {
+  res.setHeader('Content-Security-Policy',
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline'; " +
+    "style-src 'self' 'unsafe-inline'; " +
+    "img-src 'self' data:; " +
+    "font-src 'self'; " +
+    "connect-src 'self'; " +
+    "object-src 'none'; " +
+    "frame-src 'none'; " +
+    "base-uri 'self'; " +
+    "form-action 'self';"
+  );
+  next();
+});
+
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
@@ -123,7 +141,7 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ['./routes/*.ts', './models/*.ts'], // Updated for TypeScript files
+  apis: ['./src/routes/**/*.ts', './src/models/**/*.ts'], // Updated for all TypeScript route/model files
 };
 
 const specs = swaggerJsdoc(swaggerOptions);
