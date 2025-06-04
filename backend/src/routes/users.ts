@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import passport from 'passport';
-import { body, validationResult } from 'express-validator';
+const { body, validationResult } = require('express-validator');
 import User, { IUser } from '../models/User';
 import Client, { IClientDocument } from '../models/Client';
 import Provider, { IProviderDocument } from '../models/Provider';
@@ -38,8 +38,46 @@ interface ProfileResponse {
  *     responses:
  *       200:
  *         description: User profile retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: "60f7c2b8e1d2c8a1b8e1d2c8"
+ *                     firstName:
+ *                       type: string
+ *                       example: "Jane"
+ *                     lastName:
+ *                       type: string
+ *                       example: "Doe"
+ *                     email:
+ *                       type: string
+ *                       example: "jane@example.com"
+ *                     role:
+ *                       type: string
+ *                       example: "client"
+ *                     isEmailVerified:
+ *                       type: boolean
+ *                       example: true
+ *                 profile:
+ *                   type: object
+ *                   nullable: true
+ *                   example: { "userId": "60f7c2b8e1d2c8a1b8e1d2c8", "status": "active" }
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Unauthorized"
  */
 router.get('/profile', authenticate, async (req: Request, res: Response<ProfileResponse | { error: string }>) => {
   try {
@@ -84,18 +122,78 @@ router.get('/profile', authenticate, async (req: Request, res: Response<ProfileR
  *             properties:
  *               firstName:
  *                 type: string
+ *                 example: "Jane"
  *               lastName:
  *                 type: string
+ *                 example: "Doe"
  *               profile:
  *                 type: object
  *                 properties:
  *                   phone:
  *                     type: string
+ *                     example: "+1-555-123-4567"
  *                   timezone:
  *                     type: string
+ *                     example: "America/Phoenix"
  *     responses:
  *       200:
  *         description: Profile updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Profile updated successfully"
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: "60f7c2b8e1d2c8a1b8e1d2c8"
+ *                     firstName:
+ *                       type: string
+ *                       example: "Jane"
+ *                     lastName:
+ *                       type: string
+ *                       example: "Doe"
+ *                     email:
+ *                       type: string
+ *                       example: "jane@example.com"
+ *                     role:
+ *                       type: string
+ *                       example: "client"
+ *                     isEmailVerified:
+ *                       type: boolean
+ *                       example: true
+ *       400:
+ *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Validation failed"
+ *                 details:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       msg:
+ *                         type: string
+ *                         example: "Phone must be a valid mobile number"
+ *                       param:
+ *                         type: string
+ *                         example: "profile.phone"
+ *                       location:
+ *                         type: string
+ *                         example: "body"
+ *                       value:
+ *                         type: string
+ *                         example: "notaphone"
  */
 router.put('/profile', authenticate, [
   body('firstName').optional().trim().isLength({ min: 1, max: 50 }),
