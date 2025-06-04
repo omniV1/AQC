@@ -128,8 +128,8 @@ const swaggerOptions = {
 
 const specs = swaggerJsdoc(swaggerOptions);
 
-// FIXED: Proper middleware setup for Swagger
-const swaggerCSPMiddleware = (req: Request, res: Response, next: NextFunction) => {
+// FIXED: Proper CSP middleware function
+function swaggerCSPMiddleware(req: Request, res: Response, next: NextFunction): void {
   res.setHeader('Content-Security-Policy',
     "default-src 'self'; " +
     "script-src 'self' 'unsafe-inline'; " +
@@ -143,10 +143,12 @@ const swaggerCSPMiddleware = (req: Request, res: Response, next: NextFunction) =
     "form-action 'self';"
   );
   next();
-};
+}
 
-// FIXED: Correct way to setup Swagger UI
-app.use('/api-docs', swaggerCSPMiddleware, swaggerUi.serve, swaggerUi.setup(specs));
+// FIXED: Separate middleware registration to avoid type conflicts
+app.use('/api-docs', swaggerCSPMiddleware);
+app.use('/api-docs', swaggerUi.serve);
+app.get('/api-docs', swaggerUi.setup(specs));
 
 // Routes
 app.use('/api/appointments', appointmentsRouter);
@@ -209,28 +211,30 @@ interface CustomError extends Error {
   name: string;
 }
 
-// Error Handling Middleware
-const errorHandler = (err: CustomError, req: Request, res: Response, next: NextFunction) => {
+// FIXED: Proper error handler function signature
+function errorHandler(err: CustomError, req: Request, res: Response, next: NextFunction): void {
   console.error(err.stack);
   
   if (err.name === 'ValidationError') {
-    return res.status(400).json({
+    res.status(400).json({
       error: 'Validation Error',
       details: err.message
     });
+    return;
   }
   
   if (err.name === 'UnauthorizedError') {
-    return res.status(401).json({
+    res.status(401).json({
       error: 'Unauthorized',
       message: 'Invalid token'
     });
+    return;
   }
   
-  return res.status(err.status || 500).json({
+  res.status(err.status || 500).json({
     error: process.env.NODE_ENV === 'production' ? 'Internal Server Error' : err.message
   });
-};
+}
 
 app.use(errorHandler);
 
@@ -243,7 +247,7 @@ app.use('*', (req: Request, res: Response) => {
 });
 
 // FIXED: Proper port binding for Render
-const PORT = process.env.PORT || 10000;
+const PORT = parseInt(process.env.PORT || '', 10) || 10000;
 
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
