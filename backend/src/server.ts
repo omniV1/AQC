@@ -88,7 +88,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Rate Limiting
+// Rate Limiting - FIXED: Removed trailing slash
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
@@ -96,7 +96,7 @@ const limiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
-app.use('/api/', limiter);
+app.use('/api', limiter);
 
 // Body Parsing Middleware
 app.use(express.json({ limit: '10mb' }));
@@ -110,8 +110,8 @@ app.use(passport.initialize());
 
 // Swagger Documentation
 
-// Set a permissive CSP for Swagger UI to allow scripts, styles, and images
-app.use('/api-docs', (req, res, next) => {
+// Set a permissive CSP for Swagger UI to allow scripts, styles, and images - FIXED: Proper middleware function
+const swaggerCSP = (req: Request, res: Response, next: NextFunction) => {
   res.setHeader('Content-Security-Policy',
     "default-src 'self'; " +
     "script-src 'self' 'unsafe-inline'; " +
@@ -125,7 +125,7 @@ app.use('/api-docs', (req, res, next) => {
     "form-action 'self';"
   );
   next();
-});
+};
 
 const swaggerOptions = {
   definition: {
@@ -145,19 +145,18 @@ const swaggerOptions = {
 };
 
 const specs = swaggerJsdoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-  // Routes (TypeScript routes)
-  // app.use('/api/auth', require('./routes/auth'));
-  // app.use('/api/users', require('./routes/users'));
-  // app.use('/api/clients', require('./routes/clients'));
-  // app.use('/api/providers', require('./routes/providers'));
-  
-  app.use('/api/appointments', appointmentsRouter);
-  app.use('/api/messages', messagesRouter);
-  app.use('/api/resources', resourcesRouter);
-  app.use('/api/checkins', checkinsRouter);
-  app.use('/api/blog', blogRouter);
+// FIXED: Separate the swagger middleware setup
+app.use('/api-docs', swaggerCSP);
+app.use('/api-docs', swaggerUi.serve);
+app.get('/api-docs', swaggerUi.setup(specs));
+
+// Routes (TypeScript routes) - FIXED: Ensure proper router typing
+app.use('/api/appointments', appointmentsRouter);
+app.use('/api/messages', messagesRouter);
+app.use('/api/resources', resourcesRouter);
+app.use('/api/checkins', checkinsRouter);
+app.use('/api/blog', blogRouter);
 
 // Health Check
 app.get('/api/health', (req: Request, res: Response) => {
@@ -213,8 +212,8 @@ interface CustomError extends Error {
   name: string;
 }
 
-// Error Handling Middleware
-app.use((err: CustomError, req: Request, res: Response, next: NextFunction) => {
+// Error Handling Middleware - FIXED: Proper error handler signature
+const errorHandler = (err: CustomError, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
   
   if (err.name === 'ValidationError') {
@@ -234,7 +233,9 @@ app.use((err: CustomError, req: Request, res: Response, next: NextFunction) => {
   return res.status(err.status || 500).json({
     error: process.env.NODE_ENV === 'production' ? 'Internal Server Error' : err.message
   });
-});
+};
+
+app.use(errorHandler);
 
 // 404 Handler
 app.use('*', (req: Request, res: Response) => {
@@ -251,4 +252,4 @@ server.listen(PORT, () => {
   console.log(`API Documentation available at http://localhost:${PORT}/api-docs`);
 });
 
-export { app, server, io }; 
+export { app, server, io };
