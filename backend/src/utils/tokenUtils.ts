@@ -30,7 +30,7 @@ export const generateTokens = (user: IUser): { accessToken: string; refreshToken
     payload,
     process.env.JWT_SECRET!,
     { 
-      expiresIn: process.env.JWT_EXPIRE || '1h',
+      expiresIn: 3600, // 1 hour in seconds
       issuer: 'lunara-api',
       audience: 'lunara-frontend'
     }
@@ -40,7 +40,7 @@ export const generateTokens = (user: IUser): { accessToken: string; refreshToken
     payload,
     process.env.JWT_REFRESH_SECRET!,
     { 
-      expiresIn: process.env.JWT_REFRESH_EXPIRE || '7d',
+      expiresIn: 604800, // 7 days in seconds
       issuer: 'lunara-api',
       audience: 'lunara-frontend'
     }

@@ -254,6 +254,7 @@ router.post(
       message: 'Thank you for your inquiry! We will get back to you within 24 hours.',
       status: 'success'
     });
+    return;
   }
 );
 

@@ -1,15 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
-import { APIError, handleMongooseError, handleJWTError, isOperationalError } from '../utils/errors';
+import { APIError, handleMongooseError, handleJWTError, isOperationalError, ValidationError } from '../utils/errors';
 
 // Extend Express Request interface to include custom properties
 declare global {
   namespace Express {
     interface Request {
       startTime?: number;
-      rateLimit?: {
-        resetTime?: Date;
-      };
     }
     interface Response {
       success?: (data: any, message?: string, statusCode?: number) => void;
@@ -103,7 +100,7 @@ export const errorHandler = (err: any, req: Request, res: Response, next: NextFu
     res.status(error.statusCode).json({
       success: false,
       error: error.message,
-      ...(error.details && { details: error.details })
+      ...(error instanceof ValidationError && error.details ? { details: error.details } : {})
     });
     return;
   }

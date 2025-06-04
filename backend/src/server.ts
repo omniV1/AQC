@@ -147,7 +147,7 @@ function swaggerCSPMiddleware(req: Request, res: Response, next: NextFunction): 
 
 // FIXED: Separate middleware registration to avoid type conflicts
 app.use('/api-docs', swaggerCSPMiddleware);
-app.use('/api-docs', swaggerUi.serve);
+app.use('/api-docs', ...swaggerUi.serve);
 app.get('/api-docs', swaggerUi.setup(specs));
 
 // Routes
