@@ -88,7 +88,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Rate Limiting - FIXED: Removed trailing slash
+// Rate Limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
@@ -109,24 +109,6 @@ app.use(morgan('combined'));
 app.use(passport.initialize());
 
 // Swagger Documentation
-
-// Set a permissive CSP for Swagger UI to allow scripts, styles, and images - FIXED: Proper middleware function
-const swaggerCSP = (req: Request, res: Response, next: NextFunction) => {
-  res.setHeader('Content-Security-Policy',
-    "default-src 'self'; " +
-    "script-src 'self' 'unsafe-inline'; " +
-    "style-src 'self' 'unsafe-inline'; " +
-    "img-src 'self' data:; " +
-    "font-src 'self'; " +
-    "connect-src 'self'; " +
-    "object-src 'none'; " +
-    "frame-src 'none'; " +
-    "base-uri 'self'; " +
-    "form-action 'self';"
-  );
-  next();
-};
-
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
@@ -141,17 +123,34 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ['./src/routes/**/*.ts', './src/models/**/*.ts'], // Updated for all TypeScript route/model files
+  apis: ['./src/routes/**/*.ts', './src/models/**/*.ts'],
 };
 
 const specs = swaggerJsdoc(swaggerOptions);
 
-// FIXED: Separate the swagger middleware setup
-app.use('/api-docs', swaggerCSP);
+// FIXED: Proper CSP middleware function
+function swaggerCSPMiddleware(req: Request, res: Response, next: NextFunction): void {
+  res.setHeader('Content-Security-Policy',
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline'; " +
+    "style-src 'self' 'unsafe-inline'; " +
+    "img-src 'self' data:; " +
+    "font-src 'self'; " +
+    "connect-src 'self'; " +
+    "object-src 'none'; " +
+    "frame-src 'none'; " +
+    "base-uri 'self'; " +
+    "form-action 'self';"
+  );
+  next();
+}
+
+// FIXED: Separate middleware registration to avoid type conflicts
+app.use('/api-docs', swaggerCSPMiddleware);
 app.use('/api-docs', swaggerUi.serve);
 app.get('/api-docs', swaggerUi.setup(specs));
 
-// Routes (TypeScript routes) - FIXED: Ensure proper router typing
+// Routes
 app.use('/api/appointments', appointmentsRouter);
 app.use('/api/messages', messagesRouter);
 app.use('/api/resources', resourcesRouter);
@@ -212,28 +211,30 @@ interface CustomError extends Error {
   name: string;
 }
 
-// Error Handling Middleware - FIXED: Proper error handler signature
-const errorHandler = (err: CustomError, req: Request, res: Response, next: NextFunction) => {
+// FIXED: Proper error handler function signature
+function errorHandler(err: CustomError, req: Request, res: Response, next: NextFunction): void {
   console.error(err.stack);
   
   if (err.name === 'ValidationError') {
-    return res.status(400).json({
+    res.status(400).json({
       error: 'Validation Error',
       details: err.message
     });
+    return;
   }
   
   if (err.name === 'UnauthorizedError') {
-    return res.status(401).json({
+    res.status(401).json({
       error: 'Unauthorized',
       message: 'Invalid token'
     });
+    return;
   }
   
-  return res.status(err.status || 500).json({
+  res.status(err.status || 500).json({
     error: process.env.NODE_ENV === 'production' ? 'Internal Server Error' : err.message
   });
-};
+}
 
 app.use(errorHandler);
 
@@ -245,9 +246,10 @@ app.use('*', (req: Request, res: Response) => {
   });
 });
 
-const PORT = process.env.PORT || 5000;
+// FIXED: Proper port binding for Render
+const PORT = parseInt(process.env.PORT || '', 10) || 10000;
 
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`API Documentation available at http://localhost:${PORT}/api-docs`);
 });
