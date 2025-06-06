@@ -1,102 +1,77 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import babyOllie from "../Assets/baby ollie.png";
-import meadowBackground from "../Assets/meadow background.png";
-import note from "../Assets/note.png";
-import babyEli from "../Assets/baby eli.png";
-import leftCorn from "../Assets/left corn.png";
-import rightCorn from "../Assets/right corn.png";
-// lunaraLogo import might be removed if Header.tsx handles it globally and is used here
-// import lunaraLogo from "../Assets/lunara logo.png"; 
-import beeImage from "../Assets/image 2.png";
-// import Footer from '../components/layout/Footer'; // Footer is now provided by MainLayout
 
-export const LandingPage: React.FC = () => {
-  return (
-    <div className="w-full min-h-screen bg-white pt-32">
-      {/* Header section removed - assuming global Header.tsx is used */}
-      {/* <div className="flex flex-col items-center py-8">
-        <Link to="/">
-          <img src={lunaraLogo} alt="Lunara" className="w-[120px] md:w-[150px] mb-8" />
-        </Link>
-        <nav className="flex justify-center space-x-8 md:space-x-12">
-          <Link to="/about" className="text-[#571e00] hover:text-[#8B4513] transition-colors">About</Link>
-          <Link to="/faq" className="text-[#571e00] hover:text-[#8B4513] transition-colors">FAQ</Link>
-          <Link to="/blog" className="text-[#571e00] hover:text-[#8B4513] transition-colors">Blog</Link>
-          <Link to="/login" className="text-[#571e00] hover:text-[#8B4513] transition-colors">Login</Link>
-        </nav>
-      </div> */}
+// Types
+interface HeroBannerProps {
+  title: string;
+  subtitle: string;
+  backgroundImage: string;
+  ctaButtons: {
+    text: string;
+    link: string;
+  }[];
+}
 
-      {/* Hero Banner */}
-      <div className="relative">
-        <img 
-          src={babyOllie} 
-          alt="Baby sleeping peacefully" 
-          className="w-full h-[400px] md:h-[600px] object-cover"
-        />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <h1 className="font-playfair italic text-[#571e00] text-4xl md:text-6xl text-center leading-relaxed max-w-4xl px-4">
-            Rest-centered, postpartum<br />
-            support for all families
-          </h1>
-        </div>
-        
-        {/* Acorn Buttons */}
-        <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 flex gap-16">
-          <Link to="/services" className="relative">
-            <img src={leftCorn} alt="" className="w-24 md:w-32" />
-            <span className="absolute inset-0 flex items-center justify-center text-white font-serif text-xl">
-              Services
-            </span>
-          </Link>
-          <Link to="/inquire" className="relative">
-            <img src={rightCorn} alt="" className="w-24 md:w-32" />
-            <span className="absolute inset-0 flex items-center justify-center text-white font-serif text-xl">
-              Inquire
-            </span>
-          </Link>
-        </div>
-      </div>
-
-      {/* Content Section */}
-      <div className="relative mt-24 md:mt-32">
-        <img 
-          src={meadowBackground} 
-          alt="" 
-          className="w-full h-[600px] md:h-[800px] object-cover"
-        />
-        
-        <div className="absolute inset-0">
-          <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-12 pt-16">
-            {/* Letter */}
-            <div className="relative w-full max-w-[400px] md:max-w-[500px]">
-              <img 
-                src={note} 
-                alt="" 
-                className="w-full rotate-[4deg]"
-              />
-              <img 
-                src={beeImage} 
-                alt="" 
-                className="absolute -left-8 -top-8 w-24 md:w-32 object-contain rotate-[25deg]"
-              />
-            </div>
-
-            {/* Photo */}
-            <div className="relative w-full max-w-[300px] md:max-w-[400px]">
-              <img 
-                src={babyEli} 
-                alt="Baby portrait" 
-                className="w-full h-auto object-cover grayscale"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* <Footer /> */}{/* Footer is now provided by MainLayout */}
+// Components
+const HeroBanner: React.FC<HeroBannerProps> = ({ title, subtitle, backgroundImage, ctaButtons }) => (
+  <div className="relative min-h-[calc(100vh-200px)] flex items-center justify-center mt-[200px]">
+    {/* Background Image with Overlay */}
+    <div className="absolute inset-0">
+      <img 
+        src={backgroundImage} 
+        alt="Hero background" 
+        className="w-full h-full object-cover"
+        loading="eager"
+      />
+      <div className="absolute inset-0 bg-black/30" /> {/* Overlay */}
     </div>
+
+    {/* Content */}
+    <div className="relative z-1 text-center px-4">
+      <h1 className="font-['Luxurious_Roman'] text-white text-5xl md:text-7xl mb-6">
+        {title}
+      </h1>
+      <p className="text-white text-xl md:text-2xl mb-12 max-w-2xl mx-auto font-light">
+        {subtitle}
+      </p>
+      
+      <div className="flex flex-col sm:flex-row gap-6 justify-center">
+        {ctaButtons.map((button, index) => (
+          <Link 
+            key={index}
+            to={button.link} 
+            className="inline-block px-8 py-3 text-lg font-['Luxurious_Roman'] transition-all
+                     bg-[#FAF7F2] text-[#571E00] hover:bg-[#571E00] hover:text-[#FAF7F2]
+                     rounded-full shadow-lg hover:shadow-xl"
+          >
+            {button.text}
+          </Link>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+const LandingPage: React.FC = () => {
+  const heroContent: HeroBannerProps = {
+    title: "Welcome to Lunara",
+    subtitle: "Experience the art of beauty and wellness in our luxurious sanctuary",
+    backgroundImage: "/images/hero-background.svg",
+    ctaButtons: [
+      {
+        text: "Book Appointment",
+        link: "/appointments"
+      },
+      {
+        text: "Our Services",
+        link: "/services"
+      }
+    ]
+  };
+
+  return (
+    <HeroBanner {...heroContent} />
   );
 };
 
-export default LandingPage; 
+export default LandingPage;

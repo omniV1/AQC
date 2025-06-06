@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { RegisterData } from '../types/auth';
+import { ClientRegistrationData } from '../types/auth';
 
 export const Register: React.FC = () => {
   const navigate = useNavigate();
-  const { register } = useAuth();
+  const { registerClient } = useAuth();
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState<RegisterData>({
+  const [formData, setFormData] = useState<ClientRegistrationData>({
     email: '',
     password: '',
     firstName: '',
     lastName: '',
-    dueDate: '',
-    birthDate: '',
+    providerId: 0, // This will be set based on provider selection
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,7 +22,7 @@ export const Register: React.FC = () => {
     setIsLoading(true);
 
     try {
-      await register(formData);
+      await registerClient(formData);
       navigate('/dashboard');
     } catch (err) {
       setError('Registration failed. Please try again.');
@@ -33,7 +32,7 @@ export const Register: React.FC = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
+    setFormData((prev: ClientRegistrationData) => ({
       ...prev,
       [e.target.name]: e.target.value
     }));
@@ -135,41 +134,6 @@ export const Register: React.FC = () => {
                   className="w-full px-4 py-2 border border-brown/20 rounded bg-white/50 focus:outline-none focus:ring-1 focus:ring-purple placeholder:text-brown/40"
                 />
                 <p className="mt-1 text-xs text-brown/60">Must be at least 8 characters long</p>
-              </div>
-            </div>
-
-            {/* Optional Information Section */}
-            <div className="space-y-6">
-              <h2 className="text-xl font-serif text-brown">Journey Details (Optional)</h2>
-              
-              <div>
-                <label htmlFor="dueDate" className="block text-sm font-medium text-brown mb-1">
-                  Due Date
-                </label>
-                <input 
-                  type="date" 
-                  name="dueDate" 
-                  id="dueDate"
-                  value={formData.dueDate}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-brown/20 rounded bg-white/50 focus:outline-none focus:ring-1 focus:ring-purple"
-                />
-                <p className="mt-1 text-xs text-brown/60">Helps us provide timely resources for your pregnancy journey</p>
-              </div>
-
-              <div>
-                <label htmlFor="birthDate" className="block text-sm font-medium text-brown mb-1">
-                  Baby's Birth Date
-                </label>
-                <input 
-                  type="date" 
-                  name="birthDate" 
-                  id="birthDate"
-                  value={formData.birthDate}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-brown/20 rounded bg-white/50 focus:outline-none focus:ring-1 focus:ring-purple"
-                />
-                <p className="mt-1 text-xs text-brown/60">If your baby has arrived, we'll customize support for your postpartum stage</p>
               </div>
             </div>
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import Footer from '../layout/Footer';
+import { Footer } from '../layout/Footer';
 
 export const ProviderRegistration: React.FC = () => {
     const navigate = useNavigate();

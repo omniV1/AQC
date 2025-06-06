@@ -1,62 +1,92 @@
 import React from 'react';
-import lunaraLogoSmall from '../../Assets/lunara logo small.png';
-import instaIcon from '../../Assets/insta.png';
-import spotifyIcon from '../../Assets/spotify.png';
-import pinsImage from '../../Assets/pins.png';
+import { Link } from 'react-router-dom';
 
-export default function Footer() {
+export const Footer: React.FC = () => {
   return (
-    <footer className="relative w-full flex flex-col items-center bg-transparent px-4 py-16 mt-12">
-      {/* Pins Image - Positioned to the left */}
-      <img 
-        src={pinsImage} 
-        alt="Decorative pins" 
-        className="absolute left-4 md:left-8 top-1/2 transform -translate-y-1/2 w-36 h-auto md:w-48 z-10"
-      />
-
-      <div className="flex flex-col md:flex-row justify-around w-full max-w-2xl mb-8">
-        {/* Quick Links */}
-        <div className="flex flex-col items-center md:items-start mb-6 md:mb-0">
-          <h3 className="[font-family:'Luxurious_Roman-Regular',Helvetica] font-normal text-[#571e00] text-lg mb-2">Quick Links</h3>
-          <a href="/about" className="[font-family:'Luxurious_Roman-Regular',Helvetica] font-normal text-[#571e00] text-base mb-1 hover:underline">About</a>
-          <a href="/services" className="[font-family:'Luxurious_Roman-Regular',Helvetica] font-normal text-[#571e00] text-base mb-1 hover:underline">Services</a>
-          <a href="/contact" className="[font-family:'Luxurious_Roman-Regular',Helvetica] font-normal text-[#571e00] text-base hover:underline">Contact</a>
+    <footer className="bg-[#FAF7F2] text-[#571E00] py-12">
+      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+        {/* Company Info */}
+        <div className="text-center md:text-left">
+          <h3 className="font-['Luxurious_Roman'] text-xl mb-4">Lunara</h3>
+          <p className="text-sm mb-2">Your sanctuary for beauty and wellness</p>
+          <p className="text-sm">© {new Date().getFullYear()} Lunara. All rights reserved.</p>
         </div>
 
-        {/* Connect With Us */}
-        <div className="flex flex-col items-center md:items-start">
-          <h3 className="[font-family:'Luxurious_Roman-Regular',Helvetica] font-normal text-[#571e00] text-lg mb-2">Connect With Us</h3>
-          <div className="flex flex-row">
-            <a href="#" target="_blank" rel="noopener noreferrer">
-              <img
-                className="w-[40px] h-[40px] object-cover mr-2 transition-transform hover:scale-110"
-                alt="Instagram"
-                src={instaIcon}
-              />
+        {/* Quick Links */}
+        <div className="text-center md:text-left">
+          <h4 className="font-['Luxurious_Roman'] text-lg mb-4">Quick Links</h4>
+          <ul className="space-y-2">
+            <li>
+              <Link to="/about" className="text-sm hover:text-[#A27B5C] transition-colors">
+                About Us
+              </Link>
+            </li>
+            <li>
+              <Link to="/services" className="text-sm hover:text-[#A27B5C] transition-colors">
+                Our Services
+              </Link>
+            </li>
+            <li>
+              <Link to="/appointments" className="text-sm hover:text-[#A27B5C] transition-colors">
+                Book Appointment
+              </Link>
+            </li>
+            <li>
+              <Link to="/faq" className="text-sm hover:text-[#A27B5C] transition-colors">
+                FAQ
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        {/* Contact Info */}
+        <div className="text-center md:text-left">
+          <h4 className="font-['Luxurious_Roman'] text-lg mb-4">Contact</h4>
+          <ul className="space-y-2 text-sm">
+            <li>123 Beauty Lane</li>
+            <li>Wellness City, WC 12345</li>
+            <li>Phone: (555) 123-4567</li>
+            <li>Email: info@lunara.com</li>
+          </ul>
+        </div>
+
+        {/* Hours */}
+        <div className="text-center md:text-left">
+          <h4 className="font-['Luxurious_Roman'] text-lg mb-4">Hours</h4>
+          <ul className="space-y-2 text-sm">
+            <li>Monday - Friday: 9am - 8pm</li>
+            <li>Saturday: 9am - 6pm</li>
+            <li>Sunday: 10am - 5pm</li>
+          </ul>
+        </div>
+      </div>
+
+      {/* Bottom Bar */}
+      <div className="max-w-7xl mx-auto px-4 mt-8 pt-8 border-t border-[#571E00]/20">
+        <div className="flex flex-col md:flex-row justify-between items-center text-sm">
+          <div className="flex space-x-4 mb-4 md:mb-0">
+            <Link to="/privacy" className="hover:text-[#A27B5C] transition-colors">
+              Privacy Policy
+            </Link>
+            <Link to="/terms" className="hover:text-[#A27B5C] transition-colors">
+              Terms of Service
+            </Link>
+          </div>
+          <div className="flex space-x-4">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#A27B5C] transition-colors">
+              Facebook
             </a>
-            <a href="#" target="_blank" rel="noopener noreferrer">
-              <img
-                className="w-[40px] h-[40px] object-cover transition-transform hover:scale-110"
-                alt="Spotify"
-                src={spotifyIcon}
-              />
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#A27B5C] transition-colors">
+              Instagram
+            </a>
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#A27B5C] transition-colors">
+              Twitter
             </a>
           </div>
         </div>
       </div>
-
-      {/* Logo and Tagline */}
-      <div className="flex flex-col items-center my-8">
-         <img src={lunaraLogoSmall} alt="Lunara Logo" className="h-12 mb-3" />
-         <p className="[font-family:'Luxurious_Roman-Regular',Helvetica] font-normal text-[#571e00] text-center text-sm max-w-xs">
-          Care that honors the sacred rhythm of birth, rest, and renewal.
-         </p>
-      </div>
-
-      {/* Copyright */}
-      <p className="[font-family:'Luxurious_Roman-Regular',Helvetica] font-normal text-[#571e00] text-xs">
-        © 2025 Lunara. All rights reserved.
-      </p>
     </footer>
   );
-} 
+};
+
+
