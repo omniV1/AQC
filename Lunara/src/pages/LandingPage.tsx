@@ -25,11 +25,11 @@ const LandingPage: React.FC = () => (
             support for all families
           </h1>
 
-          <div className="flex gap-4 mt-6">
-            <button className="px-12 py-4 bg-white text-[#4E1B00] text-lg hover:bg-[#A27B5C] hover:text-white rounded-full shadow-md transition-all font-medium border border-[#AD714F] font-['Luxurious_Roman']">
+          <div className="flex gap-4 mt-4">
+            <button className="px-5 py-1 bg-white text-[#4E1B00] text-lg hover:bg-[#A27B5C] hover:text-white rounded-full shadow-md transition-all font-medium border border-[#AD714F] font-['Luxurious_Roman']">
               Services
             </button>
-            <button className="px-12 py-4 bg-white text-[#4E1B00] text-lg hover:bg-[#A27B5C] hover:text-white rounded-full shadow-md transition-all font-medium border border-[#AD714F] font-['Luxurious_Roman']">
+            <button className="px-5 py-1 bg-white text-[#4E1B00] text-lg hover:bg-[#A27B5C] hover:text-white rounded-full shadow-md transition-all font-medium border border-[#AD714F] font-['Luxurious_Roman']">
               Inquire
             </button>
           </div>
