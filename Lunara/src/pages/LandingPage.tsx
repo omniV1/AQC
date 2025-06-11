@@ -1,77 +1,95 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Header from '../components/layout/Header';
 
-// Types
-interface HeroBannerProps {
-  title: string;
-  subtitle: string;
-  backgroundImage: string;
-  ctaButtons: {
-    text: string;
-    link: string;
-  }[];
-}
+const LandingPage: React.FC = () => (
+  <div className="w-full bg-[#FAF7F2] flex justify-center">
+    <div className="w-full max-w-[1076px]">
+      {/* Hero Section – pulled up so it tucks behind the scalloped header */}
+      <div className="relative w-full h-[580px] -mt-[50px]">
+        {/* Background Image */}
+        <div
+          className="absolute inset-0 z-0 w-full h-full"
+          style={{
+            backgroundImage: `url('/images/ollie head.png')`,
+            backgroundPosition: 'center top',
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat'
+          }}
+        />
 
-// Components
-const HeroBanner: React.FC<HeroBannerProps> = ({ title, subtitle, backgroundImage, ctaButtons }) => (
-  <div className="relative min-h-[calc(100vh-200px)] flex items-center justify-center mt-[200px]">
-    {/* Background Image with Overlay */}
-    <div className="absolute inset-0">
-      <img 
-        src={backgroundImage} 
-        alt="Hero background" 
-        className="w-full h-full object-cover"
-        loading="eager"
-      />
-      <div className="absolute inset-0 bg-black/30" /> {/* Overlay */}
-    </div>
+        {/* Hero Content */}
+        <div className="relative z-10 flex flex-col items-start justify-center h-full pt-[190px] px-6 md:px-8">
+          <h1 className="text-white text-[82px] font-['Luxurious_Script'] italic leading-relaxed drop-shadow-lg text-left">
+            Rest-centered, postpartum
+            <br />
+            support for all families
+          </h1>
 
-    {/* Content */}
-    <div className="relative z-1 text-center px-4">
-      <h1 className="font-['Luxurious_Roman'] text-white text-5xl md:text-7xl mb-6">
-        {title}
-      </h1>
-      <p className="text-white text-xl md:text-2xl mb-12 max-w-2xl mx-auto font-light">
-        {subtitle}
-      </p>
-      
-      <div className="flex flex-col sm:flex-row gap-6 justify-center">
-        {ctaButtons.map((button, index) => (
-          <Link 
-            key={index}
-            to={button.link} 
-            className="inline-block px-8 py-3 text-lg font-['Luxurious_Roman'] transition-all
-                     bg-[#FAF7F2] text-[#571E00] hover:bg-[#571E00] hover:text-[#FAF7F2]
-                     rounded-full shadow-lg hover:shadow-xl"
-          >
-            {button.text}
-          </Link>
-        ))}
+          <div className="flex gap-4 mt-6">
+            <button className="px-12 py-4 bg-white text-[#4E1B00] text-lg hover:bg-[#A27B5C] hover:text-white rounded-full shadow-md transition-all font-medium border border-[#AD714F] font-['Luxurious_Roman']">
+              Services
+            </button>
+            <button className="px-12 py-4 bg-white text-[#4E1B00] text-lg hover:bg-[#A27B5C] hover:text-white rounded-full shadow-md transition-all font-medium border border-[#AD714F] font-['Luxurious_Roman']">
+              Inquire
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Header overlay */}
+      <Header />
+
+      {/* Letter Section */}
+      <div className="bg-[#FAF7F2] w-full py-16">
+        <div className="max-w-[1200px] mx-auto px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            {/* Letter Content */}
+            <div className="relative">
+              <h2 className="text-[#4E1B00] text-[32px] font-['Luxurious_Script'] italic mb-6">
+                Dear parent,
+              </h2>
+              <p className="text-[#4E1B00] leading-relaxed mb-6">
+                Lunara is a place of softness, reverence, and support. We offer gentle transition care rooted in ancient wisdom and aligned with your natural rhythms of recovery.
+              </p>
+              <p className="text-[#4E1B00] leading-relaxed">
+                Whether you're welcoming your first baby or your fifth, your needs matter just as much as your baby's.
+              </p>
+            </div>
+
+            {/* Image Grid */}
+            <div className="grid grid-cols-2 gap-6">
+              <img 
+                src="/images/baby-sleeping.jpg" 
+                alt="Peaceful sleeping baby"
+                className="w-full h-48 object-cover rounded-lg shadow-md"
+              />
+              <img 
+                src="/images/cactus.jpg"
+                alt="Decorative cactus"
+                className="w-full h-48 object-cover rounded-lg shadow-md"
+              />
+            </div>
+          </div>
+
+          {/* Service Links */}
+          <div className="flex justify-center space-x-8 mt-16">
+            <a href="/ritual" className="text-[#4E1B00] uppercase tracking-wider text-sm hover:text-[#A27B5C] transition-colors">
+              Ritual Support
+            </a>
+            <a href="/night-care" className="text-[#4E1B00] uppercase tracking-wider text-sm hover:text-[#A27B5C] transition-colors">
+              Night Care
+            </a>
+            <a href="/planning" className="text-[#4E1B00] uppercase tracking-wider text-sm hover:text-[#A27B5C] transition-colors">
+              Postpartum Planning
+            </a>
+            <a href="/sacred-rhythm" className="text-[#4E1B00] uppercase tracking-wider text-sm hover:text-[#A27B5C] transition-colors">
+              Sacred Rhythm
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 );
-
-const LandingPage: React.FC = () => {
-  const heroContent: HeroBannerProps = {
-    title: "Welcome to Lunara",
-    subtitle: "Experience the art of beauty and wellness in our luxurious sanctuary",
-    backgroundImage: "/images/hero-background.svg",
-    ctaButtons: [
-      {
-        text: "Book Appointment",
-        link: "/appointments"
-      },
-      {
-        text: "Our Services",
-        link: "/services"
-      }
-    ]
-  };
-
-  return (
-    <HeroBanner {...heroContent} />
-  );
-};
 
 export default LandingPage;
