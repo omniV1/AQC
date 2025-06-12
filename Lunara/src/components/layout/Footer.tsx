@@ -1,89 +1,64 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+
+/**
+ * New footer implementation based on the latest Figma design (node 128-2).
+ * The design features:
+ * 1. A dark brown announcement bar containing service categories separated by pipes.
+ * 2. A light cream section that centres two brand images – the "Ally" badge and the Lunara stamp logo.
+ * 3. A simple copyright line.
+ */
 
 export const Footer: React.FC = () => {
+  const categories = [
+    'HERBAL SUPPORT',
+    'NIGHT CARE',
+    'POSTPARTUM PLANNING',
+    'SACRED RHYTHM'
+  ];
+
   return (
-    <footer className="bg-[#FAF7F2] text-[#571E00] py-12">
-      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
-        {/* Company Info */}
-        <div className="text-center md:text-left">
-          <h3 className="font-['Luxurious_Roman'] text-xl mb-4">Lunara</h3>
-          <p className="text-sm mb-2">Your sanctuary for beauty and wellness</p>
-          <p className="text-sm">© {new Date().getFullYear()} Lunara. All rights reserved.</p>
-        </div>
-
-        {/* Quick Links */}
-        <div className="text-center md:text-left">
-          <h4 className="font-['Luxurious_Roman'] text-lg mb-4">Quick Links</h4>
-          <ul className="space-y-2">
-            <li>
-              <Link to="/about" className="text-sm hover:text-[#A27B5C] transition-colors">
-                About Us
-              </Link>
-            </li>
-            <li>
-              <Link to="/services" className="text-sm hover:text-[#A27B5C] transition-colors">
-                Our Services
-              </Link>
-            </li>
-            <li>
-              <Link to="/appointments" className="text-sm hover:text-[#A27B5C] transition-colors">
-                Book Appointment
-              </Link>
-            </li>
-            <li>
-              <Link to="/faq" className="text-sm hover:text-[#A27B5C] transition-colors">
-                FAQ
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        {/* Contact Info */}
-        <div className="text-center md:text-left">
-          <h4 className="font-['Luxurious_Roman'] text-lg mb-4">Contact</h4>
-          <ul className="space-y-2 text-sm">
-            <li>123 Beauty Lane</li>
-            <li>Wellness City, WC 12345</li>
-            <li>Phone: (555) 123-4567</li>
-            <li>Email: info@lunara.com</li>
-          </ul>
-        </div>
-
-        {/* Hours */}
-        <div className="text-center md:text-left">
-          <h4 className="font-['Luxurious_Roman'] text-lg mb-4">Hours</h4>
-          <ul className="space-y-2 text-sm">
-            <li>Monday - Friday: 9am - 8pm</li>
-            <li>Saturday: 9am - 6pm</li>
-            <li>Sunday: 10am - 5pm</li>
-          </ul>
-        </div>
+    <footer className="w-full">
+      {/* Category / Announcement bar */}
+      <div className="w-full bg-[#7B3F26] py-2 px-4 flex justify-center">
+        <ul className="flex flex-wrap justify-center items-center gap-2 md:gap-4 text-[#FAF7F2] font-['Luxurious_Roman'] text-sm md:text-base font-['Luxurious_Roman'] tracking-wider">
+          {categories.map((label, idx) => (
+            <React.Fragment key={label}>
+              {idx !== 0 && <span className="hidden md:inline text-[#FAF7F2]">|</span>}
+              <li className="whitespace-nowrap uppercase">{label}</li>
+            </React.Fragment>
+          ))}
+        </ul>
       </div>
 
-      {/* Bottom Bar */}
-      <div className="max-w-7xl mx-auto px-4 mt-8 pt-8 border-t border-[#571E00]/20">
-        <div className="flex flex-col md:flex-row justify-between items-center text-sm">
-          <div className="flex space-x-4 mb-4 md:mb-0">
-            <Link to="/privacy" className="hover:text-[#A27B5C] transition-colors">
-              Privacy Policy
-            </Link>
-            <Link to="/terms" className="hover:text-[#A27B5C] transition-colors">
-              Terms of Service
-            </Link>
-          </div>
-          <div className="flex space-x-4">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#A27B5C] transition-colors">
-              Facebook
-            </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#A27B5C] transition-colors">
-              Instagram
-            </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#A27B5C] transition-colors">
-              Twitter
-            </a>
-          </div>
+      {/* Main footer body */}
+      <div className="bg-[#FAF7F2] text-[#4E1B00] pt-12 pb-8">
+        {/* Brand icons – grid ensures the stamp stays perfectly centered */}
+        <div className="grid grid-cols-3 items-center justify-items-center max-w-[1076px] mx-auto">
+          {/* Ally badge – right-aligned within the first column so it sits closer to the centre */}
+          <img
+            src="/images/ally.png"
+            alt="Ally icon"
+            className="justify-self-end mr-16 md:mr-14 w-20 h-16 md:w-20 md:h-20 object-contain"
+          />
+
+          {/* Lunara stamp – centred in the middle column, aligning with the wax seal in the header */}
+          <img
+            src="/images/lunara%20stamp.png"
+            alt="Lunara stamp logo"
+            className="w-24 h-24 md:w-32 md:h-32 object-contain"
+          />
+
+          {/* Empty third column acts as spacer to keep the overall grid symmetric */}
+          <span className="hidden" />
         </div>
+
+        {/* Divider */}
+        <div className="max-w-[900px] mx-auto my-8 border-t border-[#4E1B00]/20" />
+
+        {/* Copyright */}
+        <p className="text-center text-xs md:text-sm tracking-wide">
+          © {new Date().getFullYear()} Lunara. All rights reserved.
+        </p>
       </div>
     </footer>
   );
