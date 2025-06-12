@@ -1,16 +1,15 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
-import Header from './Header';
-import Footer from './Footer';
+import React from "react";
+import Header from "./Header";
+import { Footer } from "./Footer";
 
-const MainLayout: React.FC = () => {
-  return (
-    <>
+export const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <div className="min-h-screen flex flex-col bg-white overflow-x-hidden relative">
+    <div className="relative z-50">
       <Header />
-      <Outlet />
-      <Footer />
-    </>
-  );
-};
-
-export default MainLayout; 
+    </div>
+    <main className="flex-grow relative">
+      {children}
+    </main>
+    <Footer />
+  </div>
+); 

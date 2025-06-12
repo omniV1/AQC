@@ -1,3 +1,6 @@
+// This file is temporarily disabled while focusing on landing page development
+// Rename back to authService.ts when auth functionality is needed
+
 import { ApiClient } from '../api/apiClient';
 import { 
     LoginRequest, 

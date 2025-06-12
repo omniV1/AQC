@@ -5,7 +5,7 @@ import { LoginCredentials } from '../types/auth';
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { clientLogin } = useAuth();
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<LoginCredentials>({
@@ -19,7 +19,7 @@ export const Login: React.FC = () => {
     setIsLoading(true);
 
     try {
-      await login(formData);
+      await clientLogin(formData);
       navigate('/dashboard');
     } catch (err) {
       setError('Invalid email or password');
@@ -29,7 +29,7 @@ export const Login: React.FC = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
+    setFormData((prev: LoginCredentials) => ({
       ...prev,
       [e.target.name]: e.target.value
     }));

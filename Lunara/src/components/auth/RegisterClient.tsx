@@ -37,7 +37,7 @@ export const RegisterClient: React.FC<RegisterClientProps> = ({ onSuccess, onCan
                 ...formData,
                 dueDate: formData.dueDate ? new Date(formData.dueDate).toISOString().split('T')[0] : undefined,
                 birthDate: formData.birthDate ? new Date(formData.birthDate).toISOString().split('T')[0] : undefined,
-                providerId: user.id
+                providerId: parseInt(user.id, 10)
             };
 
             await registerClient(formattedData);
