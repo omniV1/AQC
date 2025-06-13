@@ -1,5 +1,5 @@
-import React from 'react';
-import Header from '../components/layout/Header';
+import React from "react";
+import Header from "../components/layout/Header";
 
 const LandingPage: React.FC = () => (
   <div className="w-full bg-[#FAF7F2] flex justify-center">
@@ -11,9 +11,9 @@ const LandingPage: React.FC = () => (
           className="absolute inset-0 z-0 w-full h-full"
           style={{
             backgroundImage: `url('/images/ollie head.png')`,
-            backgroundPosition: 'center top',
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat'
+            backgroundPosition: "center top",
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
           }}
         />
 
@@ -63,13 +63,18 @@ const LandingPage: React.FC = () => (
                 Dear parent,
               </h2>
               <p className="text-[#4E1B00] font-['Luxurious_Roman'] leading-relaxed mb-6 tracking-wide text-[17px] md:text-lg">
-                Lunara is a place of softness, reverence, and support. We offer gentle transition care rooted in ancient wisdom and aligned with your natural rhythms of recovery.
+                Lunara is a place of softness, reverence, and support. We offer
+                gentle transition care rooted in ancient wisdom and aligned with
+                your natural rhythms of recovery.
               </p>
               <p className="text-[#4E1B00] font-['Luxurious_Roman'] leading-relaxed mb-6 tracking-wide text-[17px] md:text-lg">
-                Whether you're welcoming your first baby or your fifth, your needs matter just as much as your baby's.
+                Whether you're welcoming your first baby or your fifth, your
+                needs matter just as much as your baby's.
               </p>
               <p className="text-[#4E1B00] font-['Luxurious_Roman'] leading-relaxed tracking-wide text-[17px] md:text-lg">
-                With gentle rituals, warm guidance, and practical care, we will be here to walk beside you in the early days, the long nights, and everything in between.
+                With gentle rituals, warm guidance, and practical care, we will
+                be here to walk beside you in the early days, the long nights,
+                and everything in between.
               </p>
             </div>
 
