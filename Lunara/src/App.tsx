@@ -4,6 +4,7 @@ import { MainLayout } from './components/layout/MainLayout';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LandingPage from './pages/LandingPage';
+import BlogPage from './pages/BlogPage';
 
 // Component to handle navigation logging
 const NavigationLogger: React.FC = () => {
@@ -40,6 +41,13 @@ const App: React.FC = () => {
             <Route path="/" element={
               <MainLayout>
                 <LandingPage />
+              </MainLayout>
+            } />
+
+            {/* Blog page */}
+            <Route path="/blog" element={
+              <MainLayout>
+                <BlogPage />
               </MainLayout>
             } />
 
