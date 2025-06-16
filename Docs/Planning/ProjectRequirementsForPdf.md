@@ -1,11 +1,13 @@
 ---
 title: "LUNARA: Postpartum Support Platform"
-subtitle: "CST-451 Capstone Project Requirements Document"
+subtitle: "CST-451 Capstone Project Final Architectural Plan"
 author: 
   - Owen Lindsey
   - Carter Wright  
   - Andrew Mack
-date: "June 1, 2025"
+instructor: "Professor Amr Elchouemi"
+revision: "1.0"
+date: "June 22, 2025"
 subject: "Software Engineering"
 keywords: [Postpartum, Doula, Web Application, React, Node.js]
 lang: "en"
@@ -28,7 +30,7 @@ sansfont: "Arial"
 monofont: "Courier New"
 geometry: "left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm"
 header-left: "LUNARA Platform"
-header-right: "Requirements Document"
+header-right: "Architectural Plan"
 footer-left: "Grand Canyon University"
 footer-right: "Page \\thepage"
 ---
@@ -45,7 +47,32 @@ The system features secure authentication with OAuth integration, dynamic intake
 
 The completed platform will serve as a bridge between traditional doula services and modern digital accessibility, ensuring consistent, personalized care for new parents during their most vulnerable postpartum period.
 
+
 **Terms Reference:** *Fourth Trimester, Doula, Postpartum* (see **GLOSSARY** sections D, F, P); *OAuth, Authentication* (see **GLOSSARY** sections O, A); *UI, UX* (see **ABBREVIATIONS & ACRONYMS**); *User Experience* (see **TECHNICAL TERMS REFERENCE - Quality Assurance**)
+
+\newpage
+
+## Design Planning Summary
+
+The LUNARA project tackles the shortage of accessible postpartum support by virtualising doula services in a secure, mobile-first web platform.  Requirements gathering produced Functional Requirements FR1–FR15 and Non-Functional Requirements NFR1–NFR10.  This Architectural Plan converts those needs into concrete artefacts—logical & physical data models, UML and sequence diagrams, deployment topology, and security controls—so developers can build the system with minimal ambiguity.
+
+Business Drivers
+* Expand access to professional postpartum care regardless of geography.<br/>
+* Standardise quality via templated resources and automated follow-ups.<br/>
+* Lower cost of service delivery by leveraging cloud scalability and self-service tools.<br/>
+
+Technical Rationale
+* Full-stack JavaScript (React + Node + MongoDB) maximises team velocity and hiring flexibility.<br/>
+* Static front-end (Vercel) plus containerised API (Render) minimises hosting cost while enabling horizontal scaling.<br/>
+* Socket.io over WSS meets the <500 ms real-time messaging objective (NFR4).<br/>
+* MongoDB Atlas free tier satisfies MVP storage needs and provides automated daily backups (NFR7).<br/>
+
+### Document History
+
+| Version | Date | Author | Description |
+|---------|------|--------|-------------|
+| 1.0 | 2025-06-10 | C. Wright | Added Design Planning Summary |
+| 1.1 | 2025-06-22 | O. Lindsey | Initial Final Architectural Plan |
 
 \newpage
 
@@ -56,300 +83,301 @@ The completed platform will serve as a bridge between traditional doula services
 ### FR1: Public Website & Marketing Use Cases
 
 #### Use Case 1.1: First-Time Visitor Explores Services
-**Actor:** Prospective Client (New Parent)
-**Preconditions:** User has internet access and visits LUNARA website
+**Actor:** Prospective Client (New Parent)<br/><br/>
+**Preconditions:** User has internet access and visits LUNARA website<br/><br/>
 **Main Flow:**
-1. User navigates to LUNARA homepage
-2. User reads hero section describing postpartum support services
-3. User scrolls through service overview section
-4. User clicks "Learn More" to view detailed service descriptions
-5. User reviews doula profile and credentials
-6. User reads testimonials and success stories
-7. User clicks "Get Started" call-to-action button
+1. User navigates to LUNARA homepage<br/>
+2. User reads hero section describing postpartum support services<br/>
+3. User scrolls through service overview section<br/>
+4. User clicks "Learn More" to view detailed service descriptions<br/>
+5. User reviews doula profile and credentials<br/>
+6. User reads testimonials and success stories<br/>
+7. User clicks "Get Started" call-to-action button<br/>
 
-**Postconditions:** User understands LUNARA services and is ready to register
+**Postconditions:** User understands LUNARA services and is ready to register<br/><br/>
 **Alternative Flows:**
-- 3a. User immediately clicks contact form to ask questions
-- 5a. User wants to read blog posts first before committing
+- 3a. User immediately clicks contact form to ask questions<br/>
+- 5a. User wants to read blog posts first before committing<br/>
   
 \vspace{0.5cm}
 
-#### Use Case 1.2: Mobile User Accesses Website
-**Actor:** Prospective Client on Mobile Device
-**Preconditions:** User accesses website via mobile browser
-**Main Flow:**
-1. Website loads with mobile-optimized layout
-2. Navigation menu collapses to hamburger menu
-3. User taps hamburger menu to view navigation options
-4. Content automatically adjusts to screen size
-5. Touch targets are appropriately sized for mobile interaction
-6. User can easily scroll and navigate without zooming
+\newpage
 
-**Postconditions:** User has seamless mobile experience
+#### Use Case 1.2: Mobile User Accesses Website
+**Actor:** Prospective Client on Mobile Device<br/><br/>
+**Preconditions:** User accesses website via mobile browser<br/><br/>
+**Main Flow:**
+1. Website loads with mobile-optimized layout<br/>
+2. Navigation menu collapses to hamburger menu<br/>
+3. User taps hamburger menu to view navigation options<br/>
+4. Content automatically adjusts to screen size<br/>
+5. Touch targets are appropriately sized for mobile interaction<br/>
+6. User can easily scroll and navigate without zooming<br/>
+
+**Postconditions:** User has seamless mobile experience<br/><br/>
 
 \newpage
 
 ### FR2: Secure User Authentication & Registration Use Cases
 
 #### Use Case 2.1: New User Email Registration
-**Actor:** New Parent
-**Preconditions:** User has valid email address
+**Actor:** New Parent<br/>
+**Preconditions:** User has valid email address<br/>
 **Main Flow:**
-1. User clicks "Register" on homepage
-2. System displays registration form
-3. User enters email address and creates password
-4. System validates email format and password strength
-5. User selects role (Client)
-6. System creates user account with unverified status
-7. System sends verification email
-8. User clicks verification link in email
-9. System marks account as verified and logs user in
+1. User clicks "Register" on homepage<br/>
+2. System displays registration form<br/>
+3. User enters email address and creates password<br/>
+4. System validates email format and password strength<br/>
+5. User selects role (Client)<br/>
+6. System creates user account with unverified status<br/>
+7. System sends verification email<br/>
+8. User clicks verification link in email<br/>
+9. System marks account as verified and logs user in<br/>
 
-**Postconditions:** User has verified account and is logged in
+**Postconditions:** User has verified account and is logged in<br/>
 **Exception Flows:**
-- 4a. Invalid email format - system shows error message
-- 4b. Weak password - system shows password requirements
-- 7a. Email delivery fails - system provides resend option
+- 4a. Invalid email format - system shows error message<br/>
+- 4b. Weak password - system shows password requirements<br/>
+- 7a. Email delivery fails - system provides resend option<br/>
   
 \vspace{0.5cm}
 
 #### Use Case 2.2: OAuth Google Registration
-**Actor:** New Parent with Google Account
-**Preconditions:** User has active Google account
+**Actor:** New Parent with Google Account<br/>
+**Preconditions:** User has active Google account<br/>
 **Main Flow:**
-1. User clicks "Sign up with Google" button
-2. System redirects to Google OAuth consent screen
-3. User grants permissions to LUNARA
-4. Google returns authentication token to LUNARA
-5. System creates local user account linked to Google profile
-6. System logs user in automatically
-7. System redirects to user dashboard
+1. User clicks "Sign up with Google" button<br/>
+2. System redirects to Google OAuth consent screen<br/>
+3. User grants permissions to LUNARA<br/>
+4. Google returns authentication token to LUNARA<br/>
+5. System creates local user account linked to Google profile<br/>
+6. System logs user in automatically<br/>
+7. System redirects to user dashboard<br/>
 
-**Postconditions:** User has account linked to Google and is logged in
+**Postconditions:** User has account linked to Google and is logged in<br/>
 **Exception Flows:**
-- 3a. User denies permissions - redirected back to registration page
-- 4a. Google service unavailable - system shows error and email backup option
+- 3a. User denies permissions - redirected back to registration page<br>
+- 4a. Google service unavailable - system shows error and email backup option<br>
 
 \newpage
 
 ### FR3: User Dashboard & Navigation Use Cases
 
 #### Use Case 3.1: Client Dashboard Overview
-**Actor:** Authenticated Client
-**Preconditions:** User is logged in with completed profile
+**Actor:** Authenticated Client<br/>
+**Preconditions:** User is logged in with completed profile<br/>
 **Main Flow:**
-1. System loads personalized client dashboard
-2. Dashboard displays welcome message with user's name
-3. System calculates and shows current postpartum week
-4. Dashboard shows quick access tiles for main features
-5. Activity feed displays recent messages and appointments
-6. System shows progress indicators for incomplete tasks
-7. Dashboard provides contextual tips based on postpartum phase
+1. System loads personalized client dashboard<br/>
+2. Dashboard displays welcome message with user's name<br/>
+3. System calculates and shows current postpartum week<br/>
+4. Dashboard shows quick access tiles for main features<br/>
+5. Activity feed displays recent messages and appointments<br/>
+6. System shows progress indicators for incomplete tasks<br/>
+7. Dashboard provides contextual tips based on postpartum phase<br/>
 
-**Postconditions:** User has overview of account status and next actions
+**Postconditions:** User has overview of account status and next actions<br/>
 
 \vspace{0.5cm}
 
 #### Use Case 3.2: Mobile Dashboard Navigation
-**Actor:** Client on Mobile Device
-**Preconditions:** User is logged in on mobile browser
+**Actor:** Client on Mobile Device<br/>
+**Preconditions:** User is logged in on mobile browser<br/>
 **Main Flow:**
-1. Dashboard loads with mobile-optimized layout
-2. Navigation shows bottom tab bar for main sections
-3. User taps different tabs to switch between features
-4. Each section maintains mobile-friendly interface
-5. Touch interactions are responsive and intuitive
+1. Dashboard loads with mobile-optimized layout<br/>
+2. Navigation shows bottom tab bar for main sections<br/>
+3. User taps different tabs to switch between features<br/>
+4. Each section maintains mobile-friendly interface<br/>
+5. Touch interactions are responsive and intuitive<br/>
 
-**Postconditions:** User can easily navigate all features on mobile
+**Postconditions:** User can easily navigate all features on mobile<br/>
 
 \newpage
 
 ### FR4: Dynamic Intake & Onboarding Forms Use Cases
 
 #### Use Case 4.1: Complete Intake Process
-**Actor:** New Client
-**Preconditions:** User has registered account
+**Actor:** New Client<br/>
+**Preconditions:** User has registered account<br/>
 **Main Flow:**
-1. System presents intake form introduction
-2. User begins multi-step form with progress indicator
-3. System shows conditional fields based on previous answers
-4. User answers questions about birth experience
-5. System automatically saves progress after each section
-6. User specifies feeding preferences and support needs
-7. System validates required fields before allowing progression
-8. User reviews and submits completed intake form
-9. System marks intake as complete and updates user profile
+1. System presents intake form introduction<br/>
+2. User begins multi-step form with progress indicator<br/>
+3. System shows conditional fields based on previous answers<br/>
+4. User answers questions about birth experience<br/>
+5. System automatically saves progress after each section<br/>
+6. User specifies feeding preferences and support needs<br/>
+7. System validates required fields before allowing progression<br/>
+8. User reviews and submits completed intake form<br/>
+9. System marks intake as complete and updates user profile<br/>
 
-**Postconditions:** User profile is complete and personalized experience begins
+**Postconditions:** User profile is complete and personalized experience begins<br/>
 **Alternative Flows:**
-- 5a. User pauses mid-form - progress is saved and can be resumed later
-- 7a. Missing required fields - system highlights and explains what's needed
+- 5a. User pauses mid-form - progress is saved and can be resumed later<br/>
+- 7a. Missing required fields - system highlights and explains what's needed<br/>
 
 \newpage
 
 ### FR5: Real-time Secure Messaging Use Cases
 
 #### Use Case 5.1: Send Message to Doula
-**Actor:** Client
-**Preconditions:** User has assigned doula
+**Actor:** Client<br/>
+**Preconditions:** User has assigned doula<br/>
 **Main Flow:**
-1. User navigates to messaging section
-2. System loads conversation thread with assigned doula
-3. User types message in text input field
-4. User optionally attaches file or image
-5. User clicks send button
-6. System encrypts and delivers message via WebSocket
-7. System shows delivery confirmation
-8. Doula receives real-time notification
-9. System updates conversation thread for both parties
+1. User navigates to messaging section<br/>
+2. System loads conversation thread with assigned doula<br/>
+3. User types message in text input field<br/>
+4. User optionally attaches file or image<br/>
+5. User clicks send button<br/>
+6. System encrypts and delivers message via WebSocket<br/>
+7. System shows delivery confirmation<br/>
+8. Doula receives real-time notification<br/>
+9. System updates conversation thread for both parties<br/>
 
-**Postconditions:** Message is delivered and conversation updated
+**Postconditions:** Message is delivered and conversation updated<br/>
 **Alternative Flows:**
-- 6a. Connection lost - system queues message and retries
-- 8a. Doula offline - system sends push notification
-- 
+- 6a. Connection lost - system queues message and retries<br/>
+- 8a. Doula offline - system sends push notification<br/>
 \vspace{0.5cm}
+\newpage
 
 #### Use Case 5.2: Receive Offline Message Notification
-**Actor:** Client (Offline)
-**Preconditions:** User is not actively using application
+**Actor:** Client (Offline)<br/>
+**Preconditions:** User is not actively using application<br/>
 **Main Flow:**
-1. Doula sends message to client
-2. System detects client is offline
-3. System triggers push notification to client's device
-4. Client receives notification on device
-5. Client taps notification to open application
-6. System loads conversation with new message highlighted
+1. Doula sends message to client<br/>
+2. System detects client is offline<br/>
+3. System triggers push notification to client's device<br/>
+4. Client receives notification on device<br/>
+5. Client taps notification to open application<br/>
+6. System loads conversation with new message highlighted<br/>
 
-**Postconditions:** User is aware of new message and can respond
+**Postconditions:** User is aware of new message and can respond<br/>
 
 \newpage
 
 ### FR6: Appointment Scheduling & Management Use Cases
 
 #### Use Case 6.1: Schedule New Appointment
-**Actor:** Client
-**Preconditions:** User has assigned doula with available time slots
+**Actor:** Client<br/>
+**Preconditions:** User has assigned doula with available time slots<br/>
 **Main Flow:**
-1. User navigates to appointment scheduling
-2. System displays calendar view with available slots
-3. User selects preferred date and time
-4. System shows appointment details form
-5. User specifies appointment type (virtual/in-person)
-6. User adds any special notes or requirements
-7. User submits appointment request
-8. System sends request to doula for confirmation
-9. System sends confirmation email to both parties
-10. Calendar is updated with new appointment
+1. User navigates to appointment scheduling<br/>
+2. System displays calendar view with available slots<br/>
+3. User selects preferred date and time<br/>
+4. System shows appointment details form<br/>
+5. User specifies appointment type (virtual/in-person)<br/>
+6. User adds any special notes or requirements<br/>
+7. User submits appointment request<br/>
+8. System sends request to doula for confirmation<br/>
+9. System sends confirmation email to both parties<br/>
+10. Calendar is updated with new appointment<br/>
 
-**Postconditions:** Appointment is scheduled and both parties notified
+**Postconditions:** Appointment is scheduled and both parties notified<br/>
 **Exception Flows:**
-- 8a. Doula declines - system notifies client and suggests alternatives
-- 2a. No available slots - system offers to join waitlist
+- 8a. Doula declines - system notifies client and suggests alternatives<br/>
+- 2a. No available slots - system offers to join waitlist<br/>
 
 \newpage
 
 ### FR7: Personalized Resource Library Use Cases
 
 #### Use Case 7.1: Browse Personalized Resources
-**Actor:** Client
-**Preconditions:** User has completed intake form
+**Actor:** Client<br/>
+**Preconditions:** User has completed intake form<br/>
 **Main Flow:**
-1. User navigates to resource library
-2. System analyzes user profile and preferences
-3. System displays personalized resource recommendations
-4. User browses resources by category (nutrition, body care, etc.)
-5. User previews resource content before full access
-6. User saves favorite resources to personal collection
-7. System tracks resource usage for future recommendations
+1. User navigates to resource library<br/>
+2. System analyzes user profile and preferences<br/>
+3. System displays personalized resource recommendations<br/>
+4. User browses resources by category (nutrition, body care, etc.)<br/>
+5. User previews resource content before full access<br/>
+6. User saves favorite resources to personal collection<br/>
+7. System tracks resource usage for future recommendations<br/>
 
-**Postconditions:** User accesses relevant resources for their situation
+**Postconditions:** User accesses relevant resources for their situation<br/>
 **Alternative Flows:**
-- 4a. User searches for specific topic instead of browsing categories
-- 6a. User shares resource with their doula for discussion
+- 4a. User searches for specific topic instead of browsing categories<br/>
+- 6a. User shares resource with their doula for discussion<br/>
 
 \newpage
 
 ### FR8: Daily Check-ins & Mood Tracking Use Cases
 
 #### Use Case 8.1: Complete Daily Wellness Check-in
-**Actor:** Client
-**Preconditions:** User is in postpartum period
+**Actor:** Client<br/>
+**Preconditions:** User is in postpartum period<br/>
 **Main Flow:**
-1. System sends daily check-in notification
-2. User opens check-in prompt
-3. User rates overall mood on 1-10 scale
-4. User selects current physical symptoms from checklist
-5. User optionally adds notes about their day
-6. System saves check-in data
-7. System updates wellness trends and visualizations
-8. System alerts doula if concerning patterns detected
+1. System sends daily check-in notification<br/>
+2. User opens check-in prompt<br/>
+3. User rates overall mood on 1-10 scale<br/>
+4. User selects current physical symptoms from checklist<br/>
+5. User optionally adds notes about their day<br/>
+6. System saves check-in data<br/>
+7. System updates wellness trends and visualizations<br/>
+8. System alerts doula if concerning patterns detected<br/>
 
-**Postconditions:** Daily wellness data is recorded and analyzed
+**Postconditions:** Daily wellness data is recorded and analyzed<br/>
 **Alternative Flows:**
-- 1a. User manually initiates check-in without notification
-- 8a. Positive trends trigger congratulatory message
-
+- 1a. User manually initiates check-in without notification<br/>
+- 8a. Positive trends trigger congratulatory message<br/>
 \newpage
 
 ### FR9: Doula Client Management Dashboard Use Cases
 
 #### Use Case 9.1: Review Client Status Overview
-**Actor:** Doula
-**Preconditions:** Doula has assigned clients
+**Actor:** Doula<br/>
+**Preconditions:** Doula has assigned clients<br/>
 **Main Flow:**
-1. Doula logs in and navigates to client dashboard
-2. System displays list of all assigned clients
-3. Dashboard shows status indicators for each client
-4. Doula views recent wellness check-in summaries
-5. System highlights clients requiring attention
-6. Doula clicks on specific client for detailed view
-7. Detailed view shows full client history and communication
+1. Doula logs in and navigates to client dashboard<br/>
+2. System displays list of all assigned clients<br/>
+3. Dashboard shows status indicators for each client<br/>
+4. Doula views recent wellness check-in summaries<br/>
+5. System highlights clients requiring attention<br/>
+6. Doula clicks on specific client for detailed view<br/>
+7. Detailed view shows full client history and communication<br/>
 
-**Postconditions:** Doula has comprehensive view of client status
+**Postconditions:** Doula has comprehensive view of client status<br/>
 **Alternative Flows:**
-- 5a. No clients need immediate attention - dashboard shows all clear status
-- 6a. Doula uses quick action buttons for common tasks
+- 5a. No clients need immediate attention - dashboard shows all clear status<br/>
+- 6a. Doula uses quick action buttons for common tasks<br/>
 
 \newpage
 
 ### FR10: Care Plan Template System Use Cases
 
 #### Use Case 10.1: Create Customized Care Plan
-**Actor:** Doula
-**Preconditions:** Doula has client requiring care plan
+**Actor:** Doula<br/>
+**Preconditions:** Doula has client requiring care plan<br/>
 **Main Flow:**
-1. Doula navigates to care plan creation
-2. System displays available template categories
-3. Doula selects appropriate base template
-4. System loads template with editable sections
-5. Doula customizes sections for specific client needs
-6. Doula adds client-specific resources and milestones
-7. Doula assigns care plan to client
-8. System notifies client of new care plan
-9. Client receives access to personalized care plan
+1. Doula navigates to care plan creation<br/>
+2. System displays available template categories<br/>
+3. Doula selects appropriate base template<br/>
+4. System loads template with editable sections<br/>
+5. Doula customizes sections for specific client needs<br/>
+6. Doula adds client-specific resources and milestones<br/>
+7. Doula assigns care plan to client<br/>
+8. System notifies client of new care plan<br/>
+9. Client receives access to personalized care plan<br/>
 
-**Postconditions:** Client has customized care plan based on their needs
+**Postconditions:** Client has customized care plan based on their needs<br/>
 
 \newpage
 
 ### FR11: Blog Publishing Platform Use Cases
 
 #### Use Case 11.1: Publish New Blog Post
-**Actor:** Doula
-**Preconditions:** Doula has content to share
+**Actor:** Doula<br/>
+**Preconditions:** Doula has content to share<br/>
 **Main Flow:**
-1. Doula navigates to blog editor
-2. System opens rich text editor interface
-3. Doula writes blog post content with formatting
-4. Doula adds images and media as needed
-5. Doula adds SEO metadata (title, description, tags)
-6. Doula saves draft for review
-7. Doula publishes post when ready
-8. System makes post publicly available
-9. System notifies clients of new blog post
+1. Doula navigates to blog editor<br/>
+2. System opens rich text editor interface<br/>
+3. Doula writes blog post content with formatting<br/>
+4. Doula adds images and media as needed<br/>
+5. Doula adds SEO metadata (title, description, tags)<br/>
+6. Doula saves draft for review<br/>
+7. Doula publishes post when ready<br/>
+8. System makes post publicly available<br/>
+9. System notifies clients of new blog post<br/>
 
-**Postconditions:** Blog post is published and accessible to clients
+**Postconditions:** Blog post is published and accessible to clients<br/>
 
 \newpage
 
@@ -358,323 +386,330 @@ The completed platform will serve as a bridge between traditional doula services
 ### NFR1: Data Security & Privacy Use Cases
 
 #### Use Case NFR1.1: Secure Data Transmission
-**Actor:** Any User
-**Preconditions:** User is interacting with LUNARA platform
+**Actor:** Any User<br/>
+**Preconditions:** User is interacting with LUNARA platform<br/>
 **Main Flow:**
-1. User initiates any action requiring data transmission
-2. System establishes HTTPS/TLS 1.3 encrypted connection
-3. All data is encrypted before transmission
-4. System validates SSL certificate authenticity
-5. Data is transmitted through secure channel
-6. System logs security events for monitoring
+1. User initiates any action requiring data transmission<br/>
+2. System establishes HTTPS/TLS 1.3 encrypted connection<br/>
+3. All data is encrypted before transmission<br/>
+4. System validates SSL certificate authenticity<br/>
+5. Data is transmitted through secure channel<br/>
+6. System logs security events for monitoring<br/>
 
-**Postconditions:** All data transmission is encrypted and secure
-**Success Criteria:** 100% of communications use HTTPS/TLS 1.3
-**Verification:** Security audit confirms no unencrypted data transmission
+**Postconditions:** All data transmission is encrypted and secure<br/>
+**Success Criteria:** 100% of communications use HTTPS/TLS 1.3<br/>
+**Verification:** Security audit confirms no unencrypted data transmission<br/>
 
 \vspace{0.5cm}
+\newpage
 
 #### Use Case NFR1.2: Password Security Handling
-**Actor:** System
-**Preconditions:** User attempts to create or update password
+**Actor:** System<br/>
+**Preconditions:** User attempts to create or update password<br/>
 **Main Flow:**
-1. System receives password from user input
-2. System validates password meets strength requirements
-3. System applies bcrypt hashing with salt
-4. System stores only hashed password, never plaintext
-5. System clears password from memory
-6. System logs authentication attempt (without password data)
+1. System receives password from user input<br/>
+2. System validates password meets strength requirements<br/>
+3. System applies bcrypt hashing with salt<br/>
+4. System stores only hashed password, never plaintext<br/>
+5. System clears password from memory<br/>
+6. System logs authentication attempt (without password data)<br/>
 
-**Postconditions:** Password is securely stored and protected
-**Success Criteria:** Zero plaintext passwords stored in system
-**Verification:** Database audit confirms all passwords are properly hashed
+**Postconditions:** Password is securely stored and protected<br/>
+**Success Criteria:** Zero plaintext passwords stored in system<br/>
+**Verification:** Database audit confirms all passwords are properly hashed<br/>
 
 \newpage
 
 ### NFR2: Mobile Responsiveness Use Cases
 
 #### Use Case NFR2.1: Responsive Layout Adaptation
-**Actor:** Mobile User
-**Preconditions:** User accesses platform from mobile device
+**Actor:** Mobile User<br/>
+**Preconditions:** User accesses platform from mobile device<br/>
 **Main Flow:**
-1. User opens LUNARA on mobile browser
-2. System detects device screen size and capabilities
-3. CSS Grid and Flexbox adapt layout automatically
-4. Touch targets resize to minimum 44px for usability
-5. Text and images scale appropriately
-6. Navigation adjusts to mobile-friendly patterns
-7. Performance optimizes for mobile network speeds
+1. User opens LUNARA on mobile browser<br/>
+2. System detects device screen size and capabilities<br/>
+3. CSS Grid and Flexbox adapt layout automatically<br/>
+4. Touch targets resize to minimum 44px for usability<br/>
+5. Text and images scale appropriately<br/>
+6. Navigation adjusts to mobile-friendly patterns<br/>
+7. Performance optimizes for mobile network speeds<br/>
 
-**Postconditions:** Interface is fully functional on mobile device
-**Success Criteria:** All features accessible with touch interface
-**Verification:** Testing on various mobile devices and screen sizes
+**Postconditions:** Interface is fully functional on mobile device<br/>
+**Success Criteria:** All features accessible with touch interface<br/>
+**Verification:** Testing on various mobile devices and screen sizes<br/>
 
 \vspace{0.5cm}
+\newpage
 
 #### Use Case NFR2.2: Cross-Browser Compatibility
-**Actor:** User with Different Browser
-**Preconditions:** User accesses platform from Chrome, Firefox, Safari, or Edge
+**Actor:** User with Different Browser<br/>
+**Preconditions:** User accesses platform from Chrome, Firefox, Safari, or Edge<br/>
 **Main Flow:**
-1. User opens LUNARA in their preferred browser
-2. System serves browser-optimized assets
-3. All functionality works consistently across browsers
-4. Visual design maintains consistency
-5. Performance remains within acceptable ranges
-6. JavaScript features function properly
+1. User opens LUNARA in their preferred browser<br/>
+2. System serves browser-optimized assets<br/>
+3. All functionality works consistently across browsers<br/>
+4. Visual design maintains consistency<br/>
+5. Performance remains within acceptable ranges<br/>
+6. JavaScript features function properly<br/>
 
-**Postconditions:** Consistent experience regardless of browser choice
-**Success Criteria:** 100% feature parity across supported browsers
-**Verification:** Automated cross-browser testing suite
+**Postconditions:** Consistent experience regardless of browser choice<br/>
+**Success Criteria:** 100% feature parity across supported browsers<br/>
+**Verification:** Automated cross-browser testing suite<br/>
 
 \newpage
 
 ### NFR3: System Reliability & Performance Use Cases
 
 #### Use Case NFR3.1: High Availability Monitoring
-**Actor:** System Monitoring Service
-**Preconditions:** LUNARA platform is deployed and operational
+**Actor:** System Monitoring Service<br/>
+**Preconditions:** LUNARA platform is deployed and operational<br/>
 **Main Flow:**
-1. Monitoring service checks system health every minute
-2. System responds to health check requests
-3. Performance metrics are collected and analyzed
-4. Any downtime is immediately detected
-5. Alert notifications are sent to development team
-6. Automated recovery procedures initiate if possible
-7. System maintains 99.5% uptime target
+1. Monitoring service checks system health every minute<br/>
+2. System responds to health check requests<br/>
+3. Performance metrics are collected and analyzed<br/>
+4. Any downtime is immediately detected<br/>
+5. Alert notifications are sent to development team<br/>
+6. Automated recovery procedures initiate if possible<br/>
+7. System maintains 99.5% uptime target<br/>
 
-**Postconditions:** System availability is monitored and maintained
-**Success Criteria:** Uptime exceeds 99.5% monthly average
-**Verification:** Monitoring dashboard shows uptime statistics
+**Postconditions:** System availability is monitored and maintained<br/>
+**Success Criteria:** Uptime exceeds 99.5% monthly average<br/>
+**Verification:** Monitoring dashboard shows uptime statistics<br/>
 
 \vspace{0.5cm}
+\newpage
 
 #### Use Case NFR3.2: Performance Optimization
-**Actor:** System
-**Preconditions:** User requests page or API data
+**Actor:** System<br/>
+**Preconditions:** User requests page or API data<br/>
 **Main Flow:**
-1. User initiates request for page or data
-2. System processes request efficiently
-3. Database queries are optimized with proper indexing
-4. Static assets are served from CDN
-5. Response is compressed before transmission
-6. Page loads within 3-second target
-7. API responds within 1-second target
+1. User initiates request for page or data<br/>
+2. System processes request efficiently<br/>
+3. Database queries are optimized with proper indexing<br/>
+4. Static assets are served from CDN<br/>
+5. Response is compressed before transmission<br/>
+6. Page loads within 3-second target<br/>
+7. API responds within 1-second target<br/>
 
-**Postconditions:** User receives fast, responsive experience
-**Success Criteria:** Page loads <3s, API responses <1s
-**Verification:** Performance monitoring and Lighthouse scores
+**Postconditions:** User receives fast, responsive experience<br/>
+**Success Criteria:** Page loads <3s, API responses <1s<br/>
+**Verification:** Performance monitoring and Lighthouse scores<br/>
 
 \newpage
 
 ### NFR4: Real-time Communication Use Cases
 
 #### Use Case NFR4.1: WebSocket Connection Management
-**Actor:** User Messaging System
-**Preconditions:** Users need real-time messaging capability
+**Actor:** User Messaging System<br/>
+**Preconditions:** Users need real-time messaging capability<br/>
 **Main Flow:**
-1. User opens messaging interface
-2. System establishes WebSocket connection
-3. Connection heartbeat maintains active link
-4. Messages are delivered instantly when connection is active
-5. System handles connection drops gracefully
-6. Automatic reconnection attempts with exponential backoff
-7. Message queue ensures delivery when connection restored
+1. User opens messaging interface<br/>
+2. System establishes WebSocket connection<br/>
+3. Connection heartbeat maintains active link<br/>
+4. Messages are delivered instantly when connection is active<br/>
+5. System handles connection drops gracefully<br/>
+6. Automatic reconnection attempts with exponential backoff<br/>
+7. Message queue ensures delivery when connection restored<br/>
 
-**Postconditions:** Reliable real-time messaging is available
-**Success Criteria:** Messages delivered within 500ms when online
-**Verification:** Real-time communication testing and monitoring
+**Postconditions:** Reliable real-time messaging is available<br/>
+**Success Criteria:** Messages delivered within 500ms when online<br/>
+**Verification:** Real-time communication testing and monitoring<br/>
 
 \vspace{0.5cm}
+\newpage
 
 #### Use Case NFR4.2: Offline Notification Delivery
-**Actor:** Push Notification System
-**Preconditions:** User is offline but needs to receive messages
+**Actor:** Push Notification System<br/>
+**Preconditions:** User is offline but needs to receive messages<br/>
 **Main Flow:**
-1. Message is sent to offline user
-2. System detects user offline status
-3. Push notification service is triggered
-4. Notification is delivered to user's device
-5. User receives notification even when app is closed
-6. User can tap notification to return to conversation
-7. Message is marked as delivered when user reads it
+1. Message is sent to offline user<br/>
+2. System detects user offline status<br/>
+3. Push notification service is triggered<br/>
+4. Notification is delivered to user's device<br/>
+5. User receives notification even when app is closed<br/>
+6. User can tap notification to return to conversation<br/>
+7. Message is marked as delivered when user reads it<br/>
 
-**Postconditions:** Users receive notifications even when offline
-**Success Criteria:** 95% notification delivery rate
-**Verification:** Push notification analytics and user feedback
+**Postconditions:** Users receive notifications even when offline<br/>
+**Success Criteria:** 95% notification delivery rate<br/>
+**Verification:** Push notification analytics and user feedback<br/>
 
 \newpage
 
 ### NFR5: Scalability & Growth Use Cases
 
 #### Use Case NFR5.1: Database Performance Under Load
-**Actor:** Database System
-**Preconditions:** System experiences increased user activity
+**Actor:** Database System<br/>
+**Preconditions:** System experiences increased user activity<br/>
 **Main Flow:**
-1. Multiple users access system simultaneously
-2. Database handles concurrent connections efficiently
-3. Query performance remains consistent with proper indexing
-4. Connection pooling manages database connections
-5. Response times stay within acceptable limits
-6. System scales horizontally if needed
-7. Performance metrics are monitored continuously
+1. Multiple users access system simultaneously<br/>
+2. Database handles concurrent connections efficiently<br/>
+3. Query performance remains consistent with proper indexing<br/>
+4. Connection pooling manages database connections<br/>
+5. Response times stay within acceptable limits<br/>
+6. System scales horizontally if needed<br/>
+7. Performance metrics are monitored continuously<br/>
 
-**Postconditions:** System performs well under increased load
-**Success Criteria:** Response times remain <1s with 10x user growth
-**Verification:** Load testing and performance benchmarking
+**Postconditions:** System performs well under increased load<br/>
+**Success Criteria:** Response times remain <1s with 10x user growth<br/>
+**Verification:** Load testing and performance benchmarking<br/>
 
 \newpage
 
 ### NFR6: User Experience & Accessibility Use Cases
 
 #### Use Case NFR6.1: Screen Reader Accessibility
-**Actor:** Visually Impaired User with Screen Reader
-**Preconditions:** User accesses LUNARA with assistive technology
+**Actor:** Visually Impaired User with Screen Reader<br/>
+**Preconditions:** User accesses LUNARA with assistive technology<br/>
 **Main Flow:**
-1. User navigates to LUNARA with screen reader active
-2. Screen reader announces page title and main heading
-3. User navigates using heading structure
-4. All interactive elements have proper labels
-5. Form inputs have associated labels and instructions
-6. Error messages are announced clearly
-7. User can complete all tasks using only keyboard navigation
+1. User navigates to LUNARA with screen reader active<br/>
+2. Screen reader announces page title and main heading<br/>
+3. User navigates using heading structure<br/>
+4. All interactive elements have proper labels<br/>
+5. Form inputs have associated labels and instructions<br/>
+6. Error messages are announced clearly<br/>
+7. User can complete all tasks using only keyboard navigation<br/>
 
-**Postconditions:** User can fully access and use all platform features
-**Success Criteria:** WCAG 2.1 AA compliance achieved
-**Verification:** Accessibility audit with assistive technology testing
+**Postconditions:** User can fully access and use all platform features<br/>
+**Success Criteria:** WCAG 2.1 AA compliance achieved<br/>
+**Verification:** Accessibility audit with assistive technology testing<br/>
 
 \vspace{0.5cm}
+\newpage
 
 #### Use Case NFR6.2: Keyboard Navigation
-**Actor:** User Unable to Use Mouse
-**Preconditions:** User relies on keyboard for navigation
+**Actor:** User Unable to Use Mouse<br/>
+**Preconditions:** User relies on keyboard for navigation<br/>
 **Main Flow:**
-1. User accesses LUNARA using only keyboard
-2. Tab order follows logical page structure
-3. All interactive elements are reachable via keyboard
-4. Focus indicators are clearly visible
-5. Skip navigation links allow efficient movement
-6. Modal dialogs trap focus appropriately
-7. User can complete all tasks without mouse
+1. User accesses LUNARA using only keyboard<br/>
+2. Tab order follows logical page structure<br/>
+3. All interactive elements are reachable via keyboard<br/>
+4. Focus indicators are clearly visible<br/>
+5. Skip navigation links allow efficient movement<br/>
+6. Modal dialogs trap focus appropriately<br/>
+7. User can complete all tasks without mouse<br/>
 
-**Postconditions:** Full functionality available via keyboard
-**Success Criteria:** 100% keyboard accessibility
-**Verification:** Manual keyboard navigation testing
+**Postconditions:** Full functionality available via keyboard<br/>
+**Success Criteria:** 100% keyboard accessibility<br/>
+**Verification:** Manual keyboard navigation testing<br/>
 
 \newpage
 
 ### NFR7: Data Backup & Recovery Use Cases
 
 #### Use Case NFR7.1: Automated Daily Backup
-**Actor:** Backup System
-**Preconditions:** System is operational with user data
+**Actor:** Backup System<br/>
+**Preconditions:** System is operational with user data<br/>
 **Main Flow:**
-1. Daily backup process initiates automatically
-2. System creates full database snapshot
-3. Backup is encrypted before storage
-4. Backup is transferred to secure storage location
-5. Backup integrity is verified
-6. Previous backups are managed according to retention policy
-7. Backup completion is logged and monitored
+1. Daily backup process initiates automatically<br/>
+2. System creates full database snapshot<br/>
+3. Backup is encrypted before storage<br/>
+4. Backup is transferred to secure storage location<br/>
+5. Backup integrity is verified<br/>
+6. Previous backups are managed according to retention policy<br/>
+7. Backup completion is logged and monitored<br/>
 
-**Postconditions:** Daily backup is completed and verified
-**Success Criteria:** 100% successful daily backups
-**Verification:** Backup logs and integrity verification reports
+**Postconditions:** Daily backup is completed and verified<br/>
+**Success Criteria:** 100% successful daily backups<br/>
+**Verification:** Backup logs and integrity verification reports<br/>
 
 \vspace{0.5cm}
+\newpage
 
 #### Use Case NFR7.2: Data Recovery Process
-**Actor:** System Administrator
-**Preconditions:** Data loss event has occurred
+**Actor:** System Administrator<br/>
+**Preconditions:** Data loss event has occurred<br/>
 **Main Flow:**
-1. Data loss is detected and confirmed
-2. Administrator accesses backup storage
-3. Most recent viable backup is identified
-4. Recovery process is initiated
-5. Data is restored from backup
-6. System integrity is verified post-recovery
-7. Users are notified of recovery completion
+1. Data loss is detected and confirmed<br/>
+2. Administrator accesses backup storage<br/>
+3. Most recent viable backup is identified<br/>
+4. Recovery process is initiated<br/>
+5. Data is restored from backup<br/>
+6. System integrity is verified post-recovery<br/>
+7. Users are notified of recovery completion<br/>
 
-**Postconditions:** System is restored with minimal data loss
-**Success Criteria:** Recovery completed within 4 hours
-**Verification:** Disaster recovery testing scenarios
+**Postconditions:** System is restored with minimal data loss<br/>
+**Success Criteria:** Recovery completed within 4 hours<br/>
+**Verification:** Disaster recovery testing scenarios<br/>
 
 \newpage
 
 ### NFR8: Integration Capability Use Cases
 
 #### Use Case NFR8.1: External API Integration
-**Actor:** LUNARA System
-**Preconditions:** External service integration is required
+**Actor:** LUNARA System<br/>
+**Preconditions:** External service integration is required<br/>
 **Main Flow:**
-1. System needs to integrate with external service (email, calendar)
-2. API credentials are configured securely
-3. RESTful endpoints are established
-4. Data exchange formats are standardized
-5. Error handling manages API failures gracefully
-6. Rate limiting prevents service abuse
-7. Integration status is monitored continuously
+1. System needs to integrate with external service (email, calendar)<br/>
+2. API credentials are configured securely<br/>
+3. RESTful endpoints are established<br/>
+4. Data exchange formats are standardized<br/>
+5. Error handling manages API failures gracefully<br/>
+6. Rate limiting prevents service abuse<br/>
+7. Integration status is monitored continuously<br/>
 
-**Postconditions:** External service is successfully integrated
-**Success Criteria:** 99% API call success rate
-**Verification:** Integration testing and monitoring dashboards
+**Postconditions:** External service is successfully integrated<br/>
+**Success Criteria:** 99% API call success rate<br/>
+**Verification:** Integration testing and monitoring dashboards<br/>
 
 \newpage
 
 ### NFR9: Content Management Use Cases
 
 #### Use Case NFR9.1: Content Version Control
-**Actor:** Content Editor (Doula)
-**Preconditions:** Content needs to be updated or modified
+**Actor:** Content Editor (Doula)<br/>
+**Preconditions:** Content needs to be updated or modified<br/>
 **Main Flow:**
-1. Editor opens content for modification
-2. System creates version snapshot before changes
-3. Editor makes content modifications
-4. Changes are saved with version metadata
-5. Previous versions remain accessible
-6. Editor can revert to previous version if needed
-7. Change history is maintained for audit purposes
+1. Editor opens content for modification<br/>
+2. System creates version snapshot before changes<br/>
+3. Editor makes content modifications<br/>
+4. Changes are saved with version metadata<br/>
+5. Previous versions remain accessible<br/>
+6. Editor can revert to previous version if needed<br/>
+7. Change history is maintained for audit purposes<br/>
 
-**Postconditions:** Content changes are tracked and reversible
-**Success Criteria:** Complete version history maintained
-**Verification:** Content versioning functionality testing
+**Postconditions:** Content changes are tracked and reversible<br/>
+**Success Criteria:** Complete version history maintained<br/>
+**Verification:** Content versioning functionality testing<br/>
 
 \newpage
 
 ### NFR10: Monitoring & Analytics Use Cases
 
 #### Use Case NFR10.1: Performance Monitoring
-**Actor:** Monitoring System
-**Preconditions:** Platform is operational and serving users
+**Actor:** Monitoring System<br/>
+**Preconditions:** Platform is operational and serving users<br/>
 **Main Flow:**
-1. Monitoring system collects performance metrics continuously
-2. Response times, error rates, and resource usage are tracked
-3. Metrics are analyzed for trends and anomalies
-4. Alerts are triggered when thresholds are exceeded
-5. Dashboards provide real-time system status
-6. Historical data enables capacity planning
-7. Performance reports are generated regularly
+1. Monitoring system collects performance metrics continuously<br/>
+2. Response times, error rates, and resource usage are tracked<br/>
+3. Metrics are analyzed for trends and anomalies<br/>
+4. Alerts are triggered when thresholds are exceeded<br/>
+5. Dashboards provide real-time system status<br/>
+6. Historical data enables capacity planning<br/>
+7. Performance reports are generated regularly<br/>
 
-**Postconditions:** System performance is continuously monitored
-**Success Criteria:** 24/7 monitoring with <5 minute alert response
-**Verification:** Monitoring dashboard and alert testing
+**Postconditions:** System performance is continuously monitored<br/>
+**Success Criteria:** 24/7 monitoring with <5 minute alert response<br/>
+**Verification:** Monitoring dashboard and alert testing<br/>
 
 \vspace{0.5cm}
+\newpage
 
 #### Use Case NFR10.2: User Analytics Collection
-**Actor:** Analytics System
-**Preconditions:** Users are actively using the platform
+**Actor:** Analytics System<br/>
+**Preconditions:** Users are actively using the platform<br/>
 **Main Flow:**
-1. User interactions are tracked anonymously
-2. Feature usage patterns are recorded
-3. User journey paths are mapped
-4. Performance bottlenecks are identified
-5. Analytics data is aggregated and reported
-6. Insights guide product improvement decisions
-7. Privacy regulations are strictly followed
+1. User interactions are tracked anonymously<br/>
+2. Feature usage patterns are recorded<br/>
+3. User journey paths are mapped<br/>
+4. Performance bottlenecks are identified<br/>
+5. Analytics data is aggregated and reported<br/>
+6. Insights guide product improvement decisions<br/>
+7. Privacy regulations are strictly followed<br/>
 
-**Postconditions:** User behavior insights are available for optimization
-**Success Criteria:** Comprehensive usage analytics without privacy violations
-**Verification:** Analytics reports and privacy compliance audit
+**Postconditions:** User behavior insights are available for optimization<br/>
+**Success Criteria:** Comprehensive usage analytics without privacy violations<br/>
+**Verification:** Analytics reports and privacy compliance audit<br/>
 
 \newpage
 
@@ -709,6 +744,7 @@ The following functional requirements define the core capabilities that the LUNA
 | FR5 | **Real-time Secure Messaging** | Users can send and receive encrypted messages with their assigned doula, including file attachments, read receipts, and push notifications when offline. | Thread-based conversation organization, WebSocket implementation for real-time delivery, push notifications for offline users, read receipts and delivery confirmation, file and image attachment capability (max 10MB), message search and filtering functionality, message encryption for data protection | High |
 
 \vspace{0.5cm}
+\newpage
 
 | ID  | Functional Requirement | Description | Acceptance Criteria | Priority |
 |-----|----------------------|-------------|-------------------|----------|
@@ -719,6 +755,7 @@ The following functional requirements define the core capabilities that the LUNA
 | FR10 | **Care Plan Template System** | Doulas can create, customize, and assign templated care plans and resource bundles to clients based on their specific needs. | Pre-built care plan templates for common scenarios, customizable template components and sections, drag-and-drop template builder interface, resource bundle creation and assignment, template sharing between doulas (with permission), client-specific template customization, progress tracking against care plan milestones | Medium |
 
 \vspace{0.5cm}
+\newpage
 
 | ID  | Functional Requirement | Description | Acceptance Criteria | Priority |
 |-----|----------------------|-------------|-------------------|----------|
@@ -747,6 +784,7 @@ The following non-functional requirements define the quality attributes and cons
 | NFR5 | **Scalability & Growth** | The system architecture supports growing user bases and content volume without significant performance degradation. | Horizontal scaling capabilities with cloud infrastructure, database indexing and query optimization, efficient file storage and CDN usage, API rate limiting and resource management, caching strategies for frequently accessed content | Medium |
 
 \vspace{0.5cm}
+\newpage
 
 | ID | Non-Functional Requirement | Description | Implementation Guidelines | Priority |
 |----|---------------------------|-------------|--------------------------|----------|
@@ -780,6 +818,7 @@ The following non-functional requirements define the quality attributes and cons
 | **Database Hosting** | **MongoDB Atlas** | Managed MongoDB hosting | Free tier, automatic backups, global distribution |
 
 \vspace{1cm}
+\newpage
 
 ## System Architecture
 
@@ -824,6 +863,7 @@ graph TD
 ```
 
 \vspace{1cm}
+\newpage
 
 ## Component Details
 
@@ -872,6 +912,7 @@ The MongoDB collections will be structured as follows:
   updatedAt: Date
 }
 ```
+\newpage
 
 ### Client Profiles Collection
 ```javascript
@@ -890,6 +931,7 @@ The MongoDB collections will be structured as follows:
   updatedAt: Date
 }
 ```
+\newpage
 
 ### Messages Collection
 ```javascript
@@ -905,6 +947,7 @@ The MongoDB collections will be structured as follows:
   createdAt: Date
 }
 ```
+\newpage
 
 ### Appointments Collection
 ```javascript
@@ -922,6 +965,78 @@ The MongoDB collections will be structured as follows:
   updatedAt: Date
 }
 ```
+
+\newpage
+
+## Deployment Topology
+
+```mermaid
+graph LR
+    subgraph "Front-End CDN"
+        VercelEdge["Vercel Edge<br/>Static Assets"]
+    end
+    subgraph "Render Cluster"
+        API["Express + Socket.io<br/>(Render Std XS)"]
+        Worker["Background Worker<br/>(Render Std XXS)"]
+        Redis["Redis Cache/Queue"]
+    end
+    Mongo[(MongoDB Atlas)]
+    Cloudinary[(Cloudinary CDN)]
+    Browser -->|HTTPS| VercelEdge
+    VercelEdge -->|HTTPS| API
+    API -->|TLS| Mongo
+    API -->|TLS| Redis
+    API -->|TLS| Cloudinary
+    Worker -->|TLS| Mongo
+```
+
+\newpage
+
+## Key UML Class Diagram
+
+```mermaid
+classDiagram
+    class User{
+      ObjectId _id
+      String email
+      String password
+      RoleType role
+      Profile profile
+    }
+    class Profile{
+      String firstName
+      String lastName
+      String phone
+      String timezone
+    }
+    class ClientProfile{
+      ObjectId userId
+      Date babyBirthDate
+      Number postpartumWeek
+      Bool intakeCompleted
+    }
+    class Message{
+      ObjectId _id
+      ObjectId sender
+      ObjectId recipient
+      String content
+      Date createdAt
+      Bool isRead
+    }
+    class Appointment{
+      ObjectId _id
+      ObjectId client
+      ObjectId doula
+      Date scheduledDate
+      Status status
+    }
+    User "1" -- "1" ClientProfile
+    User "1" -- "many" Message : sends
+    User "1" -- "many" Appointment : schedules
+```
+
+\newpage
+
 
 **Terms Reference:** *React, Vite, DX, HMR, CSS, SCSS, Express.js, Node.js, MongoDB, Mongoose, Socket.io, Passport.js, JWT, Cloudinary, CDN, Vercel, Render* (see **GLOSSARY** sections R, V, D, H, C, S, E, N, M, S, P, J, C, C, V, R); *API, ODM, PWA, SPA, WSS, HTTPS, REST, CORS* (see **ABBREVIATIONS & ACRONYMS**); *Component-Based Architecture, RESTful API* (see **TECHNICAL TERMS REFERENCE - Architecture Patterns**)
 
@@ -957,6 +1072,7 @@ The MongoDB collections will be structured as follows:
 **Story Points:** 65 points
 
 \vspace{0.5cm}
+\newpage
 
 #### Sprint 2 (Weeks 4-6): Authentication & User Management
 **Goal:** Complete user registration and authentication system  
@@ -976,6 +1092,7 @@ The MongoDB collections will be structured as follows:
 **Story Points:** 75 points
 
 \vspace{0.5cm}
+\newpage
 
 #### Sprint 3 (Weeks 7-9): Core Client Features
 **Goal:** Essential client-facing functionality  
@@ -994,6 +1111,7 @@ The MongoDB collections will be structured as follows:
 **Story Points:** 70 points
 
 \vspace{0.5cm}
+\newpage
 
 #### Sprint 4 (Weeks 10-12): Real-time Messaging
 **Goal:** Complete messaging system with real-time capabilities  
@@ -1012,6 +1130,7 @@ The MongoDB collections will be structured as follows:
 **Story Points:** 80 points
 
 \vspace{0.5cm}
+\newpage
 
 #### Sprint 5 (Weeks 13-15): Scheduling & Resource Management
 **Goal:** Appointment system and resource library  
@@ -1030,6 +1149,7 @@ The MongoDB collections will be structured as follows:
 **Story Points:** 75 points
 
 \vspace{0.5cm}
+\newpage
 
 #### Sprint 6 (Weeks 16-18): Doula Portal & Content Management
 **Goal:** Doula-specific features and content management  
@@ -1048,6 +1168,7 @@ The MongoDB collections will be structured as follows:
 **Story Points:** 85 points
 
 \vspace{0.5cm}
+\newpage
 
 #### Sprint 7 (Weeks 19-20): Polish & Launch Preparation
 **Goal:** Final testing, optimization, and launch readiness  
@@ -1067,6 +1188,7 @@ The MongoDB collections will be structured as follows:
 **Story Points:** 50 points
 
 \vspace{1cm}
+\newpage
 
 ## Features Roadmap
 
@@ -1090,7 +1212,7 @@ The MongoDB collections will be structured as follows:
 
 ## Top-Down System Design Flowchart
 
-```mermaid
+~~~mermaid
 graph TD;
   A[LUNARA Postpartum Support Platform]
   
@@ -1126,6 +1248,108 @@ graph TD;
   G1 --> G2[Performance Monitoring]
   G2 --> G3[Data Management]
   G3 --> G4[Backup & Recovery]
+~~~
+
+\newpage
+
+
+## Sequence Diagram - "Client Books Appointment" 
+
+~~~mermaid
+classDiagram
+    class User{
+      ObjectId _id
+      String email
+      String password
+      RoleType role
+      Profile profile
+    }
+    class Profile{
+      String firstName
+      String lastName
+      String phone
+      String timezone
+    }
+    class ClientProfile{
+      ObjectId userId
+      Date babyBirthDate
+      Number postpartumWeek
+      Bool intakeCompleted
+    }
+    class Message{
+      ObjectId _id
+      ObjectId sender
+      ObjectId recipient
+      String content
+      Date createdAt
+      Bool isRead
+    }
+    class Appointment{
+      ObjectId _id
+      ObjectId client
+      ObjectId doula
+      Date scheduledDate
+      Status status
+    }
+    User "1" -- "1" ClientProfile
+    User "1" -- "many" Message : sends
+    User "1" -- "many" Appointment : schedules
+~~~
+\newpage
+
+### Core Algorithms – Pseudocode & Activity Diagram
+
+#### Algorithm A: Email Registration & Verification
+
+~~~text
+function registerUser(email, password):
+    // Validate inputs
+    if not validEmailFormat(email):
+        return error("Invalid email format")
+    if not strongPassword(password):
+        return error("Weak password — must meet complexity policy")
+
+    // Prevent duplicates
+    if userExists(email):
+        return error("Account with this email already exists")
+
+    // Persist new user record
+    hashed = bcrypt.hash(password)
+    verifyToken = randomToken()
+    saveUser({
+        email: email,
+        password: hashed,
+        verified: false,
+        verificationToken: verifyToken,
+        createdAt: now()
+    })
+
+    // Send verification email (async)
+    enqueueEmailJob({
+        to: email,
+        subject: "Verify your LUNARA account",
+        link: FRONTEND_URL + "/verify?token=" + verifyToken
+    })
+
+    return success("Verification email sent, please check your inbox")
+~~~
+\newpage
+
+#### Activity Diagram – Real-Time Message Delivery
+
+#### Activity Diagram – Real-Time Message Delivery
+
+```{.mermaid width=400}
+flowchart TD
+    A[Client Browser] -->|HTTP POST /messages| B(Express Controller)
+    B --> C[MongoDB \n save message]
+    B -->|emit 'message'| D(Socket.io Server)
+    D -->|online?| E{Recipient Connected?}
+    E -- Yes --> F[Deliver in browser]
+    E -- No  --> G[Queue in Redis]
+    G --> H[Push Notification]
+    H --> I[Recipient Opens App]
+    I --> D
 ```
 
 \newpage
@@ -1139,35 +1363,72 @@ The following wireframes represent the visual design specifications for the Spri
 **Home Page Design**
 - **Key Elements**: Hero section, service overview, call-to-action buttons, navigation
 
-![Home Page Wireframe](../img/Wireframes/home page2.png){width=50%}
+![Landing Page Screenshot](<../img/Wireframes/LandingPage.png>){width=50%}
 
 \newpage
 
 **About LUNARA Page**
 - **Key Elements**: Platform overview, features explanation, benefits for new parents
 
-![About LUNARA Wireframe](../img/Wireframes/about lunara page2.png){width=80%}
+![Our Philosophy Page Screenshot](<../img/Wireframes/Philosphy.png>){width=80%}
 
 \newpage
 
 **Provider login Page**
 - **Key Elements**: Email/password fields,
 
-![Provider Services Wireframe](../img/Wireframes/provider page2.png){width=80%}
+![Provider Login Page Screenshot](<../img/Wireframes/ProviderLogin.png>){width=80%}
 
 \newpage
 
 **Contact Page**
 - **Key Elements**: Contact form, office hours, location, social media links
 
-![Contact Page Wireframe](../img/Wireframes/contact page2.png){width=80%}
+![Contact Page Screenshot](<../img/Wireframes/Contact.png>){width=80%}
 
 \newpage
 
 **Client Login Page**
 - **Key Elements**: Email/password fields,
 
-![Client Login Wireframe](../img/Wireframes/login%20page2.png){width=80%}
+![Client Login Page Screenshot](<../img/Wireframes/ClientLogin.png>){width=80%}
+
+\newpage
+
+**About Providers Page**
+- **Key Elements**: Doula biography and credentials
+
+![About Providers Screenshot](<../img/Wireframes/AboutProviders.png>){width=80%}
+
+\newpage
+
+**Blog Expanded Page**
+- **Key Elements**: Article layout, metadata, navigation
+
+![Blog Expanded Screenshot](<../img/Wireframes/blogExpanded.png>){width=80%}
+
+\newpage
+
+**Client Dashboard Page**
+- **Key Elements**: Sidebar navigation, support overview, action buttons
+
+![Client Dashboard Screenshot](<../img/Wireframes/ClientDashboard.png>){width=80%}
+
+\newpage
+
+**FAQ Page**
+- **Key Elements**: Accordion list of common questions
+
+![FAQ Page Screenshot](<../img/Wireframes/FAQ.png>){width=80%}
+
+\newpage
+
+**Services Page**
+- **Key Elements**: Service list with expandable details
+
+![Services Page Screenshot](<../img/Wireframes/Services.png>){width=80%}
+
+\newpage
 
 ### Design Implementation Guidelines
 
@@ -1190,6 +1451,7 @@ The following wireframes represent the visual design specifications for the Spri
 - Seamless transition from marketing to application functionality
 
 \vspace{1cm}
+\newpage
 
 ### Wireframe Status & Sprint 1 Implementation
 
@@ -1205,6 +1467,7 @@ The following wireframes represent the visual design specifications for the Spri
 **Note**: Wireframes for post-Sprint 1 features (client dashboard, messaging interface, appointment scheduling, doula portal) are scheduled for creation during their respective development sprints to ensure design alignment with refined requirements and user feedback.
 
 \vspace{1cm}
+\newpage
 
 ## Accessibility Requirements
 
@@ -1221,7 +1484,7 @@ The LUNARA platform must comply with **WCAG 2.1 AA** accessibility standards to 
 \newpage
 
 # System Logical Model
-```mermaid
+~~~mermaid
 graph TD;
   A[Start] --> B[FR1: Public Website & Marketing Use Cases];
   B --> C[Use Case 1.1: First-Time Visitor Explores Services];
@@ -1241,7 +1504,8 @@ graph TD;
   P --> Q[Touch targets are sized for mobile];
   Q --> R[User scrolls and navigates];
   R --> K;
-```
+~~~
+
 \newpage
 
 # REPORTS SECTION
@@ -1260,6 +1524,8 @@ graph TD;
 **Format:** PDF export with charts and trend graphs
 **Frequency:** Weekly, automatically generated
 
+\newpage
+
 ### Doula Performance Dashboard
 **Title:** Monthly Doula Activity Report  
 **Purpose:** Track doula engagement and client satisfaction metrics
@@ -1272,6 +1538,8 @@ graph TD;
 
 **Format:** Web dashboard with export capability
 **Frequency:** Monthly review, real-time dashboard updates
+
+\newpage
 
 ### System Usage Analytics
 **Title:** Platform Utilization Report
@@ -1633,42 +1901,24 @@ A JavaScript library that enables real-time, bidirectional communication between
 **SPA (Single Page Application)**  
 A web application that loads a single HTML page and dynamically updates content as users interact with the app.
 
+## T
 **Sprint**  
 A fixed time period (typically 2-4 weeks) during which specific development work is completed in Agile methodology.
 
 **Supertest**  
 A JavaScript library for testing HTTP servers, commonly used with Node.js applications.
 
-## T
+## U
 **TLS (Transport Layer Security)**  
 A cryptographic protocol that provides secure communication over a computer network.
 
-## U
+## V
 **UI (User Interface)**  
 The visual elements and interactive components that users interact with in an application.
 
+## W
 **UX (User Experience)**  
 The overall experience and satisfaction a user has when interacting with a product or system.
-
-## V
-**Vercel**  
-A cloud platform for deploying and hosting frontend applications with automatic scaling and optimization.
-
-**Vite**  
-A build tool that provides fast development server and optimized production builds for modern web applications.
-
-## W
-**WCAG (Web Content Accessibility Guidelines)**  
-International standards for making web content accessible to people with disabilities.
-
-**WebSocket**  
-A communication protocol that provides full-duplex communication channels over a single TCP connection.
-
-**WSS (WebSocket Secure)**  
-The secure version of WebSocket protocol that uses TLS/SSL encryption.
-
-**WYSIWYG (What You See Is What You Get)**  
-A type of editor that allows users to edit content in a format that closely resembles the final output.
 
 ## X
 **XSS (Cross-Site Scripting)**  
@@ -1742,3 +1992,99 @@ A type of security vulnerability that allows attackers to inject malicious scrip
 - **User Analytics**: Collection and analysis of user behavior data
 - **System Monitoring**: Continuous observation of system performance and health
 - **Error Tracking**: Process of identifying, logging, and resolving application errors
+
+\newpage
+
+# Technical Requirements → Technology Mapping
+
+| Requirement ID | Requirement (Short) | Primary Technologies / Hardware |
+| -------------- | ------------------- | -------------------------------- |
+| FR1 | Public Website & Marketing | React 18 + Vite, CSS Modules/SCSS, Vercel |
+| FR2 | Secure Auth & Registration | Express.js, Passport.js, JWT, bcrypt, MongoDB/Mongoose, TLS 1.3 |
+| FR3 | User Dashboard & Navigation | React, React Router, Express.js, MongoDB/Mongoose |
+| FR4 | Dynamic Intake Forms | React Form Components, Express.js, MongoDB/Mongoose |
+| FR5 | Real-time Secure Messaging | Socket.io, Express.js, MongoDB/Mongoose, Web Push API, TLS 1.3 |
+| FR6 | Appointment Scheduling | React Calendar UI, Express.js, MongoDB, Nodemailer + Gmail SMTP, Web Push API |
+| FR7 | Personalized Resource Library | React, MongoDB/Mongoose, Cloudinary CDN |
+| FR8 | Daily Check-ins & Mood Tracking | React, Express.js, MongoDB/Mongoose, Charting Library |
+| FR9 | Doula Client Management | React, Express.js, MongoDB/Mongoose |
+| FR10 | Care Plan Templates | React Drag-and-Drop, Express.js, MongoDB/Mongoose |
+| FR11 | Blog Publishing Platform | React Rich Text Editor, Express.js, MongoDB/Mongoose, Cloudinary |
+| FR12 | Digital Journaling (Future) | React, MongoDB/Mongoose |
+| FR13 | New Mama Horoscope (Future) | Node.js Cron, Express.js, React |
+| FR14 | Sleep & Feeding Trackers (Future) | React, MongoDB/Mongoose |
+| FR15 | AI Note Summarization (Future) | Node.js, OpenAI API, Express.js, MongoDB |
+| NFR1 | Data Security & Privacy | HTTPS/TLS 1.3, bcrypt, JWT, Passport.js, MongoDB Atlas Encryption |
+| NFR2 | Mobile Responsiveness | React Responsive Design, CSS Modules/SCSS, Flexbox/Grid, PWA |
+| NFR3 | Reliability & Performance | Vercel Edge Network, Render Auto-scaling, MongoDB Atlas Cluster, Cloudinary CDN |
+| NFR4 | Real-time Communication | Socket.io, Web Push API, TLS 1.3 |
+| NFR5 | Scalability & Growth | Render Horizontal Scaling, Vercel Deployment, MongoDB Atlas Cluster |
+| NFR6 | UX & Accessibility | React, ARIA attributes, WCAG-compliant CSS Modules |
+| NFR7 | Backup & Recovery | MongoDB Atlas Automated Backups, Render Snapshot Backups |
+| NFR8 | Integration Capability | Express RESTful API, Webhooks, Node.js Modules |
+| NFR9 | Content Management | MongoDB/Mongoose, React WYSIWYG Editor, Cloudinary |
+| NFR10 | Monitoring & Analytics | Render Metrics, Vercel Analytics, Google Analytics, Lighthouse |
+
+## Data Dictionary
+
+### Users Collection
+
+| Field | Type | Description | Constraints |
+|-------|------|-------------|-------------|
+| _id | ObjectId | Primary key | Auto-generated |
+| email | String | Unique user email address | Required, unique |
+| password | String \| null | Bcrypt-hashed password (null for OAuth-only users) | Min 60 chars when present |
+| oauthProviders | Array<Object> | Linked OAuth accounts | Optional |
+| role | String | Application role | Enum: `client`, `doula`, `admin`; required |
+| profile | Object | Nested profile details | Optional |
+| isEmailVerified | Boolean | Email verification status | Default `false` |
+| createdAt | Date | Record creation timestamp | Auto-generated |
+| updatedAt | Date | Last update timestamp | Auto-generated |
+
+### ClientProfiles Collection
+
+| Field | Type | Description | Constraints |
+|-------|------|-------------|-------------|
+| _id | ObjectId | Primary key | Auto-generated |
+| userId | ObjectId | Reference to `Users._id` | Required, indexed |
+| birthDate | Date | Client's birth date | Optional |
+| babyBirthDate | Date | Baby's birth date | Optional |
+| postpartumWeek | Number | Calculated postpartum week | Updated weekly |
+| birthExperience | Object | Structured birth details | Optional |
+| feedingPreferences | Array<String> | Feeding method preferences | Optional |
+| assignedDoula | ObjectId | Reference to doula user | Optional |
+| intakeCompleted | Boolean | Intake form completion flag | Default `false` |
+| intakeData | Object | Raw intake answers | Optional |
+| createdAt | Date | Record creation timestamp | Auto-generated |
+| updatedAt | Date | Last update timestamp | Auto-generated |
+
+### Messages Collection
+
+| Field | Type | Description | Constraints |
+|-------|------|-------------|-------------|
+| _id | ObjectId | Primary key | Auto-generated |
+| conversationId | String | Logical thread identifier | Indexed |
+| sender | ObjectId | Reference to `Users._id` (author) | Required |
+| recipient | ObjectId | Reference to `Users._id` (target) | Required |
+| content | String | Message body (markdown/plain) | Required, max 5000 chars |
+| attachments | Array<String> | Cloudinary URLs | Optional |
+| isRead | Boolean | Read receipt flag | Default `false` |
+| readAt | Date | Timestamp when read | Nullable |
+| createdAt | Date | Sent timestamp | Auto-generated |
+
+### Appointments Collection
+
+| Field | Type | Description | Constraints |
+|-------|------|-------------|-------------|
+| _id | ObjectId | Primary key | Auto-generated |
+| client | ObjectId | Reference to client user | Required |
+| doula | ObjectId | Reference to doula user | Required |
+| scheduledDate | Date | Appointment start time | Required |
+| duration | Number | Length in minutes | Default 60 |
+| type | String | Session mode | Enum: `virtual`, `in-person` |
+| status | String | Booking status | Enum: `requested`, `confirmed`, `completed`, `cancelled` |
+| notes | String | Free-form notes | Optional |
+| remindersSent | Array<Date> | Timestamps of reminders | System-managed |
+| createdAt | Date | Record creation timestamp | Auto-generated |
+| updatedAt | Date | Last update timestamp | Auto-generated |
+
