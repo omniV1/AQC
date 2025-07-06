@@ -263,7 +263,8 @@ steps:
   - uses: actions/checkout@v4
   - uses: actions/setup-node@v4
     with: { node-version: ${{ matrix.node }} }
-``` |
+```
+|
 | [ ] | **Frontend CI** – GitHub Action (`frontend-ci.yml`) | NFR3 | Run `npm run lint && npm run build` and upload artefact. |
 | [ ] | Render & Vercel deployment hooks | FR1/2 | Docs: Render "Deploy Hook", Vercel env vars. |
 | [ ] | Add `winston` & `morgan` logging + basic uptime ping | [NFR10 – Monitoring](Docs/Planning/ProjectRequirementsForPdf.md#nfr10-monitoring--analytics-use-cases) | Bind `morgan('combined')` in `server.ts`; sign up UptimeRobot free tier. |
