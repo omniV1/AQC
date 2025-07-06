@@ -2,11 +2,11 @@
 
 ## 🗺️ Quick Navigation
 - [Overview](#overview)
-- [Sprint Summary](#📊-sprint-summary-actual-status)
-- [Critical Gaps](#🚨-critical-gaps-identified)
-- [Owen's Focus Board](#👨‍💻-owen—backend-lead)
-- [Carter's Focus Board](#🎨-carter—frontend-lead)
-- [Andrew's Focus Board](#⚙️-andrew—devops-lead)
+- [Sprint Summary](#-sprint-summary-actual-status)
+- [Critical Gaps](#-critical-gaps-identified)
+- [Owen's Focus Board](#-owen-backend-lead)
+- [Carter's Focus Board](#-carter-frontend-lead)
+- [Andrew's Focus Board](#-andrew-devops-lead)
 
 ## 📑 Legend
 | Symbol | Meaning |
@@ -219,25 +219,20 @@ Tick each checkbox as you complete the item.
 
 ---
 
-#### 👨‍💻 Owen — Backend Lead
+## 👨‍💻 Owen — Backend Lead
 
 | ✅ | Task | Requirement Link | Helpful Hints / Resources |
 |-----|------|-----------------|---------------------------|
-| [ ] | Build full CRUD for Appointments (`routes/appointments.ts`) | [FR6 – Appointment Scheduling](Docs/Planning/ProjectRequirementsForPdf.md#fr6-appointment-scheduling--management-use-cases) | Start from the existing stub, copy auth middleware pattern from `routes/users.ts`,
-add `Appointment` Mongoose model (schema example in *Database Schema Design* section). |
+| [ ] | Build full CRUD for Appointments (`routes/appointments.ts`) | [FR6 – Appointment Scheduling](Docs/Planning/ProjectRequirementsForPdf.md#fr6-appointment-scheduling--management-use-cases) | Start from the existing stub, copy auth middleware pattern from `routes/users.ts`, add `Appointment` Mongoose model (schema example in *Database Schema Design* section). |
 | [ ] | Build CRUD for Messaging (`routes/messages.ts`) | [FR5 – Real-time Messaging](Docs/Planning/ProjectRequirementsForPdf.md#fr5-real-time-secure-messaging-use-cases) | Keep REST simple for now—Socket.io layer will arrive Sprint 4. |
 | [ ] | Create `routes/resources.ts` to return mock filtered list | [FR7 – Resource Library](Docs/Planning/ProjectRequirementsForPdf.md#fr7-personalized-resource-library-use-cases) | Hard-code three JSON resources for Carter to render. |
 | [ ] | Update `docs/swagger.yaml` to document all new endpoints | FR2/5/6/7 | Use Swagger-JSDoc comments above controllers → run `npm run swagger-gen`. |
-| [ ] | Integration tests with Jest + Supertest | FR2 | Example:
-```ts
-await request(app).post('/auth/register').send(mockUser)
-```
-|
+| [ ] | Integration tests with Jest + Supertest | FR2 | Example: `await request(app).post('/auth/register').send(mockUser)` |
 | [ ] | Export Swagger collection & add base URL variable to `backend/README.md` | Cross-team | Helps Carter hook services quickly. |
 
 ---
 
-#### 🎨 Carter — Frontend Lead
+## 🎨 Carter — Frontend Lead
 
 | ✅ | Task | Requirement Link | Helpful Hints / Resources |
 |-----|------|-----------------|---------------------------|
@@ -247,32 +242,23 @@ await request(app).post('/auth/register').send(mockUser)
 | [ ] | Complete **Contact** page (form + validation) | FR1 / [NFR6 – Accessibility](Docs/Planning/ProjectRequirementsForPdf.md#nfr6-user-experience--accessibility-use-cases) | `react-hook-form` + `zod`; POST to `/public/contact`. |
 | [ ] | Build **FAQ** accordion | FR1 | Pull top ten Qs from *Project Requirements* FAQ section. |
 | [ ] | Consolidate axios instance & interceptors | Internal Tech Debt | Place in `services/api.ts`; add JWT header automatically. |
-| [ ] | Align UI with Figma mock-ups | Figma: [Lunara Designs](https://www.figma.com/design/cdtATWBpZPGhK4Zz7jL0PS/Lunara?node-id=0-1&p=f&t=4Sbp1vyAcOPuGefN-0) | Pay attention to spacing (8 px grid) and colour variables.
+| [ ] | Align UI with Figma mock-ups | [Figma: Lunara Designs](https://www.figma.com/design/cdtATWBpZPGhK4Zz7jL0PS/Lunara?node-id=0-1&p=f&t=4Sbp1vyAcOPuGefN-0) | Pay attention to spacing (8 px grid) and colour variables. |
 
 ---
 
-#### ⚙️ Andrew — DevOps Lead
+## ⚙️ Andrew — DevOps Lead
 
 | ✅ | Task | Requirement Link | Helpful Hints / Resources |
 |-----|------|-----------------|---------------------------|
-| [ ] | **Backend CI** – GitHub Action (`backend-ci.yml`) | [NFR3 – Reliability](Docs/Planning/ProjectRequirementsForPdf.md#nfr3-system-reliability--performance-use-cases) | Matrix Node 18/20 → `npm ci` → `npm test` → Docker build.
-Sample snippet:
-```yaml
-runs-on: ubuntu-latest
-steps:
-  - uses: actions/checkout@v4
-  - uses: actions/setup-node@v4
-    with: { node-version: ${{ matrix.node }} }
-```
-|
+| [ ] | **Backend CI** – GitHub Action (`backend-ci.yml`) | [NFR3 – Reliability](Docs/Planning/ProjectRequirementsForPdf.md#nfr3-system-reliability--performance-use-cases) | Matrix Node 18/20 → `npm ci` → `npm test` → Docker build. Sample snippet: `runs-on: ubuntu-latest` |
 | [ ] | **Frontend CI** – GitHub Action (`frontend-ci.yml`) | NFR3 | Run `npm run lint && npm run build` and upload artefact. |
 | [ ] | Render & Vercel deployment hooks | FR1/2 | Docs: Render "Deploy Hook", Vercel env vars. |
 | [ ] | Add `winston` & `morgan` logging + basic uptime ping | [NFR10 – Monitoring](Docs/Planning/ProjectRequirementsForPdf.md#nfr10-monitoring--analytics-use-cases) | Bind `morgan('combined')` in `server.ts`; sign up UptimeRobot free tier. |
-| [ ] | Expand `.env.example` files (backend & frontend) | Cross-team | Include `JWT_SECRET`, `DB_URI`, `VITE_API_URL`, `VITE_FIGMA_EMBED`, etc.
+| [ ] | Expand `.env.example` files (backend & frontend) | Cross-team | Include `JWT_SECRET`, `DB_URI`, `VITE_API_URL`, `VITE_FIGMA_EMBED`, etc. |
 
 ---
 
-> **Sprint Checkpoint 📅:** When every checkbox above is ✅ we reach 100 % of Sprint 1 goals and can proceed to Sprint 2 planning.
+> **Sprint Checkpoint 📅:** When every checkbox above is ✅ we reach 100% of Sprint 1 goals and can proceed to Sprint 2 planning.
 
 ---
 
@@ -286,7 +272,7 @@ steps:
 - ✅ Input validation
 
 ### **Frontend (Good Start):**
-- ✅ Beautiful landing page design
+- ✅ landing page design
 - ✅ Component structure
 - ✅ Authentication UI
 - ✅ Responsive design
@@ -316,13 +302,11 @@ To declare Sprint 1 **COMPLETE**, we need:
 
 ---
 
-*Last Updated: Based on actual codebase analysis*
+*Last Updated: Based on actual codebase analysis*  
 *Document Status: Reflects real implementation status vs initial planning*
 
 ---
-### 🔄 Update Procedure
+
+## 🔄 Update Procedure
 1. At the end of each working day, open this file.
-2. Tick completed checkboxes and adjust progress bars if desired (use `https://progress-bar.dev/<percent>`).
-3. Commit changes with message `docs(sprint1): progress update YYYY-MM-DD`.
-4. Push to repository—CI should pass 🟢.
-5. Share notable blockers in project Slack channel. 
+2. Tick completed checkboxes and adjust progress bars if desired (use `https://progre
