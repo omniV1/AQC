@@ -4,9 +4,9 @@
 - [Overview](#overview)
 - [Sprint Summary](#-sprint-summary-actual-status)
 - [Critical Gaps](#-critical-gaps-identified)
-- [Owen's Focus Board](#-owen-backend-lead)
-- [Carter's Focus Board](#-carter-frontend-lead)
-- [Andrew's Focus Board](#-andrew-devops-lead)
+- [Owen's Focus Board](#-owen--backend-lead)
+- [Carter's Focus Board](#-carter--frontend-lead)
+- [Andrew's Focus Board](#-andrew--devops-lead)
 
 ## 📑 Legend
 | Symbol | Meaning |
@@ -309,4 +309,7 @@ To declare Sprint 1 **COMPLETE**, we need:
 
 ## 🔄 Update Procedure
 1. At the end of each working day, open this file.
-2. Tick completed checkboxes and adjust progress bars if desired (use `https://progre
+2. Tick completed checkboxes and adjust progress bars if desired (use `https://progress-bar.dev/<percent>`).
+3. Commit changes with message `docs(sprint1): progress update YYYY-MM-DD`.
+4. Push to repository—CI should pass 🟢.
+5. Share notable blockers in project Slack channel.
