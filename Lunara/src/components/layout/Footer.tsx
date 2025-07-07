@@ -13,7 +13,7 @@ export const Footer: React.FC = () => {
     'HERBAL SUPPORT',
     'NIGHT CARE',
     'POSTPARTUM PLANNING',
-    'SACRED RHYTHM'
+    'POSTPARTUM AFTERCARE'
   ];
 
   return (
