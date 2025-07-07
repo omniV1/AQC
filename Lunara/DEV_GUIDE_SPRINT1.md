@@ -17,7 +17,7 @@
 
 ---
 
-## �� Authentication
+## ✅ Authentication
 
 - ✅ AuthService implemented (`src/services/authService.ts`)
 - ✅ `AuthContext` connected to backend endpoints
@@ -30,7 +30,8 @@
 - Use Tailwind & custom classes under `src/styles/`.
 - Follow 8-px grid & colour palette (#8FBC8F sage, #2F4F4F charcoal etc.).
 - Provide responsive breakpoints: `sm / md / lg / xl`.
-- Align UI with Figma mock-ups (spacing, colours, typography)
+- Align UI with Figma MCP mock-ups (spacing, colours, typography) – [Figma: Lunara Designs](https://www.figma.com/design/cdtATWBpZPGhK4Zz7jL0PS/Lunara?node-id=0-1&p=f&t=4Sbp1vyAcOPuGefN-0)
+- Use the **Figma MCP (Master Component Pages)** as the canonical reference for page section hierarchy & layout; replicate its structure when building React components (see link above)
 
 ---
 
