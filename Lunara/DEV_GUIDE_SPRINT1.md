@@ -25,7 +25,7 @@
 
 ---
 
-## 💅 UI / Design System
+##  UI / Design System
 
 - Use Tailwind & custom classes under `src/styles/`.
 - Follow 8-px grid & colour palette (#8FBC8F sage, #2F4F4F charcoal etc.).
