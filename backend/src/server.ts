@@ -11,6 +11,7 @@ import passport from 'passport';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import dotenv from 'dotenv';
+import logger from './utils/logger';
 
 dotenv.config();
 
@@ -49,7 +50,7 @@ const REQUIRED_ENV_VARS = [
 
 const missingVars = REQUIRED_ENV_VARS.filter((v) => !process.env[v]);
 if (missingVars.length > 0) {
-  console.error(`FATAL: Missing required environment variables: ${missingVars.join(', ')}`);
+  logger.error(`FATAL: Missing required environment variables: ${missingVars.join(', ')}`);
   process.exit(1);
 }
 
@@ -57,8 +58,8 @@ if (missingVars.length > 0) {
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/lunara', {
   // Note: useNewUrlParser and useUnifiedTopology are deprecated in newer versions
 })
-.then(() => console.log('MongoDB connected successfully'))
-.catch((err: Error) => console.error('MongoDB connection error:', err));
+.then(() => logger.info('MongoDB connected successfully'))
+.catch((err: Error) => logger.error(`MongoDB connection error: ${err}`));
 
 // Security Middleware
 app.use(helmet());
@@ -115,8 +116,8 @@ app.use('/api', limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Logging
-app.use(morgan('combined'));
+// Logging – pipe HTTP logs through Winston
+app.use(morgan('combined', { stream: { write: (message: string) => logger.info(message.trim()) } }));
 
 // Passport middleware
 app.use(passport.initialize());
@@ -189,11 +190,11 @@ interface MessageData {
 }
 
 io.on('connection', (socket) => {
-  console.log('User connected:', socket.id);
+  logger.info(`User connected: ${socket.id}`);
 
   socket.on('join_conversation', (conversationId: string) => {
     socket.join(conversationId);
-    console.log(`User ${socket.id} joined conversation ${conversationId}`);
+    logger.info(`User ${socket.id} joined conversation ${conversationId}`);
   });
 
   socket.on('send_message', async (messageData: MessageData) => {
@@ -208,13 +209,13 @@ io.on('connection', (socket) => {
       // TODO: Implement push notification service
       
     } catch (error) {
-      console.error('Error sending message:', error);
+      logger.error(`Error sending message: ${error}`);
       socket.emit('message_error', { error: 'Failed to send message' });
     }
   });
 
   socket.on('disconnect', () => {
-    console.log('User disconnected:', socket.id);
+    logger.info(`User disconnected: ${socket.id}`);
   });
 });
 
@@ -226,7 +227,7 @@ interface CustomError extends Error {
 
 // FIXED: Proper error handler function signature
 function errorHandler(err: CustomError, req: Request, res: Response, next: NextFunction): void {
-  console.error(err.stack);
+  logger.error(err.stack as string);
   
   if (err.name === 'ValidationError') {
     res.status(400).json({
@@ -263,8 +264,8 @@ app.use('*', (req: Request, res: Response) => {
 const PORT = parseInt(process.env.PORT || '', 10) || 10000;
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`API Documentation available at http://localhost:${PORT}/api-docs`);
+  logger.info(`Server running on port ${PORT}`);
+  logger.info(`API Documentation available at http://localhost:${PORT}/api-docs`);
 });
 
 export { app, server, io };

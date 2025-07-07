@@ -84,4 +84,6 @@ export const ClientLogin: React.FC = () => {
       </form>
     </div>
   );
-}; 
+};
+
+// TODO: Match visual design – https://www.figma.com/design/cdtATWBpZPGhK4Zz7jL0PS/Lunara?node-id=52-254&t=xw6y1BfnDJwu4YCs-4 

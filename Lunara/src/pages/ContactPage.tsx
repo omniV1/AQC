@@ -2,6 +2,16 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope/*, faPhone*/ } from '@fortawesome/free-solid-svg-icons'; // Assuming you might want a phone icon
 
+// -----------------------------
+// TODO (Carter – Sprint-1)
+// 1. Replace custom state management with `react-hook-form`.
+// 2. Add `zod` schema for field validation (name, email, message, phone, dueDate).
+// 3. On submit, POST to `/public/contact` backend endpoint using fetch/axios.
+// 4. Display success & error toasts.
+// 5. After Sprint-1, move contact info to environment-driven config.
+// 6. Align UI with Figma mockup: https://www.figma.com/design/cdtATWBpZPGhK4Zz7jL0PS/Lunara?node-id=52-526&t=xw6y1BfnDJwu4YCs-4
+// -----------------------------
+
 export default function ContactPage() {
   // Basic state for form fields (consider using a form library later)
   const [formData, setFormData] = React.useState({
