@@ -44,4 +44,25 @@
 - [ ] Basic SEO meta using `react-helmet` or Vite plugin
 - [ ] Lighthouse score > 85 mobile
 
-Add more items as you discover them! 
+Add more items as you discover them!
+
+## 📖 API Documentation (Swagger UI)
+
+To explore backend endpoints locally:
+
+1. In a separate terminal window start the backend in development mode:
+
+   ```bash
+   cd backend
+   npm run dev
+   ```
+
+2. Open your browser at:
+
+   ```
+   http://localhost:5000/api-docs/#/
+   ```
+
+   This brings up the interactive Swagger UI containing **all backend ("Spring AI") endpoints**. Click **Try it out** to execute requests and inspect live responses.
+
+> Note: If you customise the backend `PORT` or `API_URL` in your `.env`, update the URL above accordingly. 

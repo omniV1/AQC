@@ -81,11 +81,17 @@ app.use(
 );
 app.use(compression());
 
-// CORS Configuration
-const allowedOrigins = [
-  process.env.FRONTEND_URL || "http://localhost:3000",
-  "https://lunara.onrender.com"
-];
+// Extend allowed origins to cover Vite dev/preview servers and make it easy to override via env var list
+const allowedOrigins: string[] = (
+  process.env.CORS_ALLOWED_ORIGINS ??
+  [
+    process.env.FRONTEND_URL || "http://localhost:3000",
+    "http://localhost:5000", // Backend itself for Swagger UI
+    "http://localhost:5173", // Vite dev default
+    "http://localhost:4173", // Vite preview default
+    "https://lunara.onrender.com"
+  ].join(",")
+).split(",").map((o) => o.trim());
 
 app.use(cors({
   origin: (origin, callback) => {
