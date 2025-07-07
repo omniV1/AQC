@@ -2,11 +2,11 @@
 
 ## 🗺️ Quick Navigation
 - [Overview](#overview)
-- [Sprint Summary](#📊-sprint-summary-actual-status)
-- [Critical Gaps](#🚨-critical-gaps-identified)
-- [Owen's Focus Board](#👨‍💻-owen—backend-lead)
-- [Carter's Focus Board](#🎨-carter—frontend-lead)
-- [Andrew's Focus Board](#⚙️-andrew—devops-lead)
+- [Sprint Summary](#-sprint-summary-actual-status)
+- [Critical Gaps](#-critical-gaps-identified)
+- [Owen's Focus Board](#-owen--backend-lead)
+- [Carter's Focus Board](#-carter--frontend-lead)
+- [Andrew's Focus Board](#-andrew--devops-lead)
 
 ## 📑 Legend
 | Symbol | Meaning |
@@ -210,7 +210,7 @@ Tick each checkbox as you complete the item.
 
 ---
 
-#### 👨‍💻 Owen — Backend Lead
+## 👨‍💻 Owen — Backend Lead
 
 | ✅ | Task | Requirement Link | Helpful Hints / Resources |
 |-----|------|-----------------|---------------------------|
@@ -219,11 +219,10 @@ Tick each checkbox as you complete the item.
 | [✅] | Create `routes/resources.ts` to return mock filtered list | [FR7 – Resource Library](Docs/Planning/ProjectRequirementsForPdf.md#fr7-personalized-resource-library-use-cases) | Public endpoint with 3 mock resources. |
 | [✅] | Update `docs/swagger.yaml` to document all new endpoints | FR2/5/6/7 | Use Swagger-JSDoc comments above controllers → run `npm run swagger-gen`. |
 | [✅] | Integration tests with Jest + Supertest | FR2 | Added happy-path tests for auth, appointments, messaging. |
-| [ ] | Export Swagger collection & add base URL variable to `backend/README.md` | Cross-team | Helps Carter hook services quickly. |
 
 ---
 
-#### 🎨 Carter — Frontend Lead
+## 🎨 Carter — Frontend Lead
 
 | ✅ | Task | Requirement Link | Helpful Hints / Resources |
 |-----|------|-----------------|---------------------------|
@@ -237,11 +236,70 @@ Tick each checkbox as you complete the item.
 
 ---
 
-#### ⚙️ Andrew — DevOps Lead
+## ⚙️ Andrew — DevOps Lead
 
 | ✅ | Task | Requirement Link | Helpful Hints / Resources |
-|-----|------|-----------------|---------------------------|
+
 | [✅] | **Backend CI** – GitHub Action (`backend-ci.yml`) | [NFR3 – Reliability](Docs/Planning/ProjectRequirementsForPdf.md#nfr3-system-reliability--performance-use-cases) | Implemented Node 18/20 matrix, tests, coverage, Docker build.
 | [✅] | **Frontend CI** – GitHub Action (`frontend-ci.yml`) | NFR3 | Lint, test, build, and upload artefacts implemented. |
 | [✅] | Render & Vercel deployment hooks | N/A | Removed from Sprint 1 scope; will revisit in Sprint 2. |
 | [✅] | Add `winston` & `
+
+---
+
+> **Sprint Checkpoint 📅:** When every checkbox above is ✅ we reach 100% of Sprint 1 goals and can proceed to Sprint 2 planning.
+
+---
+
+## 🔍 WHAT'S ACTUALLY WORKING
+
+### **Backend (Strong Foundation):**
+- ✅ Complete authentication system
+- ✅ Robust data models
+- ✅ Security middleware
+- ✅ Email service
+- ✅ Input validation
+
+### **Frontend (Good Start):**
+- ✅ landing page design
+- ✅ Component structure
+- ✅ Authentication UI
+- ✅ Responsive design
+
+### **Infrastructure (Basic Setup):**
+- ✅ Repository structure
+- ✅ Development environment
+- ✅ Database connection
+- ✅ Package management
+
+---
+
+## 📋 SPRINT 1 COMPLETION CRITERIA
+
+To declare Sprint 1 **COMPLETE**, we need:
+
+| Requirement | Status | Owner |
+|-------------|--------|-------|
+| Landing page live and functional | ✅ DONE | Carter |
+| User registration working end-to-end | 🔄 PARTIAL | Owen/Carter |
+| Basic authentication flow | 🔄 PARTIAL | Owen/Carter |
+| Production deployment ready | ❌ MISSING | Andrew |
+| Public website complete | 🔄 PARTIAL | Carter |
+| API documentation complete | 🔄 PARTIAL | Owen |
+
+**Current Assessment: ~61% Complete**
+
+---
+
+*Last Updated: Based on actual codebase analysis*  
+*Document Status: Reflects real implementation status vs initial planning*
+
+---
+
+## 🔄 Update Procedure
+1. At the end of each working day, open this file.
+2. Tick completed checkboxes and adjust progress bars if desired (use `https://progress-bar.dev/<percent>`).
+3. Commit changes with message `docs(sprint1): progress update YYYY-MM-DD`.
+4. Push to repository—CI should pass 🟢.
+5. Share notable blockers in project Slack channel.
+
