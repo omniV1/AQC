@@ -57,4 +57,19 @@ declare global {
             toBeInTheDocument(): R;
         }
     }
+}
+
+// Polyfill TransformStream for MSW/interceptors if not available
+if (typeof global.TransformStream === 'undefined') {
+  try {
+    // Node 18+ provides TransformStream in "stream/web"
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { TransformStream } = require('stream/web');
+    // @ts-ignore: Assigning to global
+    global.TransformStream = TransformStream;
+  } catch {
+    // Fallback: create a minimal stub
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    global.TransformStream = function () {} as any;
+  }
 } 

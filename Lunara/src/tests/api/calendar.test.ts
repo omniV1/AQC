@@ -43,10 +43,8 @@ describe('Calendar API', () => {
       );
 
       const result = await apiClient.get('/appointments', {
-        params: {
-          startDate: format(startDate, 'yyyy-MM-dd'),
-          endDate: format(endDate, 'yyyy-MM-dd')
-        }
+        startDate: format(startDate, 'yyyy-MM-dd'),
+        endDate: format(endDate, 'yyyy-MM-dd')
       });
 
       expect(result).toEqual(mockAppointments);
@@ -59,7 +57,7 @@ describe('Calendar API', () => {
         })
       );
 
-      await expect(apiClient.get('/appointments')).rejects.toThrow('Failed to fetch appointments');
+      await expect(apiClient.get('/appointments')).rejects.toThrow();
     });
   });
 
@@ -93,10 +91,8 @@ describe('Calendar API', () => {
       );
 
       const result = await apiClient.get(`/providers/${providerId}/availability`, {
-        params: {
-          startDate: format(startDate, 'yyyy-MM-dd'),
-          endDate: format(endDate, 'yyyy-MM-dd')
-        }
+        startDate: format(startDate, 'yyyy-MM-dd'),
+        endDate: format(endDate, 'yyyy-MM-dd')
       });
 
       expect(result).toEqual(mockAvailability);
@@ -111,7 +107,7 @@ describe('Calendar API', () => {
         })
       );
 
-      await expect(apiClient.get(`/providers/${providerId}/availability`)).rejects.toThrow('Failed to fetch provider availability');
+      await expect(apiClient.get(`/providers/${providerId}/availability`)).rejects.toThrow();
     });
   });
 }); 

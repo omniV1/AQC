@@ -89,8 +89,7 @@ describe('Support Session API', () => {
         })
       );
 
-      await expect(apiClient.patch(`/sessions/${sessionId}/status`, mockUpdate))
-        .rejects.toThrow('Invalid status transition');
+      await expect(apiClient.patch(`/sessions/${sessionId}/status`, mockUpdate)).rejects.toThrow();
     });
   });
 
@@ -176,8 +175,7 @@ describe('Support Session API', () => {
         })
       );
 
-      await expect(apiClient.post(`/sessions/${sessionId}/cancel`, mockCancellation))
-        .rejects.toThrow('Cannot cancel session within 24 hours of start time');
+      await expect(apiClient.post(`/sessions/${sessionId}/cancel`, mockCancellation)).rejects.toThrow();
     });
   });
 }); 

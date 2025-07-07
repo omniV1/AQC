@@ -1,41 +1,35 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../contexts/AuthContext';
 import { ClientRegistrationData } from '../types/auth';
 
 export const Register: React.FC = () => {
   const navigate = useNavigate();
   const { registerClient } = useAuth();
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState<ClientRegistrationData>({
-    email: '',
-    password: '',
-    firstName: '',
-    lastName: '',
-    providerId: 0, // This will be set based on provider selection
+
+  const schema = z.object({
+    firstName: z.string().min(1, 'First name is required'),
+    lastName: z.string().min(1, 'Last name is required'),
+    email: z.string().email('Invalid email address'),
+    password: z.string().min(8, 'Password must be at least 8 characters'),
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setIsLoading(true);
+  type FormValues = z.infer<typeof schema>;
 
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormValues>({
+    resolver: zodResolver(schema),
+  });
+
+  const onSubmit = async (data: FormValues) => {
     try {
-      await registerClient(formData);
+      await registerClient({ ...data, providerId: 0 }); // TODO: provider selection
       navigate('/dashboard');
     } catch (err) {
-      setError('Registration failed. Please try again.');
-    } finally {
-      setIsLoading(false);
+      /* handle in toast */
     }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev: ClientRegistrationData) => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
   };
 
   return (
@@ -58,13 +52,7 @@ export const Register: React.FC = () => {
         
         {/* Registration Form */}
         <div className="space-y-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {error && (
-              <div className="bg-red-50/50 border border-red-100 text-red-700 p-4 rounded text-center">
-                {error}
-              </div>
-            )}
-
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Personal Information Section */}
             <div className="space-y-6">
               <h2 className="text-xl font-serif text-brown">Personal Information</h2>
@@ -76,14 +64,10 @@ export const Register: React.FC = () => {
                   </label>
                   <input 
                     type="text" 
-                    name="firstName" 
-                    id="firstName" 
-                    required 
-                    placeholder="Your first name"
-                    value={formData.firstName}
-                    onChange={handleChange}
+                    {...register('firstName')}
                     className="w-full px-4 py-2 border border-brown/20 rounded bg-white/50 focus:outline-none focus:ring-1 focus:ring-purple placeholder:text-brown/40"
                   />
+                  {errors.firstName && <p className="text-xs text-red-600 mt-1">{errors.firstName.message}</p>}
                 </div>
                 <div>
                   <label htmlFor="lastName" className="block text-sm font-medium text-brown mb-1">
@@ -91,14 +75,10 @@ export const Register: React.FC = () => {
                   </label>
                   <input 
                     type="text" 
-                    name="lastName" 
-                    id="lastName" 
-                    required 
-                    placeholder="Your last name"
-                    value={formData.lastName}
-                    onChange={handleChange}
+                    {...register('lastName')}
                     className="w-full px-4 py-2 border border-brown/20 rounded bg-white/50 focus:outline-none focus:ring-1 focus:ring-purple placeholder:text-brown/40"
                   />
+                  {errors.lastName && <p className="text-xs text-red-600 mt-1">{errors.lastName.message}</p>}
                 </div>
               </div>
 
@@ -108,14 +88,10 @@ export const Register: React.FC = () => {
                 </label>
                 <input 
                   type="email" 
-                  name="email" 
-                  id="email" 
-                  required 
-                  placeholder="your.email@example.com"
-                  value={formData.email}
-                  onChange={handleChange}
+                  {...register('email')}
                   className="w-full px-4 py-2 border border-brown/20 rounded bg-white/50 focus:outline-none focus:ring-1 focus:ring-purple placeholder:text-brown/40"
                 />
+                {errors.email && <p className="text-xs text-red-600 mt-1">{errors.email.message}</p>}
                 <p className="mt-1 text-xs text-brown/60">We'll use this email to send you important updates and resources</p>
               </div>
 
@@ -125,14 +101,10 @@ export const Register: React.FC = () => {
                 </label>
                 <input 
                   type="password" 
-                  name="password" 
-                  id="password" 
-                  required 
-                  placeholder="Create a secure password"
-                  value={formData.password}
-                  onChange={handleChange}
+                  {...register('password')}
                   className="w-full px-4 py-2 border border-brown/20 rounded bg-white/50 focus:outline-none focus:ring-1 focus:ring-purple placeholder:text-brown/40"
                 />
+                {errors.password && <p className="text-xs text-red-600 mt-1">{errors.password.message}</p>}
                 <p className="mt-1 text-xs text-brown/60">Must be at least 8 characters long</p>
               </div>
             </div>
@@ -140,10 +112,10 @@ export const Register: React.FC = () => {
             <div>
               <button 
                 type="submit" 
-                disabled={isLoading}
+                disabled={isSubmitting}
                 className="w-full bg-purple hover:bg-purple/80 text-white font-medium py-2.5 px-8 rounded transition-colors duration-300 disabled:opacity-50"
               >
-                {isLoading ? 'Creating account...' : 'Create account'}
+                {isSubmitting ? 'Creating account...' : 'Create account'}
               </button>
             </div>
           </form>

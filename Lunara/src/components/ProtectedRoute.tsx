@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { Spinner } from './ui/Spinner';
 
 interface ProtectedRouteProps {
     children: React.ReactElement;
@@ -8,7 +9,7 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles }) => {
-    const { user, isAuthenticated } = useAuth();
+    const { user, isAuthenticated, loading } = useAuth();
 
     console.log('ProtectedRoute Debug:', {
         isAuthenticated,
@@ -17,9 +18,13 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowe
         currentRole: user?.role
     });
 
+    if (loading) {
+        return <Spinner />;
+    }
+
     if (!isAuthenticated || !user) {
-        console.log('Not authenticated, redirecting to home');
-        return <Navigate to="/" replace />;
+        console.log('Not authenticated, redirecting to login');
+        return <Navigate to="/login" replace />;
     }
 
     // If user is not authorized for this route, redirect to their appropriate dashboard
