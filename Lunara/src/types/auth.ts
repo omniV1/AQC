@@ -5,7 +5,8 @@ export type { LoginCredentials, ProviderRegistrationData, ClientRegistrationData
 
 export interface AuthResponse {
   user: User;
-  token: string;
+  token: string; // access token
+  refreshToken: string;
 }
 
 export interface AuthContextType {

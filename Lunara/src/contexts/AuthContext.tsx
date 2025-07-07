@@ -31,8 +31,9 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         checkAuth();
     }, []);
 
-    const handleAuthResponse = (token: string, user: User) => {
-        localStorage.setItem('token', token);
+    const handleAuthResponse = (accessToken: string, refreshToken: string, user: User) => {
+        localStorage.setItem('token', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
         setUser(user);
         setError(null);
     };
@@ -40,7 +41,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     const registerProvider = async (data: ProviderRegistrationData): Promise<AuthResponse> => {
         try {
             const response = await authService.registerProvider(data);
-            handleAuthResponse(response.token, response.user);
+            handleAuthResponse(response.token, response.refreshToken, response.user);
             toast.success('Registration successful! Welcome to Lunara.');
             return response;
         } catch (error: any) {
@@ -53,7 +54,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     const registerClient = async (data: ClientRegistrationData): Promise<AuthResponse> => {
         try {
             const response = await authService.registerClient(data);
-            handleAuthResponse(response.token, response.user);
+            handleAuthResponse(response.token, response.refreshToken, response.user);
             toast.success('Client registered successfully!');
             return response;
         } catch (error: any) {
@@ -66,7 +67,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     const providerLogin = async (credentials: LoginCredentials): Promise<AuthResponse> => {
         try {
             const response = await authService.providerLogin(credentials);
-            handleAuthResponse(response.token, response.user);
+            handleAuthResponse(response.token, response.refreshToken, response.user);
             toast.success('Login successful! Welcome back.');
             return response;
         } catch (error: any) {
@@ -79,7 +80,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     const clientLogin = async (credentials: LoginCredentials): Promise<AuthResponse> => {
         try {
             const response = await authService.clientLogin(credentials);
-            handleAuthResponse(response.token, response.user);
+            handleAuthResponse(response.token, response.refreshToken, response.user);
             toast.success('Login successful! Welcome back.');
             return response;
         } catch (error: any) {
@@ -91,6 +92,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
     const logout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
         setUser(null);
         setError(null);
         toast.info('You have been logged out.');
