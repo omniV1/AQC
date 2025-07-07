@@ -10,18 +10,18 @@
 
 | Route | File | Status | TODO |
 |-------|------|--------|------|
-| `/about` | `src/pages/AboutPage.tsx` | PARTIAL | Fill in copy, images, SEO meta |
-| `/services` | `src/pages/ServicesPage.tsx` | **NEW** | List core offerings, link to scheduling CTA |
-| `/contact` | `src/pages/ContactPage.tsx` | PARTIAL | Add form validation with **react-hook-form + zod**, POST to `/public/contact` |
-| `/faq` | `src/pages/FAQPage.tsx` | **NEW** | Accordion component, top 10 questions |
+| `/about` | `src/pages/AboutPage.tsx` | WIP | Finalise copy & imagery, add SEO meta tags, responsive layout |
+| `/services` | `src/pages/ServicesPage.tsx` | WIP | Implement service cards & descriptions, CTA to scheduling, add illustrations |
+| `/contact` | `src/pages/ContactPage.tsx` | WIP | Build form (react-hook-form + zod), POST to `/public/contact`, success toast |
+| `/faq` | `src/pages/FAQPage.tsx` | WIP | Accordion with top 10 Q&A (`<details>` fallback) |
 
 ---
 
-## 🔐 Authentication
+## �� Authentication
 
-- Implement AuthService (`src/services/authService.ts`) – see placeholder file.
-- Wire `AuthContext` to call backend endpoints.
-- Persist JWT in localStorage; refresh automatically.
+- ✅ AuthService implemented (`src/services/authService.ts`)
+- ✅ `AuthContext` connected to backend endpoints
+- ✅ JWT persisted in localStorage with automatic refresh flow
 
 ---
 
@@ -30,15 +30,16 @@
 - Use Tailwind & custom classes under `src/styles/`.
 - Follow 8-px grid & colour palette (#8FBC8F sage, #2F4F4F charcoal etc.).
 - Provide responsive breakpoints: `sm / md / lg / xl`.
+- Align UI with Figma mock-ups (spacing, colours, typography)
 
 ---
 
 ## 📝 Checklists
 
 ### Auth Flow
-- [ ] Register (client / provider)
-- [ ] Login & protected routes
-- [ ] Logout clears token
+- [x] Register (client / provider)
+- [x] Login & protected routes
+- [x] Logout clears token
 
 ### Pages
 - [ ] Basic SEO meta using `react-helmet` or Vite plugin
@@ -65,4 +66,14 @@ To explore backend endpoints locally:
 
    This brings up the interactive Swagger UI containing **all backend ("Spring AI") endpoints**. Click **Try it out** to execute requests and inspect live responses.
 
-> Note: If you customise the backend `PORT` or `API_URL` in your `.env`, update the URL above accordingly. 
+> Note: If you customise the backend `PORT` or `API_URL` in your `.env`, update the URL above accordingly.
+
+## 🚧 Remaining Sprint-1 Goals (from Sprint1_TODO_Breakdown.md)
+
+- [ ] **Finish About page** 
+- [ ] **Finish Services page** 
+- [ ] **Finish Contact page** – add RHF + zod validation, POST to `/public/contact`, success toast.
+- [ ] **Build FAQ page** – accordion component with top 10 questions, semantic markup (`<details>` fallback).
+- [ ] **Align UI with Figma mock-ups** – spacing (8 px grid), colour variables, typography scale.
+
+These items are the only Sprint-1 tasks still unchecked for the Frontend column. Once all are ticked we can mark **Frontend Development 100 %** in `Sprint1_TODO_Breakdown.md`. 

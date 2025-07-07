@@ -19,10 +19,10 @@ name: Backend CI
 on:
   push:
     paths:
-      - 'backend/**'
+      - backend/**
   pull_request:
     paths:
-      - 'backend/**'
+      - backend/**
 
 jobs:
   build-test:
@@ -36,29 +36,23 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
           cache-dependency-path: backend/package-lock.json
-
       - name: Install dependencies
         run: npm ci
-
       - name: TypeScript type-check
         run: npm run type-check
-
       - name: Run unit tests
         run: npm test -- --coverage
-
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
           name: backend-coverage-${{ matrix.node-version }}
           path: backend/coverage
-
       # Build Docker image only on main branch – can be pushed in a separate job once registry credentials are configured
       - name: Build Docker image (main branch only)
         if: github.ref == 'refs/heads/main'
