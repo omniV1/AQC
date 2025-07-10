@@ -2186,146 +2186,38 @@ While LUNARA is positioned as a wellness and support platform rather than a medi
 
 # GLOSSARY
 
-## A
-**API (Application Programming Interface)**  
-
-A set of protocols and tools for building software applications, allowing different software components to communicate.
-
-**Authentication**  
-
-The process of verifying the identity of a user or system before granting access to resources.
-
-**Authorization**  
-
-The process of determining what actions an authenticated user is permitted to perform.
-
-## B
-**bcrypt**  
-
-A password hashing function designed to be computationally expensive to resist brute-force attacks.
-
-**Backend**  
-
-The server-side of an application that handles data processing, storage, and business logic.
-
-## C
-**CDN (Content Delivery Network)**  
-
-A distributed network of servers that deliver web content to users based on their geographic location.
-
-**CI/CD (Continuous Integration/Continuous Deployment)**  
-
-Development practices that involve frequent code integration and automated deployment processes.
-
-**Client**  
-
-In LUNARA context: A new parent using the platform for postpartum support. In technical context: The frontend application or user interface.
-
-**Cloudinary**  
-
-A cloud-based service for managing and optimizing images and videos.
-
-**CORS (Cross-Origin Resource Sharing)**  
-
-A security feature implemented by web browsers to control how web pages access resources from other domains.
-
-**CSRF (Cross-Site Request Forgery)**  
-
-A type of malicious attack that tricks users into performing unwanted actions on web applications.
-
-## D
-**Doula**  
-
-A trained professional who provides physical, emotional, and informational support to mothers before, during, and after childbirth.
-
-**DX (Developer Experience)**  
-
-The overall experience developers have when working with tools, frameworks, and development environments.
-
-## E
-**Express.js**  
-
-A minimal and flexible Node.js web application framework for building APIs and web applications.
-
-## F
-**Fourth Trimester**  
-
-The first three months after childbirth, focusing on the mother's physical and emotional recovery.
-
-**Frontend**  
-
-The client-side of an application that users interact with directly, including the user interface and user experience.
-
-## G
-**Git Flow**  
-
-A branching model for Git that defines specific branch types and their purposes in the development workflow.
-
-## H
-**HTTPS (HyperText Transfer Protocol Secure)**  
-
-The secure version of HTTP that encrypts data transmitted between web browsers and servers.
-
-**HMR (Hot Module Replacement)**  
-
-A development feature that allows modules to be updated in real-time without requiring a full page reload.
-
-## I
-**Intake Form**  
-
-A comprehensive questionnaire that collects essential information about a client's needs, preferences, and circumstances.
-
-## J
-**Jest**  
-
-A JavaScript testing framework designed to ensure correctness of any JavaScript codebase.
-
-**JWT (JSON Web Token)**  
-
-A compact, URL-safe token format used for securely transmitting information between parties.
-
-## L
-**Lighthouse**  
-
-An open-source tool for measuring web page quality, including performance, accessibility, and SEO.
-
-**LUNARA**  
-
-The name of the postpartum support platform being developed (derived from "Luna" meaning moon, symbolizing cycles and nurturing).
-
-## M
-**MongoDB**  
-
-A NoSQL document database that stores data in flexible, JSON-like documents.
-
-**Mongoose**  
-
-An Object Document Mapper (ODM) library for MongoDB and Node.js that provides schema validation and query building.
-
-## N
-**Node.js**  
-
-A JavaScript runtime environment that allows JavaScript to be executed on the server side.
-
-**NFR (Non-Functional Requirement)**  
-
-Requirements that specify system quality attributes like performance, security, and usability rather than specific functionality.
-
-## O
-**OAuth**  
-
-An open standard for access delegation, commonly used for secure authentication with third-party services.
-
-**ODM (Object Document Mapper)**  
-
-A programming technique for converting data between incompatible type systems in object-oriented programming languages and document databases.
-
-## P
-**Passport.js**  
-
-An authentication middleware for Node.js that supports various authentication strategies.
-
-**Postpartum**  
-
-The period following childbirth, typically referring to the first six weeks to several months after delivery.
+| Term | Definition |
+|------|------------|
+| **API (Application Programming Interface)** | A formal contract of HTTP endpoints and data formats that enables independent software components to exchange information. |
+| **Authentication** | The act of confirming the identity of a user or system before granting access to resources. |
+| **Authorization** | The process of determining the privileges or actions an authenticated entity is allowed to perform. |
+| **Backend** | The server-side layer responsible for business logic, data processing, and persistence. |
+| **bcrypt** | A computationally expensive hashing algorithm used to securely store passwords and resist brute-force attacks. |
+| **CDN (Content Delivery Network)** | A geographically distributed network of servers that accelerates delivery of static assets to end-users. |
+| **CI/CD (Continuous Integration / Continuous Deployment)** | An automated pipeline that builds, tests, and releases code changes in small, frequent increments. |
+| **Client** | (Business) A new parent using LUNARA services. (Technical) The browser-based front-end application consuming the API. |
+| **Cloudinary** | A SaaS platform for storing, transforming, and optimising images and videos. |
+| **CORS (Cross-Origin Resource Sharing)** | Browser security mechanism that controls whether a web page can request resources from a domain different from the one that served it. |
+| **CSRF (Cross-Site Request Forgery)** | An attack that tricks a victim's browser into executing unwanted actions on a site where the victim is authenticated. |
+| **Doula** | A trained professional who provides emotional, physical, and informational support before, during, and after childbirth. |
+| **DX (Developer Experience)** | The overall quality, efficiency, and satisfaction developers derive from tools, documentation, and processes. |
+| **Express.js** | A minimalist web framework for Node.js used to build REST APIs and web applications. |
+| **Fourth Trimester** | The first 12 weeks after childbirth, emphasising maternal recovery and infant adjustment. |
+| **Frontend** | The user-facing portion of an application executed in the browser (UI/UX layer). |
+| **Git Flow** | A Git branching strategy that defines dedicated feature, develop, release, and hotfix branches for structured collaboration. |
+| **HMR (Hot Module Replacement)** | Development feature that swaps modules in a running application without a full page reload. |
+| **HTTPS (HyperText Transfer Protocol Secure)** | HTTP channel encrypted with TLS/SSL to protect data in transit. |
+| **Intake Form** | A structured questionnaire that captures a client's background, needs, and preferences prior to service delivery. |
+| **Jest** | A JavaScript testing framework that provides unit, integration, and snapshot testing capabilities. |
+| **JWT (JSON Web Token)** | A compact, URL-safe token containing digitally signed claims for stateless authentication. |
+| **Lighthouse** | An open-source auditing tool that evaluates web performance, accessibility, SEO, and best practices. |
+| **LUNARA** | The postpartum care platform being developed in this project. |
+| **MongoDB** | A NoSQL, document-oriented database that stores data in flexible BSON/JSON-like structures. |
+| **Mongoose** | A Node.js Object-Document Mapper (ODM) that provides schemas, validation, and query helpers for MongoDB. |
+| **NFR (Non-Functional Requirement)** | A requirement describing a system quality attribute (e.g., performance, security, usability) rather than discrete functionality. |
+| **Node.js** | A JavaScript runtime built on Chrome's V8 engine that enables server-side execution of JavaScript. |
+| **OAuth** | An open standard for delegated authorisation that allows secure access to user data without sharing credentials. |
+| **ODM (Object Document Mapper)** | A design pattern (and accompanying libraries) that maps objects in application code to documents in a NoSQL database. |
+| **Passport.js** | A Node.js middleware that provides a wide range of pluggable authentication strategies. |
+| **Postpartum** | The period following childbirth, typically defined as the first six weeks but often extending several months. |
 
