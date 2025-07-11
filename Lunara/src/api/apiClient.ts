@@ -13,7 +13,8 @@ export class ApiClient {
   private axios: AxiosInstance;
 
   private constructor() {
-    const baseURL = process.env.VITE_API_BASE_URL || '/api';
+    // Use Vite environment variable; fallback to dev API path
+    const baseURL = import.meta.env.VITE_API_BASE_URL || '/api';
 
     this.axios = axios.create({
       baseURL,

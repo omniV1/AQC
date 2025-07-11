@@ -1,7 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 export const Header: React.FC = () => {
+  const location = useLocation();
+
+  const isFaq = location.pathname.startsWith('/faq');
+  const isServices = location.pathname.startsWith('/services');
+
+  // Decide which secondary link to show on the left group.
+  const leftSecondaryLink = isFaq
+    ? { to: '/services', label: 'Services' }
+    : isServices
+    ? { to: '/faq', label: 'FAQ' }
+    : { to: '/faq', label: 'FAQ' };
+
   return (
     <header className="absolute top-0 left-0 right-0 z-50 flex justify-center" style={{
       height: '170px',
@@ -21,10 +33,10 @@ export const Header: React.FC = () => {
           </Link>
           <span className="text-[#4E1B00]">|</span>
           <Link
-            to="/faq"
+            to={leftSecondaryLink.to}
             className="text-[20px] text-[#4E1B00] font-['Luxurious_Roman'] hover:text-[#A27B5C] transition-colors tracking-wide"
           >
-            FAQ
+            {leftSecondaryLink.label}
           </Link>
         </div>
 
