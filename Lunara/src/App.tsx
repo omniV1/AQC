@@ -12,6 +12,7 @@ import AboutPage from './pages/AboutPage';
 import ServicesPage from './pages/ServicesPage';
 import LoginPage from './pages/LoginPage';
 import ContactPage from './pages/ContactPage';
+import AboutDoulaPage from './pages/AboutDoulaPage';
 
 // Component to handle navigation logging
 const NavigationLogger: React.FC = () => {
@@ -77,6 +78,13 @@ const App: React.FC = () => {
               <Route path="/about" element={
                 <MainLayout>
                   <AboutPage />
+                </MainLayout>
+              } />
+
+              {/* About Doula page */}
+              <Route path="/about-doula" element={
+                <MainLayout>
+                  <AboutDoulaPage />
                 </MainLayout>
               } />
 
