@@ -10,6 +10,8 @@ export default {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         serif: ['Lora', 'serif'],
         playfair: ['Playfair Display', 'serif'],
+        script: ['"Luxurious Script"', 'cursive'],
+        roman: ['"Luxurious Roman"', 'serif'],
       },
       colors: {
         cream: '#FAF7F2',
