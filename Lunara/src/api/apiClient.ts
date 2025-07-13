@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import { getBaseApiUrl } from '../utils/getBaseApiUrl';
 
 /**
  * ApiClient
@@ -13,8 +14,8 @@ export class ApiClient {
   private axios: AxiosInstance;
 
   private constructor() {
-    // Use Vite environment variable; fallback to dev API path
-    const baseURL = import.meta.env.VITE_API_BASE_URL || '/api';
+    // Resolve base URL in a way that also works under Jest (no `import.meta`)
+    const baseURL = getBaseApiUrl();
 
     this.axios = axios.create({
       baseURL,

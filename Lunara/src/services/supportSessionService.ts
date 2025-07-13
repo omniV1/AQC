@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { SupportSession, SupportSessionStatus, ApprovalStatus, SupportSessionType } from '../types/models';
+import { getBaseApiUrl } from '../utils/getBaseApiUrl';
 
-const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api';
+const API_URL = getBaseApiUrl();
 
 export const supportSessionService = {
     // Get all sessions

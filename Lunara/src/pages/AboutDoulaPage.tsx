@@ -24,7 +24,7 @@ export default function AboutDoulaPage() {
           <h1
             className="text-white text-[82px] font-['Luxurious_Script'] text-center absolute left-1/2 top-[65%] transform -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none select-none"
             style={{
-              WebkitTextStrokeColor: '#675A50',
+              WebkitTextStroke: '1px rgba(87, 32, 3, 0.35)',
               lineHeight: '74px',
               letterSpacing: '2.46px'
             }}

@@ -21,12 +21,8 @@ export default function AboutPage() {
         />
         {/* Overlay Heading */}
         <h1
-          className="text-white text-[82px] font-['Luxurious_Script'] text-center absolute left-1/2 top-[65%] transform -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none select-none"
-          style={{
-            WebkitTextStrokeColor: '#675A50',
-            lineHeight: '74px',
-            letterSpacing: '2.46px'
-          }}
+          className="absolute inset-0 flex items-center justify-center text-white text-9xl md:text-7xl font-script tracking-wide drop-shadow-md transform translate-y-9"
+          style={{ WebkitTextStroke: '1px rgba(87, 32, 3, 0.35)', letterSpacing: '0.07em' }}
         >
           Our Philosophy
         </h1>

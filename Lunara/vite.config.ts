@@ -15,6 +15,10 @@ export default defineConfig({
       '/api': 'http://localhost:5000',
     },
   },
+  // Expose VITE_API_BASE_URL as a global constant so we can avoid directly referencing `import.meta` in shared code.
+  define: {
+    __VITE_API_BASE_URL__: JSON.stringify(process.env.VITE_API_BASE_URL ?? ''),
+  },
   // resolve: { // Removed alias section
   //   alias: {
   //     // Force resolving react-icons to the installed package
