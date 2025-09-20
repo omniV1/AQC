@@ -1857,9 +1857,217 @@ The Resource Library Service must meet the following non-functional requirements
 
 \newpage
 
+# LEVERAGING EXISTING LUNARA INFRASTRUCTURE
+
+## **🚀 Foundation Already Built - No Need to Start from Scratch!**
+
+**CRITICAL INSIGHT:** Andrew's project builds upon a **sophisticated, enterprise-grade foundation** already established in the main LUNARA platform. This dramatically reduces complexity and development time.
+
+### **🏗️ What's Already Built & Ready to Use**
+
+#### **✅ Complete Authentication System**
+```typescript
+// ALREADY AVAILABLE: Full authentication with multiple strategies
+import passport from 'passport';
+import { AuthenticatedRequest } from '../types';
+
+// Andrew can immediately use:
+const authenticate = passport.authenticate('jwt', { session: false });
+
+// Routes automatically get user context:
+router.get('/resources', authenticate, (req: AuthenticatedRequest, res) => {
+  const user = req.user; // User data already available!
+  // Andrew's resource logic here
+});
+```
+
+#### **✅ Sophisticated Database Layer**
+```typescript
+// ALREADY AVAILABLE: Professional schemas and validation
+import mongoose, { Schema, Document } from 'mongoose';
+
+// Andrew follows existing patterns from User.ts, Client.ts
+export interface IResource extends Document {
+  title: string;
+  content: string;
+  author: mongoose.Types.ObjectId; // Links to existing User!
+  category: string;
+  tags: string[];
+  // ... Andrew extends this pattern
+}
+
+// Existing validation, middleware, and virtuals patterns ready to copy
+```
+
+#### **✅ Professional API Infrastructure**
+```typescript
+// ALREADY AVAILABLE: Express.js with full middleware stack
+// Andrew extends existing routes structure:
+
+// /src/routes/resources.ts (Andrew creates following appointments.ts pattern)
+import express, { Router, Response } from 'express';
+import { asyncHandler } from '../middleware'; // EXISTING error handling!
+import { handleValidationErrors } from '../middleware'; // EXISTING validation!
+
+// All middleware patterns already established and working
+```
+
+#### **✅ Frontend Service Integration**
+```typescript
+// ALREADY AVAILABLE: ApiClient with authentication built-in
+import { ApiClient } from '../api/apiClient';
+
+export class ResourceService {
+  private static _instance: ResourceService | null = null;
+  private readonly api = ApiClient.getInstance(); // EXISTING authenticated client!
+  
+  async getResources(): Promise<Resource[]> {
+    return this.api.get('/resources'); // Authentication automatic!
+  }
+}
+```
+
+### **📋 Integration Strategy - Step by Step**
+
+#### **Backend Integration (Weeks 1-4)**
+
+**Week 1-2: Extend Database Models**
+```typescript
+// Step 1: Create /src/models/Resource.ts following User.ts pattern
+// Step 2: Create /src/models/Category.ts following Client.ts pattern  
+// Step 3: Add to existing database connection (NO new setup needed)
+
+// COPY from User.ts pattern:
+const resourceSchema = new Schema<IResource>({
+  title: {
+    type: String,
+    required: [true, 'Title is required'],
+    trim: true,
+    maxlength: [200, 'Title cannot exceed 200 characters']
+  },
+  // ... follows exact validation patterns from existing models
+}, {
+  timestamps: true, // EXISTING pattern
+  toJSON: { virtuals: true }, // EXISTING pattern  
+  toObject: { virtuals: true } // EXISTING pattern
+});
+```
+
+**Week 3-4: Create API Routes**
+```typescript
+// Step 1: Create /src/routes/resources.ts following appointments.ts pattern
+// COPY middleware stack from appointments.ts:
+
+import express, { Router, Response } from 'express';
+import passport from 'passport';
+import { body, param, validationResult } from 'express-validator';
+import Resource from '../models/Resource';
+
+const router: Router = express.Router();
+const authenticate = passport.authenticate('jwt', { session: false }); // EXISTING!
+
+// EXACT pattern from appointments.ts:
+router.get('/', authenticate, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const resources = await Resource.find({}).populate('author', 'firstName lastName');
+    return res.json(resources);
+  } catch (error) {
+    // EXISTING error handling automatically catches this
+    console.error('Get resources error:', error);
+    return res.status(500).json({ error: 'Failed to retrieve resources' });
+  }
+});
+```
+
+#### **Frontend Integration (Weeks 5-6)**
+
+**Extend Existing React Services**
+```typescript
+// Step 1: Create ResourceService following existing authService.ts pattern
+// Step 2: Add ResourceContext following existing AuthContext.tsx pattern
+// Step 3: Create resource components using existing UI components
+
+// COPY from authService.ts pattern:
+export class ResourceService {
+  private static _instance: ResourceService | null = null;
+  private readonly api = ApiClient.getInstance(); // EXISTING ApiClient!
+  
+  static getInstance(): ResourceService {
+    if (!this._instance) {
+      this._instance = new ResourceService();
+    }
+    return this._instance;
+  }
+  
+  // Andrew follows EXACT same patterns
+}
+```
+
+#### **Testing Integration (Week 7)**
+```typescript
+// COPY from existing integration tests pattern:
+import request from 'supertest';
+import { app } from '../../src/server'; // EXISTING app!
+
+describe('Resource API', () => {
+  // COPY test setup from appointments_messages.test.ts
+  let authToken: string;
+  
+  beforeAll(async () => {
+    // EXISTING test utilities and setup
+  });
+  
+  it('should create a resource', async () => {
+    const res = await request(app)
+      .post('/api/resources')
+      .set('Authorization', `Bearer ${authToken}`) // EXISTING auth!
+      .send({ /* resource data */ });
+    
+    expect(res.status).toBe(201);
+  });
+});
+```
+
+### **🎯 Development Advantages with Existing Foundation**
+
+#### **No Need to Learn/Build:**
+- ✅ **Express.js server setup** and configuration
+- ✅ **MongoDB connection** and error handling  
+- ✅ **Authentication middleware** and JWT handling
+- ✅ **Validation patterns** and error responses
+- ✅ **TypeScript configuration** and type definitions
+- ✅ **Testing setup** and utilities
+- ✅ **Frontend build pipeline** and development environment
+- ✅ **API client** with automatic authentication
+- ✅ **React patterns** and component architecture
+
+#### **Andrew Just Needs to:**
+1. **Follow existing patterns** (copy & modify existing files)
+2. **Extend database schemas** using established validation rules
+3. **Add new routes** using existing middleware stack
+4. **Create React components** using existing UI library
+5. **Write tests** using existing test utilities
+
+### **📊 Complexity Reduction**
+
+**Without Foundation:** 
+- 100% of infrastructure + 100% of features = **200% work**
+
+**With Foundation:**
+- 0% infrastructure + 100% of features = **100% work**
+
+**Actual Andrew Scope:**
+- 0% infrastructure + 30% features (extending patterns) = **30% work**
+
+This transforms Andrew's project from **"building a microservice"** to **"extending an existing platform"** - perfect for a learning-focused senior project!
+
+---
+
+\newpage
+
 # TECHNICAL ARCHITECTURE
 
-### **Technology Stack**
+### **Technology Stack (Building on Existing)**
 ```
 Frontend: React 18 + TypeScript + Tailwind CSS
 Backend: Node.js + Express + TypeScript  
@@ -1893,116 +2101,300 @@ Testing: Jest + React Testing Library
 
 \newpage
 
-# PROJECT TIMELINE (15 Weeks)
+# PROJECT TIMELINE (15 Weeks) - INTEGRATION APPROACH
 
-### **Phase 1: Foundation (Weeks 1-3)**
-**Learning Focus:** Modern web development fundamentals
+### **🚀 Phase 1: LUNARA Integration & Pattern Learning (Weeks 1-3)**
+**Learning Focus:** Understanding and extending existing enterprise-grade architecture
 
-#### **Week 1: Environment Setup & Project Initialization**
+#### **Week 1: LUNARA Codebase Integration & Pattern Analysis**
+**INTEGRATION APPROACH:** Work directly within existing LUNARA monorepo rather than creating separate service
+
 **SPECIFIC TASKS:**
-- [ ] **Day 1-2:** Create GitHub repository with specific structure:
+- [ ] **Day 1:** Set up development environment using existing LUNARA infrastructure
+  ```bash
+  # Clone existing LUNARA repository (no new repo needed!)
+  git clone <LUNARA-repo-url>
+  cd LUNARA
+  
+  # Use existing backend setup
+  cd backend && npm install  # Uses existing package.json with ALL dependencies
+  npm run dev               # Start existing Express server with all middleware
+  
+  # Use existing frontend setup  
+  cd ../Lunara && npm install # Uses existing React setup
+  npm run dev                # Start existing Vite dev server
   ```
-  resource-library-service/
-  ├── backend/
-  │   ├── src/
-  │   ├── tests/
-  │   ├── package.json
-  │   └── README.md
-  ├── frontend/
-  │   ├── src/
-  │   ├── public/
-  │   ├── package.json
-  │   └── README.md
-  ├── docs/
-  │   ├── api/
-  │   └── setup/
-  └── docker-compose.yml
+
+- [ ] **Day 2:** Study existing authentication patterns (NO auth implementation needed!)
+  ```typescript
+  // STUDY these existing files:
+  // - backend/src/config/passport.ts (JWT + OAuth already implemented)
+  // - backend/src/routes/auth.ts (complete auth API already working)
+  // - Lunara/src/services/authService.ts (frontend auth service ready)
+  // - Lunara/src/contexts/AuthContext.tsx (React auth context working)
+  
+  // TEST existing auth endpoints:
+  // POST /api/auth/register, /api/auth/login (already functional!)
   ```
-- [ ] **Day 3:** Install and configure required tools:
-  - Node.js v18+
-  - MongoDB Compass
-  - Postman/Insomnia
-  - VS Code with extensions (ES7+ React/Redux/React-Native snippets, Prettier, ESLint)
-- [ ] **Day 4-5:** Initialize Express.js backend with exact dependencies:
-  ```json
-  {
-    "dependencies": {
-      "express": "^4.18.2",
-      "mongoose": "^7.5.0",
-      "cors": "^2.8.5",
-      "dotenv": "^16.3.1",
-      "helmet": "^7.0.0",
-      "morgan": "^1.10.0",
-      "joi": "^17.9.2"
-    },
-    "devDependencies": {
-      "jest": "^29.6.2",
-      "supertest": "^6.3.3",
-      "nodemon": "^3.0.1"
-    }
-  }
+
+- [ ] **Day 3:** Analyze existing database model patterns (NO database setup needed!)
+  ```typescript
+  // STUDY these existing models (copy these patterns):
+  // - backend/src/models/User.ts (validation, schema, middleware patterns)
+  // - backend/src/models/Client.ts (complex nested schemas)
+  // - backend/src/models/Provider.ts (relationships, virtuals, statics)
+  // - backend/src/models/Appointment.ts (references between models)
+  
+  // GOAL: Document patterns Andrew will copy for Resource models
   ```
-- [ ] **Day 6-7:** Create basic server structure with health check endpoint
+
+- [ ] **Day 4:** Study existing API route patterns (NO route setup needed!)
+  ```typescript
+  // STUDY these existing routes (copy these patterns):
+  // - backend/src/routes/appointments.ts (CRUD operations with auth)
+  // - backend/src/routes/messages.ts (middleware usage, validation)
+  // - backend/src/routes/users.ts (profile management patterns)
+  
+  // TEST existing endpoints with Postman using existing auth tokens
+  ```
+
+- [ ] **Day 5:** Study existing frontend service patterns (NO frontend setup needed!)
+  ```typescript
+  // STUDY these existing services (copy these patterns):
+  // - Lunara/src/services/authService.ts (singleton service pattern)
+  // - Lunara/src/api/apiClient.ts (HTTP client with auto-auth)
+  // - Lunara/src/contexts/AuthContext.tsx (React context patterns)
+  // - Lunara/src/components/ (existing UI component library)
+  ```
 
 **SPECIFIC DELIVERABLES (Due End of Week 1):**
-1. **GitHub Repository:** Public repo with initial commit and proper README
-2. **Backend Server:** Express server running on localhost:3001 with `/health` endpoint
-3. **Environment File:** `.env.example` with all required variables documented
-4. **Documentation:** `docs/setup/DEVELOPMENT_SETUP.md` with step-by-step setup instructions
+1. **Working LUNARA Environment:** Both backend and frontend running successfully
+2. **Pattern Documentation:** Markdown file documenting existing patterns Andrew will extend
+3. **Feature Branch:** `git checkout -b feature/andrew-resource-library`
+4. **Integration Plan:** Document showing exactly which existing files Andrew will extend
 
 **SUBMISSION REQUIREMENTS:**
-- GitHub repo link
-- Screenshot of server running with health check response
-- Commit history showing daily progress
+- Screenshot of existing LUNARA backend running (showing existing endpoints)
+- Screenshot of existing LUNARA frontend running (showing existing auth working)
+- Pattern documentation with code snippets from existing files
+- Git branch created and pushed with documentation commit
 
-#### **Week 2: Database Integration & API Foundation**
+#### **Week 2: Database Model Extension (Using Existing Infrastructure)**
+**INTEGRATION APPROACH:** Extend existing MongoDB connection and follow established model patterns
+
 **SPECIFIC TASKS:**
-- [ ] **Day 1-2:** MongoDB setup and connection:
-  - Create MongoDB Atlas cluster (free tier)
-  - Implement connection with error handling
-  - Create database schemas for Resource, Category, User models
-- [ ] **Day 3-4:** Implement exact Resource model with these fields:
-  ```javascript
-  const ResourceSchema = {
-    title: { type: String, required: true, maxlength: 200 },
-    description: { type: String, required: true, maxlength: 1000 },
-    content: { type: String, required: true },
-    category: { type: String, required: true, enum: ['nutrition', 'body-care', 'infant-care', 'mental-health', 'relationships', 'printables'] },
-    tags: [String],
-    targetWeeks: [{ type: Number, min: 1, max: 52 }],
-    difficulty: { type: String, enum: ['beginner', 'intermediate', 'advanced'] },
-    fileUrl: String,
-    thumbnailUrl: String,
-    author: { type: String, required: true },
-    isPublished: { type: Boolean, default: false },
-    publishDate: Date,
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now }
+- [ ] **Day 1:** Create Resource model following existing User.ts pattern (NO MongoDB setup needed!)
+  ```typescript
+  // EXTEND existing database (backend/src/models/Resource.ts)
+  // COPY validation patterns from backend/src/models/User.ts:
+  
+  import mongoose, { Schema, Document } from 'mongoose';
+  
+  export interface IResource extends Document {
+    title: string;
+    description: string;
+    content: string;
+    category: string;
+    tags: string[];
+    author: mongoose.Types.ObjectId; // Reference existing User model!
+    targetWeeks: number[];
+    difficulty: 'beginner' | 'intermediate' | 'advanced';
+    fileUrl?: string;
+    thumbnailUrl?: string;
+    isPublished: boolean;
+    publishDate?: Date;
+    // Use existing timestamp pattern from User.ts
+  }
+  
+  // COPY validation patterns from existing models:
+  const resourceSchema = new Schema<IResource>({
+    title: {
+      type: String,
+      required: [true, 'Title is required'], // SAME pattern as User.ts
+      trim: true,
+      maxlength: [200, 'Title cannot exceed 200 characters'] // SAME pattern
+    },
+    // ... follow EXACT patterns from existing models
+  }, {
+    timestamps: true, // EXISTING pattern
+    toJSON: { virtuals: true }, // EXISTING pattern
+    toObject: { virtuals: true } // EXISTING pattern
+  });
+  ```
+
+- [ ] **Day 2:** Create Category model following existing Client.ts complex schema pattern
+  ```typescript
+  // Create backend/src/models/Category.ts
+  // COPY complex nested schema patterns from backend/src/models/Client.ts
+  // Use existing relationship and population patterns
+  
+  export interface ICategory extends Document {
+    name: string;
+    description: string;
+    parentCategory?: mongoose.Types.ObjectId; // Self-reference like Provider relationships
+    subcategories: mongoose.Types.ObjectId[];
+    // Use existing validation and virtual patterns
   }
   ```
-- [ ] **Day 5-6:** Create these exact API endpoints:
-  - `POST /api/resources` - Create resource
-  - `GET /api/resources` - Get all resources with filtering
-  - `GET /api/resources/:id` - Get single resource
-  - `PUT /api/resources/:id` - Update resource
-  - `DELETE /api/resources/:id` - Delete resource
-  - `GET /api/resources/categories` - Get all categories
-- [ ] **Day 7:** Implement input validation using Joi for all endpoints
+
+- [ ] **Day 3:** Create UserResourceInteraction model following existing Message.ts patterns
+  ```typescript
+  // Create backend/src/models/UserResourceInteraction.ts  
+  // COPY relationship patterns from backend/src/models/Message.ts
+  
+  export interface IUserResourceInteraction extends Document {
+    user: mongoose.Types.ObjectId; // Reference existing User!
+    resource: mongoose.Types.ObjectId; // Reference new Resource
+    interactionType: 'view' | 'download' | 'favorite' | 'rating';
+    rating?: number;
+    // Use existing timestamp and indexing patterns
+  }
+  ```
+
+- [ ] **Day 4:** Integrate models with existing database connection
+  ```typescript
+  // ADD to existing backend/src/server.ts imports (NO new connection needed!)
+  // Models automatically use existing MongoDB connection
+  // Test with existing error handling and logging
+  ```
+
+- [ ] **Day 5:** Create model tests following existing test patterns
+  ```typescript
+  // COPY test structure from backend/tests/models/provider.test.js
+  // Use existing MongoMemoryServer setup (NO test setup needed!)
+  // Use existing test utilities and patterns
+  ```
 
 **SPECIFIC DELIVERABLES (Due End of Week 2):**
-1. **Database Connection:** Working MongoDB connection with proper error handling
-2. **API Endpoints:** All 6 endpoints implemented and tested with Postman
-3. **Data Models:** Complete Resource schema with validation
-4. **API Documentation:** Postman collection with example requests/responses
-5. **Testing:** Basic integration tests for all endpoints
+1. **Resource Model:** Complete Resource.ts following existing User.ts patterns
+2. **Category Model:** Category.ts with hierarchical structure following Client.ts patterns  
+3. **Interaction Model:** UserResourceInteraction.ts following Message.ts patterns
+4. **Model Tests:** Unit tests following existing provider.test.js patterns
+5. **Database Integration:** Models integrated with existing MongoDB connection
 
 **SUBMISSION REQUIREMENTS:**
-- Postman collection export file
-- Screenshot of MongoDB data with sample resources
-- Test coverage report showing >80% coverage
+- Models following EXACT patterns from existing codebase
+- All models using existing validation and error handling patterns
+- Unit tests using existing MongoMemoryServer setup
+- Git commits showing daily progress with clear messages
 
-#### **Week 3: Frontend Foundation & React Setup**
+#### **Week 3: API Route Extension (Using Existing Middleware Stack)**
+**INTEGRATION APPROACH:** Create new routes using existing Express middleware and patterns
+
 **SPECIFIC TASKS:**
+- [ ] **Day 1:** Create Resource routes following existing appointments.ts pattern (NO Express setup needed!)
+  ```typescript
+  // Create backend/src/routes/resources.ts
+  // COPY structure from backend/src/routes/appointments.ts:
+  
+  import express, { Router, Response } from 'express';
+  import passport from 'passport';
+  import { body, param, validationResult } from 'express-validator';
+  import Resource from '../models/Resource';
+  import { AuthenticatedRequest } from '../types'; // EXISTING type!
+  
+  const router: Router = express.Router();
+  const authenticate = passport.authenticate('jwt', { session: false }); // EXISTING auth!
+  
+  // COPY exact patterns from appointments.ts:
+  router.get('/', authenticate, async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const resources = await Resource.find({}).populate('author', 'firstName lastName');
+      return res.json(resources);
+    } catch (error) {
+      // EXISTING error handling pattern
+      console.error('Get resources error:', error);
+      return res.status(500).json({ error: 'Failed to retrieve resources' });
+    }
+  });
+  ```
+
+- [ ] **Day 2:** Implement Resource CRUD operations following appointments.ts patterns
+  ```typescript
+  // COPY validation patterns from existing routes:
+  router.post('/', authenticate, [
+    body('title').notEmpty().withMessage('Title is required'),
+    body('content').notEmpty().withMessage('Content is required'),
+    // ... use EXISTING validation patterns
+  ], async (req: AuthenticatedRequest, res: Response) => {
+    // Use EXISTING validation error handling from appointments.ts
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ error: 'Validation failed', details: errors.array() });
+    }
+    // ... COPY exact CRUD patterns
+  });
+  ```
+
+- [ ] **Day 3:** Create Category management routes following users.ts patterns
+  ```typescript
+  // Create backend/src/routes/categories.ts
+  // COPY route structure from backend/src/routes/users.ts
+  // Use EXISTING middleware and validation patterns
+  ```
+
+- [ ] **Day 4:** Integrate routes with existing server infrastructure
+  ```typescript
+  // ADD to backend/src/server.ts following existing pattern:
+  import resourcesRouter from './routes/resources';
+  import categoriesRouter from './routes/categories';
+  
+  // Use EXISTING middleware stack:
+  app.use('/api/resources', resourcesRouter);
+  app.use('/api/categories', categoriesRouter);
+  
+  // Routes automatically get existing CORS, rate limiting, security headers!
+  ```
+
+- [ ] **Day 5:** Create integration tests following existing test patterns
+  ```typescript
+  // Create backend/tests/integration/resources.test.ts
+  // COPY test structure from backend/tests/integration/appointments_messages.test.ts
+  // Use EXISTING test authentication and setup utilities
+  ```
+
+**SPECIFIC DELIVERABLES (Due End of Week 3):**
+1. **Resource API:** Complete CRUD operations following appointments.ts patterns
+2. **Category API:** Category management following users.ts patterns
+3. **Server Integration:** Routes integrated with existing middleware stack
+4. **Integration Tests:** Tests following existing test patterns
+5. **API Documentation:** Swagger docs auto-generated using existing setup
+
+**SUBMISSION REQUIREMENTS:**
+- Routes following EXACT patterns from existing codebase
+- All routes using existing authentication and validation middleware
+- Integration tests using existing test utilities and setup
+- Swagger documentation auto-generated from existing system
+- Postman collection testing all endpoints with authentication
+### **🎯 INTEGRATION ADVANTAGES SUMMARY**
+
+**With this integration approach, Andrew gets:**
+
+#### **Immediate Development Advantages:**
+- ✅ **Zero setup time** - everything already configured and working
+- ✅ **Proven patterns** - copy from working, tested code
+- ✅ **Professional infrastructure** - enterprise-grade middleware and security
+- ✅ **Complete testing framework** - utilities and patterns ready to use
+- ✅ **Automatic features** - authentication, error handling, logging all working
+
+#### **Learning Benefits:**
+- 📚 **Real-world experience** - working with production-quality codebase
+- 📚 **Best practices** - following established patterns and conventions
+- 📚 **Code review opportunities** - comparing his code to existing examples
+- 📚 **Modern stack exposure** - TypeScript, Mongoose, Express.js patterns
+
+#### **Timeline Impact:**
+- ⚡ **Week 1:** Study patterns (instead of environment setup)
+- ⚡ **Week 2:** Extend models (instead of database configuration)
+- ⚡ **Week 3:** Add routes (instead of Express.js setup)
+- ⚡ **Weeks 4+:** Focus on features (instead of infrastructure)
+
+**This approach transforms Andrew's project from "building a microservice" to "extending a platform" - perfect for learning while delivering real value!**
+
+---
+
+### **Phase 2: Feature Development (Weeks 4-8)**
+**Learning Focus:** Frontend integration and business logic implementation
 - [ ] **Day 1-2:** Initialize React application with Vite:
   ```bash
   npm create vite@latest frontend -- --template react-ts
