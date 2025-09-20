@@ -87,21 +87,48 @@ Andrew's Resource Library Service represents **approximately 35-40% of the total
 ### **What Andrew is Building for LUNARA**
 
 #### **1. Complete Content Management Ecosystem (25% of Platform)**
-Andrew is building the entire content infrastructure that powers LUNARA's educational mission:
+Andrew is building a **dual content system** that handles both provider and client content on the same platform:
 
-**Content Creation & Publishing:**
-- **Rich text editor system** for doulas to create educational resources
+**Provider Content Creation & Publishing:**
+- **Rich text editor system** for doulas to create blogs and educational resources
 - **Template-based content creation** for standardized resource types
 - **SEO optimization tools** to ensure discoverability of LUNARA content
 - **Content workflow management** (draft → review → publish pipeline)
 - **Version control system** for content updates and rollbacks
-- **Bulk content operations** for efficient management
+- **Blog publishing platform** with categories and tagging
+
+**Client Document Management:**
+- **Secure file upload system** for clients to upload personal documents
+- **Form and survey management** for emotional wellness tracking
+- **Document submission workflow** to assigned providers
+- **Private document storage** with role-based access control
+- **Document sharing** between clients and their assigned doulas
+- **Progress tracking** through document completion status
+
+**Content Types Supported:**
+```typescript
+// Provider Content (Public/Educational)
+- Blog posts and articles
+- Educational resources and guides
+- Care plan templates
+- Video/audio content
+- Downloadable materials (PDFs, worksheets)
+
+// Client Content (Private/Personal)  
+- Emotional wellness surveys
+- Health assessment forms
+- Personal photos and documents
+- Progress tracking forms
+- Intake questionnaires
+- Private journaling entries
+```
 
 **Impact on Main Platform:**
 - **Eliminates 4-6 weeks of development** from main team timeline
-- **Provides foundation** for all educational content delivery
+- **Provides foundation** for all content delivery (both provider and client)
 - **Enables scalable content operations** without custom development
-- **Supports business growth** through professional content management
+- **Supports dual workflow** for public content and private document management
+- **Unified content infrastructure** serving both user types
 
 #### **2. Personalized Resource Delivery Engine (15% of Platform)**
 The recommendation and personalization system Andrew builds will power user engagement across LUNARA:
@@ -779,6 +806,183 @@ The Resource Library Service provides:
 - Input validation and sanitization for all user content
 - Secure file deletion to prevent data recovery
 - Audit logging for all content modifications
+
+---
+
+### **FR-RL1.5: Dual Content Hosting & Document Management System**
+**Priority:** High  
+**Complexity:** Medium  
+
+**CRITICAL CLARIFICATION:** The Resource Library Service handles **two distinct content workflows** on the same platform:
+
+#### **Content Type Separation:**
+
+**1. Provider Content (Public/Educational):**
+- **Who Creates:** Doulas, care providers, platform administrators
+- **Content Types:** Blog posts, educational articles, care plan templates, video guides, downloadable resources
+- **Visibility:** Public to all clients (or selectively published)
+- **Purpose:** Educational content, professional guidance, platform resources
+- **Workflow:** Draft → Review → Publish → Public Access
+
+**2. Client Content (Private/Personal):**
+- **Who Creates:** Clients (postpartum mothers)  
+- **Content Types:** Emotional wellness surveys, health assessments, personal photos, progress forms, intake questionnaires
+- **Visibility:** Private to client + assigned provider only
+- **Purpose:** Personal tracking, provider communication, care coordination
+- **Workflow:** Upload → Submit to Provider → Review → Feedback
+
+#### **Detailed Technical Architecture:**
+
+**Database Schema for Dual Content System:**
+```javascript
+// Provider Content Collection (Public Educational Content)
+const ProviderContentSchema = new mongoose.Schema({
+  title: { type: String, required: true, maxlength: 200 },
+  content: { type: String, required: true },
+  contentType: {
+    type: String,
+    enum: ['blog-post', 'educational-resource', 'care-plan-template', 'video-guide', 'downloadable-pdf'],
+    required: true
+  },
+  author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  publishStatus: {
+    type: String,
+    enum: ['draft', 'pending-review', 'published', 'archived'],
+    default: 'draft'
+  },
+  targetAudience: {
+    postpartumWeeks: [{ type: Number, min: 1, max: 52 }],
+    clientCategories: [String] // 'first-time-mothers', 'multiple-births', etc.
+  },
+  isPublic: { type: Boolean, default: true },
+  seoOptimized: {
+    metaTitle: String,
+    metaDescription: String,
+    keywords: [String]
+  }
+}, { timestamps: true });
+
+// Client Document Collection (Private Personal Content)  
+const ClientDocumentSchema = new mongoose.Schema({
+  title: { type: String, required: true, maxlength: 200 },
+  documentType: {
+    type: String,
+    enum: ['emotional-survey', 'health-assessment', 'progress-photo', 'personal-form', 'intake-questionnaire', 'journal-entry'],
+    required: true
+  },
+  uploadedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Client
+  assignedProvider: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Provider who can access
+  files: [{
+    cloudinaryUrl: String,
+    originalFileName: String,
+    fileType: String,
+    fileSize: Number,
+    uploadDate: { type: Date, default: Date.now }
+  }],
+  submissionStatus: {
+    type: String,
+    enum: ['draft', 'submitted-to-provider', 'reviewed-by-provider', 'completed'],
+    default: 'draft'
+  },
+  submissionData: {
+    submittedDate: Date,
+    reviewedDate: Date,
+    providerNotes: String,
+    providerFeedback: String
+  },
+  formData: {
+    // Store survey responses, assessment scores, etc.
+    type: mongoose.Schema.Types.Mixed
+  },
+  privacyLevel: {
+    type: String,
+    enum: ['client-only', 'client-and-provider', 'care-team'],
+    default: 'client-and-provider'
+  },
+  dueDate: Date, // For surveys/assessments with deadlines
+  reminderSettings: {
+    enabled: Boolean,
+    frequency: String // 'daily', 'weekly', 'custom'
+  }
+}, { timestamps: true });
+
+// Document Sharing & Permissions
+const DocumentAccessSchema = new mongoose.Schema({
+  document: { type: mongoose.Schema.Types.ObjectId, required: true },
+  documentType: { type: String, enum: ['provider-content', 'client-document'], required: true },
+  accessGrantedTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  accessGrantedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  permissions: {
+    canView: { type: Boolean, default: true },
+    canEdit: { type: Boolean, default: false },
+    canDownload: { type: Boolean, default: true },
+    canComment: { type: Boolean, default: true }
+  },
+  accessExpiration: Date,
+  lastAccessed: Date,
+  accessCount: { type: Number, default: 0 }
+}, { timestamps: true });
+```
+
+#### **API Endpoints for Dual Content System:**
+
+**Provider Content APIs (Blog & Educational Content):**
+```javascript
+// POST /api/provider-content - Create blog post or educational resource
+// GET /api/provider-content - List public content (available to all clients)
+// PUT /api/provider-content/:id - Update content (providers only)
+// DELETE /api/provider-content/:id - Archive content
+// POST /api/provider-content/:id/publish - Publish draft content
+```
+
+**Client Document APIs (Personal Document Management):**
+```javascript
+// POST /api/client-documents - Upload personal document
+// GET /api/client-documents - List own documents (clients) or assigned documents (providers)
+// PUT /api/client-documents/:id - Update document or add provider notes
+// POST /api/client-documents/:id/submit - Submit document to assigned provider
+// GET /api/client-documents/:id/share/:providerId - Share document with specific provider
+```
+
+#### **Workflow Integration with Main LUNARA Platform:**
+
+**Provider Workflow (Content Creation):**
+1. Provider logs into LUNARA platform using existing authentication
+2. Accesses "Content Management" section in provider dashboard  
+3. Creates blog post or educational resource using rich text editor
+4. Sets target audience (postpartum weeks, client categories)
+5. Submits for review (if required) or publishes directly
+6. Content becomes available to relevant clients automatically
+
+**Client Workflow (Document Submission):**
+1. Client logs into LUNARA platform using existing authentication
+2. Accesses "My Documents" or "Assessments" section in client dashboard
+3. Uploads personal documents or completes digital forms/surveys
+4. Submits documents to assigned provider with optional message
+5. Provider receives notification through existing messaging system
+6. Provider reviews, provides feedback, and updates care plan accordingly
+
+#### **Integration with Existing LUNARA Infrastructure:**
+
+**Authentication & Authorization:**
+- Uses existing Passport.js JWT authentication from main platform
+- Role-based access control using existing User model roles ('client', 'provider')
+- Provider-client assignment relationships from existing Client/Provider models
+
+**File Storage:**
+- Integrates with existing Cloudinary setup in main platform
+- Separate storage folders for public content vs. private documents
+- Automatic image optimization and responsive delivery for both content types
+
+**Notification System:**
+- Uses existing email service (Nodemailer) for document submission notifications
+- Integrates with existing Socket.io for real-time updates
+- Provider dashboard notifications when clients submit documents
+
+**Database Integration:**
+- Uses existing MongoDB connection and patterns
+- Follows existing schema validation and error handling patterns
+- Integrates with existing User, Client, Provider relationship models
 
 ---
 
@@ -2103,6 +2307,20 @@ Testing: Jest + React Testing Library
 
 # PROJECT TIMELINE (15 Weeks) - INTEGRATION APPROACH
 
+## **⚡ SIMPLIFIED APPROACH CONFIRMED**
+
+**Based on infrastructure decisions above, Andrew's timeline is dramatically simplified:**
+
+- ✅ **No separate repository** - works in main AQC repo with feature branches
+- ✅ **No authentication setup** - uses existing JWT system unchanged  
+- ✅ **No database configuration** - creates new collections in existing Atlas database
+- ✅ **No environment setup** - uses existing `.env` with team-provided credentials
+- ✅ **No deployment configuration** - integrates with existing deployment pipeline
+
+**This allows Andrew to focus 100% of his time on feature development rather than infrastructure setup!**
+
+---
+
 ### **🚀 Phase 1: LUNARA Integration & Pattern Learning (Weeks 1-3)**
 **Learning Focus:** Understanding and extending existing enterprise-grade architecture
 
@@ -2393,48 +2611,352 @@ Testing: Jest + React Testing Library
 
 ---
 
-### **Phase 2: Feature Development (Weeks 4-8)**
-**Learning Focus:** Frontend integration and business logic implementation
-- [ ] **Day 1-2:** Initialize React application with Vite:
-  ```bash
-  npm create vite@latest frontend -- --template react-ts
-  ```
-- [ ] **Day 3-4:** Install and configure required dependencies:
-  ```json
-  {
-    "dependencies": {
-      "react": "^18.2.0",
-      "react-dom": "^18.2.0",
-      "react-router-dom": "^6.15.0",
-      "axios": "^1.5.0",
-      "tailwindcss": "^3.3.3"
-    },
-    "devDependencies": {
-      "@testing-library/react": "^13.4.0",
-      "@testing-library/jest-dom": "^6.1.2",
-      "vitest": "^0.34.3"
+\newpage
+
+# PROJECT SETUP & INFRASTRUCTURE DECISIONS
+
+## **🚨 CRITICAL: Development Environment Setup (RESOLVED)**
+
+**These key infrastructure decisions have been made to simplify Andrew's development:**
+
+### **✅ Repository Strategy - SAME REPO**
+```bash
+# Andrew will work in the main AQC repository
+git clone https://github.com/your-team/AQC.git
+cd AQC
+
+# Create feature branches for development
+git checkout -b feature/resource-library-backend
+git checkout -b feature/resource-library-frontend
+git checkout -b feature/resource-library-integration
+```
+
+**Benefits:**
+- ✅ **Immediate access** to all existing code and patterns
+- ✅ **Shared dependencies** - no version conflicts
+- ✅ **Easy integration testing** - can test with live main platform
+- ✅ **Code review integration** - team can review in same workflow
+- ✅ **Deployment simplicity** - same CI/CD pipeline
+
+### **✅ Authentication Strategy - EXISTING JWT SYSTEM**
+**Andrew uses the existing authentication without changes:**
+
+```typescript
+// Andrew's routes automatically get authentication:
+import { authenticate } from '../middleware';
+
+// All resource routes are automatically protected:
+router.get('/api/resources', authenticate, getResources);
+router.post('/api/resources', authenticate, createResource);
+
+// User context available in all routes:
+interface AuthenticatedRequest extends Request {
+  user: {
+    id: string;
+    email: string;
+    role: 'client' | 'doula' | 'admin';
+  };
+}
+```
+
+**No Changes Needed:**
+- ✅ **Same JWT tokens** (1-hour access, 7-day refresh)
+- ✅ **Same authentication middleware** from existing codebase
+- ✅ **Same user context** automatically available
+- ✅ **Same security patterns** (rate limiting, CORS, etc.)
+
+### **✅ Database Strategy - NEW COLLECTIONS IN EXISTING ATLAS DB**
+```typescript
+// Andrew creates new collections in existing database:
+// mongodb+srv://username:password@cluster.mongodb.net/lunara
+
+// New Collections Andrew will create:
+// - resources
+// - resource_categories  
+// - user_resource_interactions
+// - resource_templates
+// - client_documents
+// - care_plan_templates
+
+// Existing collections he can reference:
+// - users (for authentication)
+// - clients (for client-specific content)
+// - providers (for provider-created content)
+```
+
+**Database Connection Already Configured:**
+```typescript
+// Andrew uses existing connection from server.ts:
+mongoose.connect(process.env.MONGODB_URI) // Already connected to Atlas
+```
+
+### **✅ File Storage - SHARED CLOUDINARY ACCOUNT**
+```env
+# Team will provide these credentials:
+CLOUDINARY_CLOUD_NAME=team-lunara-account
+CLOUDINARY_API_KEY=shared-api-key
+CLOUDINARY_API_SECRET=shared-api-secret
+```
+
+**File Upload Integration:**
+```typescript
+// Andrew can immediately use existing patterns:
+import { uploadToCloudinary } from '../utils/cloudinary'; // If exists
+// OR follow existing file upload patterns from the codebase
+```
+
+---
+
+## **📋 SIMPLIFIED WEEK 1 SETUP CHECKLIST**
+
+### **Day 1: Repository & Environment**
+- [ ] Clone main AQC repository
+- [ ] Create feature branch: `feature/resource-library-backend`
+- [ ] Install dependencies: `cd backend && npm install`
+- [ ] Copy `.env.example` to `.env` (team will provide credentials)
+- [ ] Test existing backend: `npm run dev` (should start on port 5000)
+- [ ] Verify database connection to Atlas instance
+
+### **Day 2: Code Exploration**
+- [ ] Study existing models: `src/models/User.ts`, `Client.ts`, `Provider.ts`
+- [ ] Study existing routes: `src/routes/auth.ts`, `users.ts`
+- [ ] Study existing middleware: `src/middleware/index.ts`
+- [ ] Study existing authentication flow in `config/passport.ts`
+- [ ] Run existing tests: `npm test`
+
+### **Day 3: First Model Creation**
+- [ ] Create `src/models/Resource.ts` following `User.ts` patterns
+- [ ] Create basic schema with validation
+- [ ] Test model creation with simple Node.js script
+- [ ] Add to Git: `git add . && git commit -m "Add Resource model"`
+
+**No Complex Setup Required:**
+- ❌ No separate repository setup
+- ❌ No authentication configuration  
+- ❌ No database connection setup
+- ❌ No Cloudinary account creation
+- ❌ No deployment configuration
+
+**Everything Andrew needs is already working in the main codebase!**
+
+---
+
+### **Phase 2: Dual Content System Frontend Development (Weeks 4-8)**
+**Learning Focus:** Extending existing LUNARA frontend for dual content workflows
+
+#### **Week 4: Frontend Service Extension (Using Existing React Infrastructure)**
+**INTEGRATION APPROACH:** Extend existing LUNARA frontend rather than creating new React app
+
+**SPECIFIC TASKS:**
+- [ ] **Day 1:** Create ResourceService following existing authService.ts pattern (NO React setup needed!)
+  ```typescript
+  // Create Lunara/src/services/resourceService.ts
+  // COPY singleton pattern from Lunara/src/services/authService.ts:
+  
+  import { ApiClient } from '../api/apiClient';
+  
+  export class ResourceService {
+    private static _instance: ResourceService | null = null;
+    private readonly api = ApiClient.getInstance(); // EXISTING authenticated client!
+    
+    static getInstance(): ResourceService {
+      if (!this._instance) {
+        this._instance = new ResourceService();
+      }
+      return this._instance;
+    }
+    
+    // Provider Content Methods
+    async getPublicResources(filters?: ResourceFilters): Promise<ProviderContent[]> {
+      return this.api.get('/provider-content', { params: filters });
+    }
+    
+    async createBlogPost(data: BlogPostData): Promise<ProviderContent> {
+      return this.api.post('/provider-content', data);
+    }
+    
+    // Client Document Methods  
+    async uploadClientDocument(file: File, metadata: DocumentMetadata): Promise<ClientDocument> {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('metadata', JSON.stringify(metadata));
+      return this.api.post('/client-documents', formData);
+    }
+    
+    async submitDocumentToProvider(documentId: string, message?: string): Promise<void> {
+      return this.api.post(`/client-documents/${documentId}/submit`, { message });
     }
   }
   ```
-- [ ] **Day 5-6:** Create these exact components:
-  - `src/components/ResourceList.tsx` - Display resources
-  - `src/components/ResourceCard.tsx` - Individual resource display
-  - `src/components/CategoryFilter.tsx` - Filter by category
-  - `src/pages/HomePage.tsx` - Main landing page
-  - `src/pages/ResourcesPage.tsx` - Resources listing page
-- [ ] **Day 7:** Implement routing and basic navigation
 
-**SPECIFIC DELIVERABLES (Due End of Week 3):**
-1. **React Application:** Working app running on localhost:3000
-2. **Component Library:** All 5 required components implemented
-3. **API Integration:** Frontend successfully fetching data from backend
-4. **Responsive Design:** Mobile-responsive layout using Tailwind CSS
-5. **Testing Setup:** Component tests for ResourceCard component
+- [ ] **Day 2:** Create ResourceContext following existing AuthContext.tsx pattern
+  ```typescript
+  // Create Lunara/src/contexts/ResourceContext.tsx
+  // COPY context pattern from Lunara/src/contexts/AuthContext.tsx:
+  
+  import React, { createContext, useContext, useState } from 'react';
+  import { ResourceService } from '../services/resourceService';
+  
+  interface ResourceContextType {
+    // Provider content state
+    publicResources: ProviderContent[];
+    loadPublicResources: (filters?: ResourceFilters) => Promise<void>;
+    createBlogPost: (data: BlogPostData) => Promise<void>;
+    
+    // Client document state
+    clientDocuments: ClientDocument[];
+    uploadDocument: (file: File, metadata: DocumentMetadata) => Promise<void>;
+    submitToProvider: (documentId: string, message?: string) => Promise<void>;
+  }
+  
+  // Follow EXACT same patterns as AuthContext for state management
+  ```
+
+- [ ] **Day 3:** Create dual content components using existing UI patterns
+  ```typescript
+  // Provider Content Components (for doulas):
+  // - Lunara/src/components/resource/BlogEditor.tsx (follows existing form patterns)
+  // - Lunara/src/components/resource/ResourceLibrary.tsx (follows existing list patterns)
+  
+  // Client Document Components (for clients):
+  // - Lunara/src/components/documents/DocumentUpload.tsx (follows existing form patterns)
+  // - Lunara/src/components/documents/MyDocuments.tsx (follows existing list patterns)
+  // - Lunara/src/components/documents/DocumentViewer.tsx (new component for file viewing)
+  ```
+
+- [ ] **Day 4:** Integrate components with existing LUNARA dashboard
+  ```typescript
+  // Add to existing provider dashboard (NO new pages needed!):
+  // - "Content Management" section for blog creation
+  // - "Client Documents" section for reviewing submissions
+  
+  // Add to existing client dashboard:
+  // - "My Documents" section for upload/management
+  // - "Resource Library" section for viewing provider content
+  
+  // Use existing routing patterns in Lunara/src/App.tsx
+  ```
+
+- [ ] **Day 5:** Test dual workflows with existing authentication
+  ```bash
+  # Test with existing LUNARA users:
+  # 1. Login as provider → create blog post → verify client can view
+  # 2. Login as client → upload document → verify provider receives notification
+  # 3. Test document submission workflow end-to-end
+  ```
+
+#### **Week 5: Content Creation & Publishing Workflows**
+
+**SPECIFIC TASKS:**
+- [ ] **Day 1-2:** Implement rich text editor for provider blog creation
+  ```typescript
+  // Use React-compatible editor (following existing form patterns):
+  // - Integrate with existing Tailwind CSS styling
+  // - Support image upload using existing Cloudinary integration
+  // - Auto-save drafts using existing patterns
+  ```
+
+- [ ] **Day 3-4:** Implement client document upload with form validation
+  ```typescript
+  // Create document upload forms:
+  // - Emotional wellness survey form
+  // - Progress tracking photo upload
+  // - Personal assessment questionnaire
+  // Use existing React Hook Form + Zod validation patterns
+  ```
+
+- [ ] **Day 5:** Implement document sharing and submission workflow
+  ```typescript
+  // Client submits document → Provider gets notification → Provider reviews → Client gets feedback
+  // Use existing notification patterns and messaging integration
+  ```
+
+#### **Week 6: Search, Filtering & Personalization Integration**
+
+**SPECIFIC TASKS:**
+- [ ] **Day 1-2:** Implement search for both content types
+  ```typescript
+  // Provider content search: Public resources by category, tags, target weeks
+  // Client document search: Personal documents by type, date, status
+  // Use existing search patterns and components if available
+  ```
+
+- [ ] **Day 3-4:** Add filtering and categorization
+  ```typescript
+  // Provider content filters: Category, difficulty, target weeks, author
+  // Client document filters: Type, submission status, date range, provider
+  // Follow existing filtering component patterns
+  ```
+
+- [ ] **Day 5:** Implement basic recommendation system
+  ```typescript
+  // Show relevant provider content based on client's postpartum week
+  // Suggest document templates based on client's progress
+  // Use existing user data from Client/Provider models
+  ```
+
+#### **Week 7: Advanced Features & File Management**
+
+**SPECIFIC TASKS:**
+- [ ] **Day 1-2:** Implement Cloudinary integration for both content types
+  ```typescript
+  // Provider content: Blog images, downloadable PDFs, video content
+  // Client documents: Personal photos, scanned forms, progress images
+  // Use existing Cloudinary configuration and patterns
+  ```
+
+- [ ] **Day 3-4:** Add document versioning and revision history
+  ```typescript
+  // Track changes to both provider content and client documents
+  // Show edit history and allow rollback for provider content
+  // Track submission versions for client documents
+  ```
+
+- [ ] **Day 5:** Implement notification system integration
+  ```typescript
+  // Provider notifications: New client document submissions
+  // Client notifications: New relevant content published, provider feedback
+  // Use existing email service and Socket.io patterns
+  ```
+
+#### **Week 8: Testing, Integration & Polish**
+
+**SPECIFIC TASKS:**
+- [ ] **Day 1-2:** Create comprehensive tests for both workflows
+  ```typescript
+  // Test provider content creation and publishing workflow
+  // Test client document upload and submission workflow
+  // Test role-based access control and permissions
+  // Use existing Jest and React Testing Library setup
+  ```
+
+- [ ] **Day 3-4:** Integration testing with existing LUNARA features
+  ```typescript
+  // Test authentication integration with existing auth system
+  // Test provider-client relationship integration
+  // Test notification integration with existing messaging
+  // Use existing integration test patterns
+  ```
+
+- [ ] **Day 5:** Final polish and documentation
+  ```typescript
+  // Ensure consistent UI/UX with existing LUNARA design
+  // Create user documentation for both provider and client workflows
+  // Document API integration points and technical specifications
+  ```
+
+**SPECIFIC DELIVERABLES (Due End of Week 8):**
+1. **Dual Content System:** Working provider blog creation + client document management
+2. **Frontend Integration:** Components integrated into existing LUNARA dashboards
+3. **Workflow Testing:** End-to-end testing of both content workflows
+4. **User Documentation:** Guides for providers and clients using the system
+5. **Technical Documentation:** API documentation and integration specifications
 
 **SUBMISSION REQUIREMENTS:**
-- Live demo video (2-3 minutes) showing full application
-- GitHub repo with separate frontend/backend folders
-- Component documentation with screenshots
+- Live demo showing both provider and client workflows
+- Integration with existing LUNARA authentication and user management
+- Test coverage reports for new components and services
+- User guide documentation for both content workflows
 
 ---
 
