@@ -1,47 +1,67 @@
-# Grand Canyon University  
-**College of Science, Engineering and Technology**  
-**Software Development Capstone**
+---
+title: "LUNARA: A Compassionate Companion for Postpartum Mothers"
+subtitle: "Postpartum Doula Support Platform Project Proposal"
+author: 
+  - Owen Lindsey
+  - Carter Wright  
+  - Andrew Mack
+instructor: "Professor Amr Elchouemi"
+revision: "1.0"
+date: "May 11, 2025"
+subject: "Software Engineering - Initial Proposal"
+keywords: [LUNARA, Postpartum, Doula, Project Proposal, React, Node.js, Digital Platform]
+lang: "en"
+titlepage: true
+titlepage-color: "4B0082"
+titlepage-text-color: "FFFFFF"
+titlepage-rule-color: "DAA520"
+titlepage-rule-height: 2
+book: true
+classoption: [oneside]
+toc: true
+toc-depth: 3
+lof: false
+lot: false
+fontsize: 11pt
+linestretch: 1.2
+mainfont: "Times New Roman"
+sansfont: "Arial"
+monofont: "Courier New"
+geometry: "paperwidth=11in,paperheight=17in,left=2.5cm,right=2.5cm,top=3cm,bottom=3cm"
+header-left: "LUNARA Initial Proposal"
+header-right: "Capstone Project"
+footer-left: "Grand Canyon University"
+footer-right: "Page \\thepage"
+listings: true
+listings-no-page-break: true
+code-block-font-size: \footnotesize
+listings-disable-line-numbers: false
+tables: true
+graphics: true
+header-includes:
+  - \usepackage{longtable}
+  - \usepackage{booktabs}
+  - \usepackage{array}
+  - \usepackage{xcolor}
+  - \definecolor{schoolpurple}{HTML}{4B0082}
+  - \definecolor{schoolgold}{HTML}{DAA520}
+  - \definecolor{schoolwhite}{HTML}{FFFFFF}
+  - \lstset{breaklines=true,breakatwhitespace=false,columns=fullflexible,prebreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookrightarrow\space}},breakindent=1.5em,breakautoindent=true}
+  - \lstset{basicstyle=\scriptsize\ttfamily,xleftmargin=1.5em,framexleftmargin=1em}
+  - \lstset{showstringspaces=false,keepspaces=true}
+  - \usepackage{makecell}
+  - \setlength{\tabcolsep}{4pt}
+  - \renewcommand{\arraystretch}{1.1}
+colorlinks: true
+linkcolor: purple
+urlcolor: purple
+toccolor: black
+disable-header-and-footer: false
+---
 
-----
+\newpage
 
-## Capstone Proposal
-
-# **LUNARA: A Compassionate Companion for Postpartum Mothers**
-
-----
-
-**Prepared by:**  
-*Owen Lindsey, Andrew Mack, Carter Wright*  
-Bachelor of Science in Software Development  
-Capstone Section: *CST-451*  
-Instructor: Amr Elchouemi
-
-----
-
-**Date:**  
-*May 11, 2025*
-
-## Postpartum Doula Support Platform Project Proposal
-
-*May 2025*
-
-----
-
-## Table of Contents
-
-- [Executive Summary](#executive-summary)
-- [Team Members & Roles](#team-members--roles)
-- [Team Coordination & Communication](#team-coordination--communication)
-- [Software Description](#software-description)
-- [Project Approach](#project-approach)
-- [Timeline](#timeline)
-- [Project Considerations](#project-considerations)
-- [Desired Goals](#desired-goals)
-- [Deliverables & Measurement](#deliverables--measurement)
-- [Technical Vision](#technical-vision)
-- [User Experience](#user-experience)
-
-----
+# EXECUTIVE SUMMARY
 
 ## Executive Summary
 
@@ -52,7 +72,10 @@ Our vision is to develop a platform that feels less like traditional software an
 As software development students at Grand Canyon University, we're excited to build this platform as our senior capstone project. Our work will unfold over 20 weeks, culminating in an October 2025 launch. We'll blend modern technology with timeless care principles to create a sustainable, accessible digital solution for postpartum support.
 
 ----
-## Team Members & Roles
+
+\newpage
+
+# TEAM MEMBERS & ROLES
 
 As senior software development students at Grand Canyon University, we're committed to applying our education and skills to create a meaningful solution for postpartum care. **While all team members will collaborate across the entire stack and contribute to all aspects of development throughout the project lifecycle**, each member will leverage their unique strengths and take leadership in specific areas:
 
@@ -88,7 +111,9 @@ This collaborative approach, combined with clear leadership responsibilities, wi
 
 ----
 
-## Team Coordination & Communication
+\newpage
+
+# TEAM COORDINATION & COMMUNICATION
 
 We believe in transparency, regular communication, and adaptability. Our team coordination approach ensures consistent progress and quality throughout the development process.
 
@@ -123,7 +148,9 @@ We'll utilize modern collaboration tools that provide transparency and maintain 
 
 ----
 
-## Software Description
+\newpage
+
+# SOFTWARE DESCRIPTION
 
 "LUNARA" will be a digital sanctuary for new parents in their fourth trimester, weaving together practical support tools with an enchanting storybook aesthetic. The platform will extend nurturing presence into families' daily lives through thoughtfully designed features that prioritize emotional wellbeing, practical guidance, and holistic care.
 
@@ -171,7 +198,9 @@ The visual and emotional experience of the platform will reflect the gentle tran
 
 ----
 
-## Project Approach
+\newpage
+
+# PROJECT APPROACH
 
 Our development philosophy centers on creating a platform that will evolve alongside doula practices, beginning with a solid foundation of essential features and expanding thoughtfully over time. We recognize that postpartum care is a deeply personal field that requires flexibility and adaptation.
 
@@ -206,7 +235,9 @@ This approach ensures that what we build truly meets the needs of doula practice
 
 ----
 
-## Timeline
+\newpage
+
+# TIMELINE
 
 Our 20-week development timeline is carefully designed to deliver a complete, high-quality platform by October 2025. The compressed schedule focuses on core functionality first with a phased approach to feature delivery.
 
@@ -271,7 +302,9 @@ Throughout all phases, we'll maintain our two-week sprint cadence with regular i
 
 ----
 
-## Project Considerations
+\newpage
+
+# PROJECT CONSIDERATIONS
 
 Developing the LUNARA platform requires thoughtful navigation of various considerations to ensure we create a solution that is not only beautiful and functional, but also responsible, secure, and sustainable.
 
@@ -297,7 +330,9 @@ Developing the LUNARA platform requires thoughtful navigation of various conside
 
 ----
 
-## Desired Goals
+\newpage
+
+# DESIRED GOALS
 
 Our shared vision for LUNARA extends beyond creating software—we aim to craft a digital tool that truly enhances the postpartum journey for families while supporting the growth of doula practices.
 
@@ -329,7 +364,9 @@ We'll know we've succeeded when:
 
 ----
 
-## Deliverables & Measurement
+\newpage
+
+# DELIVERABLES & MEASUREMENT
 
 Our project will culminate in a cohesive digital ecosystem that supports every aspect of postpartum doula practices. Here we outline what we'll deliver and how we'll measure success.
 
@@ -367,7 +404,9 @@ These metrics will help us refine the platform during development and provide do
 
 ----
 
-## Technical Vision
+\newpage
+
+# TECHNICAL VISION
 
 Our technical approach focuses on creating a platform that combines beautiful aesthetics with reliable performance, security, and sustainability. We've carefully selected technologies that will provide the best foundation for postpartum care needs.
 
@@ -444,7 +483,9 @@ This technical foundation provides the perfect balance of current best practices
 
 ----
 
-## User Experience
+\newpage
+
+# USER EXPERIENCE
 
 The essence of LUNARA lies in creating a digital space that feels like a natural extension of nurturing presence—a place where new parents feel held, supported, and empowered during a transformative time in their lives.
 

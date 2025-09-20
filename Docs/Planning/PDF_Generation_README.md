@@ -1,4 +1,67 @@
- # PDF Generation Guide
+---
+title: "LUNARA PDF Generation Guide"
+subtitle: "Pandoc and LaTeX Configuration Documentation"
+author: 
+  - Owen Lindsey
+  - Carter Wright  
+  - Andrew Mack
+instructor: "Professor Amr Elchouemi"
+revision: "1.0"
+date: "September 20, 2025"
+subject: "Software Engineering - Documentation Tools"
+keywords: [Pandoc, LaTeX, PDF Generation, Documentation, LUNARA, Templates]
+lang: "en"
+titlepage: true
+titlepage-color: "4B0082"
+titlepage-text-color: "FFFFFF"
+titlepage-rule-color: "DAA520"
+titlepage-rule-height: 2
+book: true
+classoption: [oneside]
+toc: true
+toc-depth: 3
+lof: false
+lot: false
+fontsize: 11pt
+linestretch: 1.2
+mainfont: "Times New Roman"
+sansfont: "Arial"
+monofont: "Courier New"
+geometry: "paperwidth=11in,paperheight=17in,left=2.5cm,right=2.5cm,top=3cm,bottom=3cm"
+header-left: "LUNARA PDF Generation"
+header-right: "Documentation Tools"
+footer-left: "Grand Canyon University"
+footer-right: "Page \\thepage"
+listings: true
+listings-no-page-break: true
+code-block-font-size: \footnotesize
+listings-disable-line-numbers: false
+tables: true
+graphics: true
+header-includes:
+  - \usepackage{longtable}
+  - \usepackage{booktabs}
+  - \usepackage{array}
+  - \usepackage{xcolor}
+  - \definecolor{schoolpurple}{HTML}{4B0082}
+  - \definecolor{schoolgold}{HTML}{DAA520}
+  - \definecolor{schoolwhite}{HTML}{FFFFFF}
+  - \lstset{breaklines=true,breakatwhitespace=false,columns=fullflexible,prebreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookrightarrow\space}},breakindent=1.5em,breakautoindent=true}
+  - \lstset{basicstyle=\scriptsize\ttfamily,xleftmargin=1.5em,framexleftmargin=1em}
+  - \lstset{showstringspaces=false,keepspaces=true}
+  - \usepackage{makecell}
+  - \setlength{\tabcolsep}{4pt}
+  - \renewcommand{\arraystretch}{1.1}
+colorlinks: true
+linkcolor: purple
+urlcolor: purple
+toccolor: black
+disable-header-and-footer: false
+---
+
+\newpage
+
+# PDF GENERATION GUIDE
 
 This directory contains scripts and templates for generating professional PDF documents from Markdown source files.
 
@@ -15,7 +78,9 @@ chmod +x generate_development_pdf.sh
 ./generate_development_pdf.sh
 ```
 
-## Code Block Optimization Features
+\newpage
+
+# CODE BLOCK OPTIMIZATION FEATURES
 
 The PDF generation has been optimized to handle long code blocks that previously overflowed pages:
 
@@ -41,7 +106,9 @@ The PDF generation has been optimized to handle long code blocks that previously
 - Shell/Bash
 - And more...
 
-## Prerequisites
+\newpage
+
+# PREREQUISITES
 
 ### Required Software
 - **Pandoc** (>= 2.0): Document converter
@@ -69,7 +136,9 @@ brew install --cask mactex
 sudo apt-get install pandoc texlive-full
 ```
 
-## Template Structure
+\newpage
+
+# TEMPLATE STRUCTURE
 
 ```
 Templates/
@@ -81,7 +150,9 @@ Templates/
 └── after-header-includes.latex
 ```
 
-## Customization Options
+\newpage
+
+# CUSTOMIZATION OPTIONS
 
 ### Code Block Font Size
 Modify the YAML front matter in your Markdown file:
@@ -99,7 +170,9 @@ geometry: "left=2.5cm,right=2.5cm,top=3cm,bottom=3cm"
 listings-disable-line-numbers: true
 ```
 
-## Troubleshooting
+\newpage
+
+# TROUBLESHOOTING
 
 ### Common Issues
 
@@ -135,7 +208,9 @@ Check LaTeX log:
 cat LUNARA_Development_Phase_Report.log
 ```
 
-## Output Quality
+\newpage
+
+# OUTPUT QUALITY
 
 The generated PDF will feature:
 - ✅ Professional formatting with proper margins
@@ -145,7 +220,9 @@ The generated PDF will feature:
 - ✅ Consistent typography and styling
 - ✅ Working table of contents and cross-references
 
-## Performance Notes
+\newpage
+
+# PERFORMANCE NOTES
 
 - **Generation Time**: ~30-60 seconds for large documents
 - **File Size**: Optimized for reasonable file sizes while maintaining quality
